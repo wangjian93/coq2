@@ -1,11 +1,12 @@
 package com.ivo.coq.project.service.impl;
 
 import com.ivo.coq.project.entity.ProjectSchedule;
+import com.ivo.coq.project.repository.ProjectScheduleRepository;
 import com.ivo.coq.project.service.ProjectScheduleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author wj
@@ -14,10 +15,30 @@ import java.util.List;
 @Service
 public class ProjectScheduleServiceImpl implements ProjectScheduleService {
 
+    private ProjectScheduleRepository repository;
+
+    @Autowired
+    public ProjectScheduleServiceImpl(ProjectScheduleRepository repository) {
+        this.repository = repository;
+    }
+
     @Override
-    public List<ProjectSchedule> getSchedules(String project) {
+    public List<ProjectSchedule> getLatestSchedules(String project, String version) {
         // TODO...
         return null;
+    }
+
+    @Override
+    public Map<String, List<ProjectSchedule>> getSchedules(String project) {
+        List<ProjectSchedule> projectScheduleList = repository.findByProject(project);
+        Map<String, List<ProjectSchedule>> map = new HashMap<>();
+        for(ProjectSchedule projectSchedule : projectScheduleList) {
+            if(map.get(projectSchedule.getVersion()) == null) {
+                map.put(projectSchedule.getVersion(), new ArrayList<ProjectSchedule>());
+            }
+            map.get(projectSchedule.getVersion()).add(projectSchedule);
+        }
+        return map;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.ivo.coq.project.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ivo.common.model.AutoIncreaseEntityModel;
 
 import javax.persistence.Entity;
@@ -32,18 +33,13 @@ public class ProjectSchedule extends AutoIncreaseEntityModel {
     /**
      * 时间
      */
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date date;
 
     /**
      * 状态
      */
     private String status;
-
-    /**
-     * 顺序
-     */
-    private int sort;
-
 
     public String getProject() {
         return project;
@@ -83,13 +79,5 @@ public class ProjectSchedule extends AutoIncreaseEntityModel {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public int getSort() {
-        return sort;
-    }
-
-    public void setSort(int sort) {
-        this.sort = sort;
     }
 }

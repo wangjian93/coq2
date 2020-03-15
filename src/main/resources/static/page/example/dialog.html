@@ -6,17 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>弹窗实例</title>
     <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css"/>
-    <link rel="stylesheet" href="../../assets/module/admin.css?v=316"/>
+    <link rel="stylesheet" href="../../assets/module/admin.css?v=317"/>
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <style>
-        /** 评论列表弹窗样式 */
-        .layui-layer-content > .layui-table-view {
-            margin: 0;
-        }
-
         /** 查看详情弹窗样式 */
         .paper-info-group {
             padding: 15px 25px;
@@ -46,11 +41,6 @@
 
         .paper-info-group .paper-info-group-imgs img:last-child {
             margin-right: 0;
-        }
-
-        /** 状态列 */
-        *[lay-event] {
-            cursor: pointer;
         }
 
         /* 日期组件不显示秒 */
@@ -83,21 +73,21 @@
     <div class="layui-card">
         <div class="layui-card-header">表单弹窗实例</div>
         <div class="layui-card-body">
-            <button id="demoEDBtnAddStudent" class="layui-btn">添加学生</button>
-            <button id="demoEDBtnAddCourseS" class="layui-btn">添加排课</button>
+            <button id="eDialogAddStuBtn" class="layui-btn">添加学生</button>
+            <button id="eDialogAddCouBtn" class="layui-btn">添加排课</button>
         </div>
     </div>
     <div class="layui-card">
         <div class="layui-card-header">表格+弹窗实例</div>
         <div class="layui-card-body">
-            <table id="demoTableED1" lay-filter="demoTableED1"></table>
+            <table id="eDialogTable" lay-filter="eDialogTable"></table>
         </div>
     </div>
 </div>
 
 <!-- 添加学生表单弹窗 -->
-<script type="text/html" id="EDModelAddStudent">
-    <form id="EDStudentForm" lay-filter="EDStudentForm" class="layui-form model-form layui-row">
+<script type="text/html" id="eDialogStuEditDialog">
+    <form id="eDialogStuEditForm" lay-filter="eDialogStuEditForm" class="layui-form model-form layui-row">
         <input name="studentId" type="hidden"/>
         <div class="layui-col-md6">
             <div class="layui-form-item">
@@ -173,15 +163,15 @@
             </div>
         </div>
         <div class="layui-form-item text-right">
-            <button class="layui-btn layui-btn-primary" type="button" ew-event="closePageDialog">取消</button>
-            <button class="layui-btn" lay-filter="EDStudentModelSubmit" lay-submit>保存</button>
+            <button class="layui-btn" lay-filter="eDialogStuEditSubmit" lay-submit>保存</button>
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
         </div>
     </form>
 </script>
 
 <!-- 添加排课表单弹窗 -->
-<script type="text/html" id="EDModelAddCourseS">
-    <form id="EDCourseForm" lay-filter="EDCourseForm" class="layui-form model-form layui-row">
+<script type="text/html" id="eDialogCouEditDialog">
+    <form id="eDialogCouEditForm" lay-filter="eDialogCouEditForm" class="layui-form model-form layui-row">
         <input name="schedulingId" type="hidden"/>
         <div class="layui-row">
             <div class="layui-col-md6">
@@ -281,33 +271,33 @@
             </div>
         </div>
         <div class="layui-form-item text-right">
-            <button class="layui-btn layui-btn-primary" type="button" ew-event="closePageDialog">取消</button>
-            <button class="layui-btn" lay-filter="EDCourseSModelSubmit" lay-submit>保存</button>
+            <button class="layui-btn" lay-filter="eDialogCouEditSubmit" lay-submit>保存</button>
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
         </div>
     </form>
 </script>
 
 <!-- 表格操作列 -->
-<script type="text/html" id="demoTableED1Bar">
+<script type="text/html" id="eDialogTbBar">
     <a class="layui-btn layui-btn-primary layui-btn-sm" lay-event="view"><i class="layui-icon">&#xe6b2;</i>查看</a>
     <a class="layui-btn layui-btn-sm" lay-event="comments"><i class="layui-icon">&#xe63a;</i>评论</a>
 </script>
 
 <!-- 查看评论表格操作列 -->
-<script type="text/html" id="demoTableEDCommentsBar">
+<script type="text/html" id="eDialogCommentTbBar">
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 
 <!-- 查看评论弹窗 -->
-<script type="text/html" id="demoEDCommentsModel">
-    <table id="demoTableEDComments" lay-filter="demoTableEDComments" class="layui-hide"></table>
-    <div class="btn-circle" id="demoEDBtnAddComment" style="position: absolute; bottom: 60px;" title="发表评论">
+<script type="text/html" id="eDialogCommentDialog">
+    <table id="eDialogCommentTable" lay-filter="eDialogCommentTable" class="layui-hide"></table>
+    <div class="btn-circle" id="eDialogCommentBtnAdd" style="position: absolute; bottom: 60px;" title="发表评论">
         <i class="layui-icon layui-icon-edit"></i>
     </div>
 </script>
 
 <!-- 查看详情弹窗 -->
-<script type="text/html" id="demoEDInfoModel">
+<script type="text/html" id="eDialogInfoDialog">
     <div class="paper-info-group">
         <h3>本周工作总结</h3>
         <p>{{d.summary}}</p>
@@ -315,7 +305,7 @@
         <p>{{d.plan}}</p>
         <h3>备注</h3>
         <p>{{d.comments}}</p>
-        <div class="paper-info-group-imgs" id="paper-imgs">
+        <div class="paper-info-group-imgs" id="eDialogInfoImgs">
             <img src="{{d.img1}}" width="130px" height="130px">
             <img src="{{d.img2}}" width="130px" height="130px">
             <img src="{{d.img3}}" width="130px" height="130px">
@@ -324,18 +314,18 @@
 </script>
 
 <!-- 表格状态列 -->
-<script type="text/html" id="demoEDStateBar1">
+<script type="text/html" id="eDialogTbState">
     {{# if(d.state==0){ }}
     <span style="color: orange;cursor: default;" lay-tips="正在审核中，请耐心等待">待审核</span>
     {{# }else if(d.state==1){ }}
-    <span class="icon-text" style="color: green;" lay-event="checkList">
+    <span class="icon-text" style="color: green;cursor: pointer;" lay-event="checkList">
         已通过<i class="layui-icon layui-icon-tips"></i>
     </span>
     {{# } }}
 </script>
 
 <!-- 审核记录 -->
-<script id="demoEDCheckList" type="text/html">
+<script id="eDialogCheckDialog" type="text/html">
     <div style="padding: 25px 0 0 30px;">
         <ul class="layui-timeline">
             <li class="layui-timeline-item">
@@ -386,7 +376,7 @@
 
 <!-- js部分 -->
 <script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
-<script type="text/javascript" src="../../assets/js/common.js?v=316"></script>
+<script type="text/javascript" src="../../assets/js/common.js?v=317"></script>
 <script>
     layui.use(['layer', 'admin', 'form', 'table', 'laytpl', 'util', 'laydate', 'cascader', 'tagsInput'], function () {
         var $ = layui.jquery;
@@ -400,23 +390,23 @@
         var cascader = layui.cascader;
 
         // 添加学生
-        $('#demoEDBtnAddStudent').click(function () {
+        $('#eDialogAddStuBtn').click(function () {
             admin.open({
                 type: 1,
                 title: '添加学生',
                 area: '700px',
-                content: $('#EDModelAddStudent').html(),
+                content: $('#eDialogStuEditDialog').html(),
                 success: function (layero, dIndex) {
                     $(layero).children('.layui-layer-content').css('overflow', 'visible');
                     form.render('radio');
                     // 表单提交事件
-                    form.on('submit(EDStudentModelSubmit)', function (data) {
+                    form.on('submit(eDialogStuEditSubmit)', function (data) {
                         layer.msg("表单验证通过", {icon: 1});
                         return false;
                     });
                     // 专业选择
                     cascader.render({
-                        elem: '#EDStudentForm input[name="profession"]',
+                        elem: '#eDialogStuEditForm input[name="profession"]',
                         itemHeight: '220px',
                         data: [{
                             label: '计算机学院',
@@ -491,12 +481,12 @@
                     });
                     // 年选择器
                     laydate.render({
-                        elem: '#EDStudentForm input[name="schoolYear"]',
+                        elem: '#eDialogStuEditForm input[name="schoolYear"]',
                         type: 'year',
                         trigger: 'click'
                     });
                     // 标签输入框
-                    $('#EDStudentForm input[name="label"]').tagsInput({
+                    $('#eDialogStuEditForm input[name="label"]').tagsInput({
                         skin: 'tagsinput-default',
                         autocomplete_url: '../../json/tagsInput.json'
                     });
@@ -506,13 +496,13 @@
         });
 
         // 添加排课
-        $('#demoEDBtnAddCourseS').click(function () {
+        $('#eDialogAddCouBtn').click(function () {
             var mData = {weekdays: '3,5,7'};  // 回显数据
             admin.open({
                 type: 1,
                 title: '添加排课',
                 area: '670px',
-                content: $('#EDModelAddCourseS').html(),
+                content: $('#eDialogCouEditDialog').html(),
                 success: function (layero, dIndex) {
                     $(layero).children('.layui-layer-content').css('overflow', 'visible');
                     if (mData) {  // 将逗号分隔的星期转成复选框对应的格式
@@ -521,9 +511,9 @@
                             mData['week_' + weekdays[i]] = weekdays[i];
                         }
                     }
-                    form.val('EDCourseForm', mData);  // 回显数据
+                    form.val('eDialogCouEditForm', mData);  // 回显数据
                     // 表单提交事件
-                    form.on('submit(EDCourseSModelSubmit)', function (data) {
+                    form.on('submit(eDialogCouEditSubmit)', function (data) {
                         data.field.weekdays = '';  // 将星期复选框选中值变成逗号分隔
                         for (var f in data.field) {
                             if (f.indexOf('week_') == 0) {
@@ -556,8 +546,8 @@
 
         // 渲染表格
         var insTb = table.render({
-            elem: '#demoTableED1',
-            url: '../../json/e_d_t1.json',
+            elem: '#eDialogTable',
+            url: '../../json/e-dialog-tb1.json',
             page: true,
             cellMinWidth: 100,
             cols: [[
@@ -573,14 +563,14 @@
                         return util.toDateString(d.createTime);
                     }
                 },
-                {toolbar: '#demoEDStateBar1', sort: true, title: '状态'},
-                {align: 'center', toolbar: '#demoTableED1Bar', title: '操作', minWidth: 180}
+                {toolbar: '#eDialogTbState', sort: true, title: '状态'},
+                {align: 'center', toolbar: '#eDialogTbBar', title: '操作', minWidth: 180}
             ]],
             size: 'lg'
         });
 
         // 工具条点击事件
-        table.on('tool(demoTableED1)', function (obj) {
+        table.on('tool(eDialogTable)', function (obj) {
             var data = obj.data;
             var layEvent = obj.event;
             if (layEvent === 'comments') {  // 查看评论
@@ -594,7 +584,7 @@
 
         // 查看详情
         function showInfo(data) {
-            laytpl(demoEDInfoModel.innerHTML).render(data, function (html) {
+            laytpl(eDialogInfoDialog.innerHTML).render(data, function (html) {
                 admin.open({
                     type: 1,
                     title: '查看详情',
@@ -602,7 +592,7 @@
                     content: html,
                     success: function () {
                         layer.photos({
-                            photos: '#paper-imgs',
+                            photos: '#eDialogInfoImgs',
                             shade: .1,
                             closeBtn: true
                         });
@@ -618,12 +608,12 @@
                 area: '650px',
                 offset: '65px',
                 title: '查看评论',
-                content: $('#demoEDCommentsModel').html(),
-                success: function () {
+                content: $('#eDialogCommentDialog').html(),
+                success: function (layero) {
                     // 渲染表格
                     var insTbCom = table.render({
-                        elem: '#demoTableEDComments',
-                        url: '../../json/e_d_c1.json?id=' + id,
+                        elem: '#eDialogCommentTable',
+                        url: '../../json/e-dialog-tb2.json?id=' + id,
                         page: true,
                         height: 400,
                         cellMinWidth: 100,
@@ -636,12 +626,15 @@
                                     return util.toDateString(d.createTime);
                                 }
                             },
-                            {align: 'center', toolbar: '#demoTableEDCommentsBar', title: '操作', minWidth: 80, width: 80}
-                        ]]
+                            {align: 'center', toolbar: '#eDialogCommentTbBar', title: '操作', minWidth: 80, width: 80}
+                        ]],
+                        done: function () {
+                            $(layero).find('.layui-table-view').css('margin', '0');
+                        }
                     });
 
                     // 查看评论工具条点击事件
-                    table.on('tool(demoTableEDComments)', function (obj) {
+                    table.on('tool(eDialogCommentTable)', function (obj) {
                         var data = obj.data;
                         var layEvent = obj.event;
                         if (layEvent === 'del') { // 删除
@@ -650,7 +643,7 @@
                     });
 
                     // 发表评论
-                    $('#demoEDBtnAddComment').click(function () {
+                    $('#eDialogCommentBtnAdd').click(function () {
                         layer.prompt({
                             title: '发表评论',
                             shade: .1,
@@ -669,7 +662,7 @@
 
         // 审核记录弹窗
         function openCheckList(d) {
-            laytpl(demoEDCheckList.innerHTML).render(d, function (html) {
+            laytpl(eDialogCheckDialog.innerHTML).render(d, function (html) {
                 admin.open({
                     type: 1,
                     title: '审核详情',

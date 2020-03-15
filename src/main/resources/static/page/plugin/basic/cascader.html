@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>级联选择器</title>
     <link rel="stylesheet" href="../../../assets/libs/layui/css/layui.css"/>
-    <link rel="stylesheet" href="../../../assets/module/admin.css?v=316"/>
+    <link rel="stylesheet" href="../../../assets/module/admin.css?v=317"/>
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -188,7 +188,7 @@
 
 <!-- js部分 -->
 <script type="text/javascript" src="../../../assets/libs/layui/layui.js"></script>
-<script type="text/javascript" src="../../../assets/js/common.js?v=316"></script>
+<script type="text/javascript" src="../../../assets/js/common.js?v=317"></script>
 <script type="text/javascript" src="../../../assets/module/cascader/citys-data.js"></script>
 <script>
     layui.use(['layer', 'form', 'tableX', 'cascader'], function () {
@@ -305,6 +305,11 @@
                 setTimeout(function () {  // 模拟网络请求
                     callback(getData(data ? data.value : undefined));
                 }, 1500);
+            },
+            onChange: function (values, data) {
+                console.log(values);
+                console.log(data);
+                console.log('-----------------');
             }
         });
 
@@ -344,7 +349,12 @@
         cascader.render({
             elem: '#demoCascader9',
             data: data,
-            filterable: true
+            filterable: true,
+            onChange: function (values, data) {
+                console.log(values);
+                console.log(data);
+                console.log('-----------------');
+            }
         });
 
         // 表单验证
@@ -363,7 +373,12 @@
             elem: '#demoCascader11',
             data: citysData,
             itemHeight: '250px',
-            filterable: true
+            filterable: true,
+            onChange: function (values, data) {
+                console.log(values);
+                console.log(data);
+                console.log('-----------------');
+            }
         });
 
         // 专业选择

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>数据表格</title>
     <link rel="stylesheet" href="../../../assets/libs/layui/css/layui.css"/>
-    <link rel="stylesheet" href="../../../assets/module/admin.css?v=316" media="all"/>
+    <link rel="stylesheet" href="../../../assets/module/admin.css?v=317" media="all"/>
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -23,25 +23,25 @@
 <div class="layui-fluid">
     <div class="layui-card">
         <div class="layui-card-body">
-
-            <div class="layui-form toolbar">
+            <!-- 表格工具栏 -->
+            <form class="layui-form toolbar table-tool-mini">
                 <div class="layui-form-item">
                     <div class="layui-inline">
-                        <label class="layui-form-label w-auto">搜索：</label>
-                        <div class="layui-input-inline mr0">
+                        <label class="layui-form-label w-auto">搜索:</label>
+                        <div class="layui-input-inline">
                             <input name="keyword" class="layui-input" type="text" placeholder="输入关键字"/>
                         </div>
                     </div>
-                    <div class="layui-inline">
-                        <button class="layui-btn icon-btn" lay-filter="formSubSearchTbBas" lay-submit>
+                    <div class="layui-inline" style="padding-right: 110px;">
+                        <button class="layui-btn icon-btn" lay-filter="tbBasicTbSearch" lay-submit>
                             <i class="layui-icon">&#xe615;</i>搜索
                         </button>
-                        <button id="btnExportTbBas" class="layui-btn icon-btn">
+                        <button id="tbBasicExportBtn" class="layui-btn icon-btn" type="button">
                             <i class="layui-icon">&#xe67d;</i>导出
                         </button>
                         <!-- 下拉按钮 -->
                         <div class="dropdown-menu dropdown-hover">
-                            <button class="layui-btn icon-btn">
+                            <button class="layui-btn icon-btn" type="button">
                                 &nbsp;更多 <i class="layui-icon layui-icon-drop"></i></button>
                             <ul class="dropdown-menu-nav">
                                 <li><a><i class="layui-icon layui-icon-edit"></i>修改用户</a></li>
@@ -51,30 +51,30 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <table id="tableTbBas" lay-filter="tableTbBas"></table>
+            </form>
+            <!-- 数据表格 -->
+            <table id="tbBasicTable" lay-filter="tbBasicTable"></table>
         </div>
     </div>
 </div>
 
 <!-- 表格操作列 -->
-<script type="text/html" id="tableBarTbBas">
+<script type="text/html" id="tbBasicTbBar">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    <a class="layui-btn layui-btn-xs" data-dropdown="#dropUser{{d.LAY_INDEX}}" no-shade="true">
+    <a class="layui-btn layui-btn-xs" data-dropdown="#userTbDrop{{d.LAY_INDEX}}" no-shade="true">
         更多<i class="layui-icon layui-icon-drop" style="font-size: 12px;margin-right: 0;"></i></a>
     <!-- 下拉菜单 -->
-    <ul class="dropdown-menu-nav dropdown-bottom-right layui-hide" id="dropUser{{d.LAY_INDEX}}">
+    <ul class="dropdown-menu-nav dropdown-bottom-right layui-hide" id="userTbDrop{{d.LAY_INDEX}}">
         <div class="dropdown-anchor"></div>
-        <li><a lay-event="edit2"><i class="layui-icon layui-icon-edit"></i>修改用户</a></li>
-        <li><a lay-event="del2"><i class="layui-icon layui-icon-delete"></i>删除用户</a></li>
-        <li><a lay-event="lock2"><i class="layui-icon layui-icon-password"></i>锁定用户</a></li>
+        <li><a lay-event="view"><i class="layui-icon layui-icon-username"></i>查看信息</a></li>
+        <li><a lay-event="lock"><i class="layui-icon layui-icon-password"></i>锁定用户</a></li>
+        <li><a lay-event="reset"><i class="layui-icon layui-icon-key"></i>重置密码</a></li>
     </ul>
 </script>
 <!-- js部分 -->
 <script type="text/javascript" src="../../../assets/libs/layui/layui.js"></script>
-<script type="text/javascript" src="../../../assets/js/common.js?v=316"></script>
+<script type="text/javascript" src="../../../assets/js/common.js?v=317"></script>
 <script>
     layui.use(['layer', 'form', 'table', 'util', 'dropdown'], function () {
         var $ = layui.jquery;
@@ -84,72 +84,71 @@
         var util = layui.util;
         var dropdown = layui.dropdown;
 
-        // 渲染表格
+        /* 渲染表格 */
         var insTb = table.render({
-            elem: '#tableTbBas',
+            elem: '#tbBasicTable',
             url: '../../../json/user.json',
             page: true,
             cellMinWidth: 100,
             cols: [[
                 {type: 'checkbox'},
-                {field: 'username', align: 'center', sort: true, title: '账号'},
-                {field: 'nickName', align: 'center', sort: true, title: '用户名'},
-                {field: 'phone', align: 'center', sort: true, title: '手机号'},
-                {field: 'sex', align: 'center', sort: true, title: '性别'},
+                {type: 'numbers'},
+                {field: 'username', title: '账号', align: 'center', sort: true},
+                {field: 'nickName', title: '用户名', align: 'center', sort: true},
+                {field: 'phone', title: '手机号', align: 'center', sort: true},
+                {field: 'sex', title: '性别', align: 'center', sort: true},
                 {
-                    field: 'createTime', sort: true, align: 'center', templet: function (d) {
+                    field: 'createTime', title: '创建时间', templet: function (d) {
                         return util.toDateString(d.createTime);
-                    }, title: '创建时间'
+                    }, align: 'center', sort: true
                 },
                 {
-                    field: 'state', align: 'center', sort: true, templet: function (d) {
+                    field: 'state', title: '状态', templet: function (d) {
                         var strs = [
                             '<span class="text-success">正常</span>',
                             '<span class="text-danger">锁定</span>'
                         ];
                         return strs[d.state];
-                    }, title: '状态'
+                    }, align: 'center', sort: true
                 },
-                {align: 'center', toolbar: '#tableBarTbBas', title: '操作', minWidth: 200}
+                {title: '操作', toolbar: '#tbBasicTbBar', align: 'center', minWidth: 200}
             ]]
         });
 
-        //监听工具条
-        table.on('tool(tableTbBas)', function (obj) {
-            var data = obj.data; //获得当前行数据
-            var layEvent = obj.event; //获得 lay-event 对应的值
+        /* 表格搜索 */
+        form.on('submit(tbBasicTbSearch)', function (data) {
+            insTb.reload({where: data.field, page: {curr: 1}});
+            return false;
+        });
 
-            if (layEvent === 'edit') { // 查看
+        /* 表格工具条点击事件 */
+        table.on('tool(tbBasicTable)', function (obj) {
+            var data = obj.data; // 获得当前行数据
+            if (obj.event === 'edit') { // 修改
                 layer.msg('点击了修改');
-            } else if (layEvent === 'del') { // 删除
+            } else if (obj.event === 'del') { // 删除
                 layer.msg('点击了删除');
-            } else if (layEvent === 'edit2') { // 修改2
-                layer.msg('点击了下拉菜单修改');
-            } else if (layEvent === 'del2') { // 删除2
-                layer.msg('点击了下拉菜单删除');
-            } else if (layEvent === 'lock2') { // 打印2
-                layer.msg('点击了下拉菜单锁定');
+            } else if (obj.event === 'view') { // 查看
+                layer.msg('点击了查看');
+            } else if (obj.event === 'reset') { // 重置密码
+                layer.msg('点击了重置密码');
+            } else if (obj.event === 'lock') { // 锁定
+                layer.msg('点击了锁定');
             }
             dropdown.hideAll();
         });
 
         // 导出excel
-        $('#btnExportTbBas').click(function () {
-            var checkRows = table.checkStatus('tableTbBas');
-            if (checkRows.data.length == 0) {
+        $('#tbBasicExportBtn').click(function () {
+            var checkRows = table.checkStatus('tbBasicTable');
+            if (checkRows.data.length === 0) {
                 layer.msg('请选择要导出的数据', {icon: 2});
             } else {
                 table.exportFile(insTb.config.id, checkRows.data, 'xls');
             }
         });
 
-        // 搜索按钮点击事件
-        form.on('submit(formSubSearchTbBas)', function (data) {
-            insTb.reload({where: data.field}, 'data');
-        });
-
     });
 </script>
 </body>
-
 </html>

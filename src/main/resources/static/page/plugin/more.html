@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>更多扩展插件</title>
     <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css"/>
-    <link rel="stylesheet" href="../../assets/module/admin.css?v=316"/>
+    <link rel="stylesheet" href="../../assets/module/admin.css?v=317"/>
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -46,26 +46,25 @@
         </div>
         <div class="layui-col-xs12 layui-col-sm6">
             <div class="layui-card">
-                <div class="layui-card-header">tooltips</div>
+                <div class="layui-card-header">tooltips文本提示</div>
                 <div class="layui-card-body text-center"
                      style="padding: 46px 0;min-height: 216px;box-sizing: border-box;">
-                    <button lay-tips="Tips Left 提示" lay-direction="1" class="layui-btn layui-btn-primary">&emsp;上&emsp;
+                    <button lay-tips="Tips Top 提示" lay-direction="1" class="layui-btn layui-btn-primary">&emsp;上&emsp;
                     </button>&emsp;
                     <button lay-tips="Tips Right 提示" lay-direction="2" class="layui-btn layui-btn-primary">&emsp;右&emsp;
                     </button>&emsp;
                     <button lay-tips="Tips Bottom 提示" lay-direction="3" class="layui-btn layui-btn-primary">&emsp;下&emsp;
                     </button>&emsp;
-                    <button lay-tips="Tips Top 提示" lay-direction="4" class="layui-btn layui-btn-primary">&emsp;左&emsp;
+                    <button lay-tips="Tips Left 提示" lay-direction="4" class="layui-btn layui-btn-primary">&emsp;左&emsp;
                     </button>
                     <br/><br/><br/>
-                    <button lay-tips="Hello Word!" lay-bg="#F56C6C" class="layui-btn layui-btn-primary">&nbsp;红&nbsp;&nbsp;色&nbsp;
+                    <button lay-tips="Hello Word!" lay-bg="#1890ff" class="layui-btn layui-btn-primary">自定义颜色
                     </button>&emsp;
-                    <button lay-tips="Hello Word!" lay-bg="#67C23A" class="layui-btn layui-btn-primary">&nbsp;绿&nbsp;&nbsp;色&nbsp;
+                    <button class="layui-btn layui-btn-primary" lay-tips="Hello Word!" lay-bg="#803ed9"
+                            lay-bgImg="linear-gradient(to right,#8510FF,#D025C2,#FF8B2D,#F64E2C)">使用渐变色
                     </button>&emsp;
-                    <button lay-tips="<span style='color:#333;'>Hello Word!</span>" lay-bg="#fff"
-                            class="layui-btn layui-btn-primary">&nbsp;白&nbsp;&nbsp;色&nbsp;
-                    </button>&emsp;
-                    <button lay-tips="Hello Word!" lay-bg="rgba(70,76,91,.8)" class="layui-btn layui-btn-primary">&nbsp;透&nbsp;&nbsp;明&nbsp;
+                    <button lay-tips="<img src='../../assets/images/head.jpg' style='width:24px;height:24px;border-radius: 50%;'/>&nbsp;&nbsp;管理员"
+                            class="layui-btn layui-btn-primary">自定义内容
                     </button>
                 </div>
             </div>
@@ -229,7 +228,7 @@
 </div>
 <!-- js部分 -->
 <script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
-<script type="text/javascript" src="../../assets/js/common.js?v=316"></script>
+<script type="text/javascript" src="../../assets/js/common.js?v=317"></script>
 <script>
     layui.use(['admin', 'table', 'element'], function () {
         var $ = layui.jquery;

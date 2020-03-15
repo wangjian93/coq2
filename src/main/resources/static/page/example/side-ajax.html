@@ -7,7 +7,7 @@
     <link href="../../assets/images/favicon.ico" rel="icon">
     <title>EasyWeb管理系统模板</title>
     <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css"/>
-    <link rel="stylesheet" href="../../assets/module/admin.css?v=316"/>
+    <link rel="stylesheet" href="../../assets/module/admin.css?v=317"/>
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -32,7 +32,7 @@
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item" lay-unselect>
                 <a>
-                    <img src="../../assets/images/head.png" class="layui-nav-img">
+                    <img src="../../assets/images/head.jpg" class="layui-nav-img">
                     <cite>管理员</cite>
                 </a>
             </li>
@@ -50,7 +50,7 @@
     <!-- 主体部分 -->
     <div class="layui-body"></div>
     <!-- 底部 -->
-    <div class="layui-footer">Copyright © 2019 EasyWeb All rights reserved.</div>
+    <div class="layui-footer">Copyright © 2020 EasyWeb All rights reserved.</div>
 </div>
 
 <!-- 加载动画 -->
@@ -64,29 +64,24 @@
 <script id="sideNav" type="text/html">
     {{#  layui.each(d, function(index, item){ }}
     <li class="layui-nav-item">
-        <a lay-href="{{item.url}}"><i class="{{item.icon}}"></i>&emsp;<cite>{{item.name}}</cite></a>
-        {{# if(item.subMenus&&item.subMenus.length>0){ }}
-        <dl class="layui-nav-child">
-            {{# layui.each(item.subMenus, function(index, subItem){ }}
-            <dd>
-                <a lay-href="{{ subItem.url }}">{{ subItem.name }}</a>
-                {{# if(subItem.subMenus&&subItem.subMenus.length>0){ }}
-                <dl class="layui-nav-child">
-                    {{# layui.each(subItem.subMenus, function(index, thrItem){ }}
-                    <dd><a lay-href="{{ thrItem.url }}">{{ thrItem.name }}</a></dd>
-                    {{# }); }}
-                </dl>
-                {{# } }}
-            </dd>
-            {{# }); }}
-        </dl>
-        {{# } }}
+        <a lay-href="{{item.url}}"><i class="{{item.icon}}"></i>&emsp;<cite>{{ item.name }}</cite></a>
+        {{# if(item.subMenus&&item.subMenus.length>0){ getSubMenus(item.subMenus); } }}
     </li>
     {{#  }); }}
+    {{# function getSubMenus(subMenus){ }}
+    <dl class="layui-nav-child">
+        {{# layui.each(subMenus, function(index, subItem){ }}
+        <dd>
+            <a lay-href="{{ subItem.url }}">{{ subItem.name }}</a>
+            {{# if(subItem.subMenus&&subItem.subMenus.length>0){ getSubMenus(subItem.subMenus); } }}
+        </dd>
+        {{# }); }}
+    </dl>
+    {{# } }}
 </script>
 <!-- js部分 -->
 <script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
-<script type="text/javascript" src="../../assets/js/common.js?v=316"></script>
+<script type="text/javascript" src="../../assets/js/common.js?v=317"></script>
 <script>
     layui.use(['layer', 'element', 'admin', 'index', 'laytpl', 'element'], function () {
         var $ = layui.jquery;

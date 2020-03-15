@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/coq3?useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    druid:
+      aop-patterns: com.ivo.coq.*
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      database-platform: com.ivo.common.mysql.MySQLDialectUTF8
+
+  jackson:
+    time-zone: GMT+8

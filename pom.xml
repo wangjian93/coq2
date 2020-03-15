@@ -20,8 +20,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
-
-    <h2.version>1.4.197</h2.version>
+    <h2-version>1.4.197</h2-version>
+    <mysql-version>5.1.46</mysql-version>
+    <druid-version>1.1.10</druid-version>
   </properties>
 
   <dependencies>
@@ -36,12 +37,6 @@
       <artifactId>spring-boot-starter-test</artifactId>
     </dependency>
 
-<!--    &lt;!&ndash;thymeleaf视图模板框架&ndash;&gt;-->
-<!--    <dependency>-->
-<!--      <groupId>org.springframework.boot</groupId>-->
-<!--      <artifactId>spring-boot-starter-thymeleaf</artifactId>-->
-<!--    </dependency>-->
-
     <!--spring data jpa持久层框架-->
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -52,9 +47,22 @@
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <version>${h2.version}</version>
+      <version>${h2-version}</version>
     </dependency>
+
+    <!--mysql连接驱动-->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>${mysql-version}</version>
+    </dependency>
+
+    <!-- Druid 连接池 -->
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>druid-spring-boot-starter</artifactId>
+      <version>${druid-version}</version>
+    </dependency>
+
   </dependencies>
-
-
 </project>
