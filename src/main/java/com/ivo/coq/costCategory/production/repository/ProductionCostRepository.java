@@ -16,7 +16,7 @@ public interface ProductionCostRepository extends JpaRepository<ProductionCost, 
      * @param project 机种
      * @return List<ProductionCost>
      */
-    List<ProductionCost> findByProject(String project);
+    List<ProductionCost> findByProjectOrderById(String project);
 
     /**
      * 根据机种、阶段筛选
@@ -24,7 +24,7 @@ public interface ProductionCostRepository extends JpaRepository<ProductionCost, 
      * @param stage 阶段
      * @return List<ProductionCost>
      */
-    List<ProductionCost> findByProjectAndStage(String project, String stage);
+    List<ProductionCost> findByProjectAndStageOrderById(String project, String stage);
 
     /**
      * 根据机种、阶段、阶段次数筛选

@@ -5,8 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>VIP - COQ COST</title>
-    <link rel="stylesheet" href="/assets/libs/layui/css/layui.css"/>
-    <link rel="stylesheet" href="/assets/module/admin.css?v=316" media="all"/>
+    <link rel="stylesheet" href="../../../assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../../assets/module/admin.css?v=316" media="all"/>
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -51,22 +51,22 @@
                         </div>
                     </div>
                     <div class="layui-inline">&emsp;
-                        <button class="layui-btn icon-btn" lay-filter="tableCostSubjectSearch" id="tableCostSubjectSearch" lay-submit>
+                        <button class="layui-btn icon-btn" lay-filter="projectSearch" id="projectSearch" lay-submit>
                             <i class="layui-icon">&#xe615;</i>搜索
                         </button>
                     </div>
                 </div>
             </form>
             <!-- 数据表格 -->
-            <table id="tableCostSubject" class="layui-table"></table>
+            <table id="tableCostSubject" lay-filter="tableCostSubject" class="layui-table"></table>
         </div>
     </div>
 </div>
 
 
 <!-- js部分 -->
-<script type="text/javascript" src="/assets/libs/layui/layui.js"></script>
-<script type="text/javascript" src="/assets/js/common.js?v=316"></script>
+<script type="text/javascript" src="../../../assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="../../../assets/js/common.js?v=316"></script>
 <script>
     layui.use(['table', 'notice', 'form', 'layer', 'notice'], function () {
         var table = layui.table;
@@ -75,7 +75,7 @@
         var layer = layui.layer;
         var notice = layui.notice;
 
-        /* 表格单元格中数据转化，'-1'转为'-'，'null'转为'' */
+        /* 表格单元格中数据转化 ('-1'转为'-'，'null'转为'') */
         var cellConvert = function(d) {
             if(d < 0) {
                 return '-';
@@ -93,7 +93,7 @@
         };
 
         // 渲染表格
-        var tableCostSubject = table.render({
+        table.render({
             elem: '#tableCostSubject',
             data: [
                 {"costType": "预防成本", "DESIGN": null, "EVT": null, "DVT": null, "NPRB": null, "PVT": null},
@@ -139,17 +139,17 @@
         });
 
         /* 表格搜索 */
-        form.on('submit(tableCostSubjectSearch)', function (data) {
+        form.on('submit(projectSearch)', function (data) {
             if(!data.field.project) {
                 notice.msg('请选择机种', {icon: 5});
                 return false;
             }
-            var url = '/coq/costSubjects/convert/' + data.field.project;
+            var URL_CostSubjectConvert = '/coq/report/costSubject/' + data.field.project;
             var index = layer.load(1);
-            $.get(url, function(data){
-                if(data.code == 0) {
+            $.get(URL_CostSubjectConvert, function(data){
+                if(data.code === 0) {
                     layer.close(index);
-                    tableCostSubject.reload({data: data.data});
+                    table.reload('tableCostSubject', {data: data.data});
                 } else {
                     layer.close(index);
                     notice.msg(data.msg, {icon: 2});
@@ -158,16 +158,14 @@
             return false;
         });
 
-        /* 机种类型下拉框 */
-        /* 机种尺寸下拉框 */
-        /* 机种选择下拉框 */
+        /* 机种、尺寸、类型下拉框联动 */
         (function() {
             $.get('/coq/projects', function(data){
-                if(data.code == 0) {
+                if(data.code === 0) {
                     var types = [];
                     $('#type').empty();
                     $.each(data.data, function (index, item) {
-                        if(types.indexOf(item.type) == -1) {
+                        if(types.indexOf(item.type) === -1) {
                             $('#type').append(new Option(item.type, item.type));
                             types.push(item.type);
                         }
@@ -184,11 +182,11 @@
             var type = $("#type").val();
             var url = '/coq/projects/' + type;
             $.get(url, function(data) {
-                if(data.code == 0) {
+                if(data.code === 0) {
                     var sizes = [];
                     $('#size').empty();
                     $.each(data.data, function (index, item) {
-                        if(sizes.indexOf(item.size) == -1) {
+                        if(sizes.indexOf(item.size) === -1) {
                             $('#size').append(new Option(item.size, item.size));
                             sizes.push(item.size);
                         }
@@ -206,17 +204,17 @@
             var size = $("#size").val();
             var url = '/coq/projects/' + type + '/' + size;
             $.get(url, function(data) {
-                if(data.code == 0) {
+                if(data.code === 0) {
                     var projects = [];
                     $('#project').empty();
                     $.each(data.data, function (index, item) {
-                        if(projects.indexOf(item.project) == -1) {
+                        if(projects.indexOf(item.project) === -1) {
                             $('#project').append(new Option(item.project, item.project));
                             projects.push(item.project);
                         }
                     });
                     form.render('select');
-                    $("#tableCostSubjectSearch").click();
+                    $("button[lay-filter=projectSearch]").click();
                 } else {
                     notice.msg(data.msg, {icon: 2});
                 }
@@ -224,6 +222,7 @@
 
         };
 
+        /* 机种、尺寸、类型下拉框选择监听 */
         form.on('select(type)', function() {
             sizeSelectRender();
         });
@@ -231,7 +230,7 @@
             projectSelectRender();
         });
         form.on('select(project)', function() {
-            $("#tableCostSubjectSearch").click();
+            $("button[lay-filter=projectSearch]").click();
         });
     });
 </script>

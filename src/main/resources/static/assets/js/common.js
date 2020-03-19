@@ -16,7 +16,8 @@ layui.config({
     tagsInput: 'tagsInput/tagsInput',
     citypicker: 'city-picker/city-picker',
     introJs: 'introJs/introJs',
-    zTree: 'zTree/zTree'
+    zTree: 'zTree/zTree',
+    xmSelect: 'xm-select/xm-select'
 }).use(['layer', 'admin'], function () {
     var $ = layui.jquery;
     var layer = layui.layer;

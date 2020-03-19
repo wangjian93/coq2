@@ -16,7 +16,7 @@ public interface MaterialCostDetailRepository extends JpaRepository<MaterialCost
      * @param project 机种
      * @return List
      */
-    List<MaterialCostDetail> findByProject(String project);
+    List<MaterialCostDetail> findByProjectOrderById(String project);
 
     /**
      * 根据机种、阶段、次数筛选
@@ -25,5 +25,5 @@ public interface MaterialCostDetailRepository extends JpaRepository<MaterialCost
      * @param time 次数
      * @return List
      */
-    List<MaterialCostDetail> findByProjectAndStageAndTime(String project, String stage, Integer time);
+    List<MaterialCostDetail> findByProjectAndStageAndTimeOrderById(String project, String stage, Integer time);
 }

@@ -16,9 +16,9 @@ public interface ReworkScrapCostRepository extends JpaRepository<ReworkScrapCost
      * @param project 机种
      * @return List<ReworkScrapCost>
      */
-    List<ReworkScrapCost> findByProject(String project);
+    List<ReworkScrapCost> findByProjectOrderById(String project);
 
-    List<ReworkScrapCost> findByProjectAndStage(String project, String stage);
+    List<ReworkScrapCost> findByProjectAndStageOrderById(String project, String stage);
 
     /**
      * 根据机种、阶段、阶段次数筛选

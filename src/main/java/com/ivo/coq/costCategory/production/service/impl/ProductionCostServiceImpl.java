@@ -34,7 +34,7 @@ public class ProductionCostServiceImpl implements ProductionCostService {
 
     @Override
     public List<ProductionCost> getProductionCosts(String project) {
-        return repository.findByProject(project);
+        return repository.findByProjectOrderById(project);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ProductionCostServiceImpl implements ProductionCostService {
 
     @Override
     public List<ProductionCost> getProductionCosts(String project, String stage) {
-        return repository.findByProjectAndStage(project, stage);
+        return repository.findByProjectAndStageOrderById(project, stage);
     }
 
     @Override

@@ -30,11 +30,11 @@ public class ProjectScheduleServiceImpl implements ProjectScheduleService {
 
     @Override
     public Map<String, List<ProjectSchedule>> getSchedules(String project) {
-        List<ProjectSchedule> projectScheduleList = repository.findByProject(project);
+        List<ProjectSchedule> projectScheduleList = repository.findByProjectOrderById(project);
         Map<String, List<ProjectSchedule>> map = new HashMap<>();
         for(ProjectSchedule projectSchedule : projectScheduleList) {
             if(map.get(projectSchedule.getVersion()) == null) {
-                map.put(projectSchedule.getVersion(), new ArrayList<ProjectSchedule>());
+                map.put(projectSchedule.getVersion(), new ArrayList<>());
             }
             map.get(projectSchedule.getVersion()).add(projectSchedule);
         }

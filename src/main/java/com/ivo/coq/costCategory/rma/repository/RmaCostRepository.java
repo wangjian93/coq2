@@ -16,7 +16,7 @@ public interface RmaCostRepository extends JpaRepository<RmaCost, Long> {
      * @param project 机种
      * @return List<RmaCost>
      */
-    List<RmaCost> findByProject(String project);
+    List<RmaCost> findByProjectOrderById(String project);
 
     /**
      * 根据机种、阶段筛选
@@ -24,7 +24,7 @@ public interface RmaCostRepository extends JpaRepository<RmaCost, Long> {
      * @param stage 阶段
      * @return List<RmaCost>
      */
-    List<RmaCost> findByProjectAndStage(String project, String stage);
+    List<RmaCost> findByProjectAndStageOrderById(String project, String stage);
 
     /**
      * 根据机种、阶段、阶段次数筛选

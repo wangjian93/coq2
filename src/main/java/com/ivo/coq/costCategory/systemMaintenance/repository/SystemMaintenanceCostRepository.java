@@ -16,7 +16,7 @@ public interface SystemMaintenanceCostRepository extends JpaRepository<SystemMai
      * @param project 机种
      * @return  List<SystemMaintenanceCost>
      */
-    List<SystemMaintenanceCost> findByProject(String project);
+    List<SystemMaintenanceCost> findByProjectOrderById(String project);
 
     /**
      * 根据机种、阶段、阶段次数筛选

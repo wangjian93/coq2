@@ -17,7 +17,7 @@ public interface ProjectScheduleRepository extends JpaRepository<ProjectSchedule
      * @param project 机种
      * @return List<ProjectSchedule>
      */
-    List<ProjectSchedule> findByProject(String project);
+    List<ProjectSchedule> findByProjectOrderById(String project);
 
     /**
      * 根据机种、版本筛选
@@ -25,5 +25,5 @@ public interface ProjectScheduleRepository extends JpaRepository<ProjectSchedule
      * @param version 版本
      * @return List<ProjectSchedule>
      */
-    List<ProjectSchedule> findByProjectAndVersion(String project, String version);
+    List<ProjectSchedule> findByProjectAndVersionOrderById(String project, String version);
 }

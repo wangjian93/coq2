@@ -24,11 +24,11 @@ public class OutsourcingThinningCostDetailServiceImpl implements OutsourcingThin
 
     @Override
     public List<OutsourcingThinningCostDetail> getOutsourcingThinningCostDetails(String project) {
-        return repository.findByProject(project);
+        return repository.findByProjectOrderById(project);
     }
 
     @Override
     public List<OutsourcingThinningCostDetail> getOutsourcingThinningCostDetails(String project, String stage, Integer time) {
-        return repository.findByProjectAndStageAndTime(project, stage, time);
+        return repository.findByProjectAndStageAndTimeOrderById(project, stage, time);
     }
 }

@@ -34,7 +34,7 @@ public class CostServiceImpl implements CostService {
 
     @Override
     public Cost getCost(String project) {
-        return repository.findFirstByProject(project);
+        return repository.findFirstByProjectOrderById(project);
     }
 
     @Override

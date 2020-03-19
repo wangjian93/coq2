@@ -178,7 +178,9 @@ public class CoqController {
     public PageResult getCost(@PathVariable("project") String project) {
         Cost cost = costService.getCost(project);
         List<Cost> list = new ArrayList<>();
-        list.add(cost);
+        if(cost != null) {
+            list.add(cost);
+        }
         return ResultUtil.successPage(list);
     }
 
@@ -191,39 +193,6 @@ public class CoqController {
     public PageResult getCostSubjects(@PathVariable("project") String project) {
         List<CostSubject> costSubjectList = costSubjectService.getCostSubjects(project);
         return ResultUtil.successPage(costSubjectList);
-    }
-
-    /**
-     * 获取机种成本二级科目，数据格式改变为行专列
-     * @param project 机种
-     * @return PageResult
-     */
-    @GetMapping("/costSubjects/convert/{project}")
-    public PageResult getCostSubjectsConvert(@PathVariable("project") String project) {
-        List<CostSubject> costSubjectList = costSubjectService.getCostSubjects(project);
-        Map<String, Map> map = new HashMap<>();
-        map.put("预防成本", new HashMap());
-        map.get("预防成本").put("costType", "预防成本");
-        map.put("鉴定成本", new HashMap());
-        map.get("鉴定成本").put("costType", "鉴定成本");
-        map.put("内损成本", new HashMap());
-        map.get("内损成本").put("costType", "内损成本");
-        map.put("外损成本", new HashMap());
-        map.get("外损成本").put("costType", "外损成本");
-        for(CostSubject costSubject : costSubjectList) {
-            map.get("预防成本").put(costSubject.getStage(), costSubject.getPreventionCost());
-            map.get("鉴定成本").put(costSubject.getStage(), costSubject.getIdentityCost());
-            map.get("内损成本").put(costSubject.getStage(), costSubject.getInLossCost());
-            map.get("外损成本").put(costSubject.getStage(), costSubject.getOutLossCost());
-        }
-
-        List<Map> mapList = new ArrayList<>();
-        mapList.add(map.get("预防成本"));
-        mapList.add(map.get("鉴定成本"));
-        mapList.add(map.get("内损成本"));
-        mapList.add(map.get("外损成本"));
-
-        return ResultUtil.successPage(mapList);
     }
 
     /**

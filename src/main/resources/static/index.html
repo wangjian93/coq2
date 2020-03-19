@@ -68,171 +68,44 @@
         <div class="layui-side-scroll">
             <ul class="layui-nav layui-nav-tree arrow2" lay-filter="admin-side-nav" lay-shrink="all">
                 <li class="layui-nav-item">
-                    <a><i class="layui-icon layui-icon-home"></i>&emsp;<cite>Dashboard</cite></a>
-                    <dl class="layui-nav-child">
-                        <dd><a lay-href="page/console/console.html">控制台</a></dd>
-                        <dd><a lay-href="page/console/workplace.html">工作台</a></dd>
-                        <dd><a lay-href="page/console/dashboard.html">分析页</a></dd>
-                    </dl>
+                    <a lay-href="page/coq/Cost.html"><i class="layui-icon layui-icon-unlink"></i>&emsp;<cite>机种成本</cite></a>
                 </li>
                 <li class="layui-nav-item">
-                    <a><i class="layui-icon layui-icon-set"></i>&emsp;<cite>系统管理</cite></a>
-                    <dl class="layui-nav-child">
-                        <dd><a lay-href="page/system/user.html">用户管理</a></dd>
-                        <dd><a lay-href="page/system/role.html">角色管理</a></dd>
-                        <dd><a lay-href="page/system/authorities.html">权限管理</a></dd>
-                        <dd><a lay-href="page/system/dictionary.html">字典管理</a></dd>
-                        <dd><a lay-href="page/system/organization.html">机构管理</a></dd>
-                        <dd><a lay-href="page/system/login-record.html">登录日志</a></dd>
-                    </dl>
+                    <a lay-href="page/coq/Schedule.html"><i class="layui-icon layui-icon-unlink"></i>&emsp;<cite>机种进度</cite></a>
                 </li>
                 <li class="layui-nav-item">
-                    <a><i class="layui-icon layui-icon-template"></i>&emsp;<cite>模板页面</cite></a>
-                    <dl class="layui-nav-child">
-                        <dd>
-                            <a>表单页</a>
-                            <dl class="layui-nav-child">
-                                <dd><a lay-href="page/template/form/form-basic.html">基础表单</a></dd>
-                                <dd><a lay-href="page/template/form/form-advance.html">复杂表单</a></dd>
-                                <dd><a lay-href="page/template/form/form-step.html">分步表单</a></dd>
-                            </dl>
-                        </dd>
-                        <dd>
-                            <a>表格页</a>
-                            <dl class="layui-nav-child">
-                                <dd><a lay-href="page/template/table/table-basic.html">数据表格</a></dd>
-                                <dd><a lay-href="page/template/table/table-advance.html">复杂查询</a></dd>
-                                <dd><a lay-href="page/template/table/table-img.html">表格缩略图</a></dd>
-                            </dl>
-                        </dd>
-                        <dd>
-                            <a>错误页</a>
-                            <dl class="layui-nav-child">
-                                <dd><a lay-href="page/template/error/error-500.html">500</a></dd>
-                                <dd><a lay-href="page/template/error/error-404.html">404</a></dd>
-                                <dd><a lay-href="page/template/error/error-403.html">403</a></dd>
-                            </dl>
-                        </dd>
-                        <dd><a lay-href="page/template/user-info.html">个人中心</a></dd>
-                        <dd><a href="page/template/login/login.html" target="_blank">登录页面</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item">
-                    <a><i class="layui-icon layui-icon-component"></i>&emsp;<cite>扩展组件</cite></a>
-                    <dl class="layui-nav-child">
-                        <dd>
-                            <a>常用组件</a>
-                            <dl class="layui-nav-child">
-                                <dd><a lay-href="page/plugin/basic/dialog.html">弹窗扩展</a></dd>
-                                <dd><a lay-href="page/plugin/basic/dropdown.html">下拉菜单</a></dd>
-                                <dd><a lay-href="page/plugin/basic/notice.html">消息通知</a></dd>
-                                <dd><a lay-href="page/plugin/basic/tagsInput.html">标签输入</a></dd>
-                                <dd><a lay-href="page/plugin/basic/cascader.html">级联选择器</a></dd>
-                                <dd><a lay-href="page/plugin/basic/steps.html">步骤条</a></dd>
-                            </dl>
-                        </dd>
-                        <dd>
-                            <a>进阶组件</a>
-                            <dl class="layui-nav-child">
-                                <dd><a lay-href="page/plugin/advance/printer.html">打印插件</a></dd>
-                                <dd><a lay-href="page/plugin/advance/split.html">分割面板</a></dd>
-                                <dd><a lay-href="page/plugin/advance/formX.html">表单扩展</a></dd>
-                                <dd><a lay-href="page/plugin/advance/tableX.html">表格扩展</a></dd>
-                                <dd><a lay-href="page/plugin/advance/dataGrid.html">数据列表</a></dd>
-                                <dd><a lay-href="page/plugin/advance/contextMenu.html">鼠标右键菜单</a></dd>
-                            </dl>
-                        </dd>
-                        <dd>
-                            <a>开源组件</a>
-                            <dl class="layui-nav-child">
-                                <dd><a lay-href="page/plugin/other/circleProgress.html">圆形进度条</a></dd>
-                                <dd><a lay-href="page/plugin/other/editor.html">富文本编辑器</a></dd>
-                                <dd><a lay-href="page/plugin/other/mousewheel.html">鼠标滚轮监听</a></dd>
-                                <dd><a lay-href="page/plugin/other/other.html">其他开源组件</a></dd>
-                            </dl>
-                        </dd>
-                        <dd><a lay-href="page/plugin/more.html">更多扩展</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item">
-                    <a><i class="layui-icon layui-icon-app"></i>&emsp;<cite>经典实例</cite></a>
-                    <dl class="layui-nav-child">
-                        <dd><a lay-href="page/example/dialog.html">弹窗实例</a></dd>
-                        <dd><a lay-href="page/example/course.html">课程管理</a></dd>
-                        <dd><a lay-href="page/example/calendar.html">排课管理</a></dd>
-                        <dd><a lay-href="page/example/question.html">添加试题</a></dd>
-                        <dd><a lay-href="page/example/file.html">文件管理</a></dd>
-                        <dd><a lay-href="page/example/table-crud.html">表格CRUD</a></dd>
-                        <dd><a href="page/example/side-more.html" target="_blank">多系统模式</a></dd>
-                        <dd><a href="page/example/side-ajax.html" target="_blank">Ajax侧边栏</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item">
-                    <a><i class="layui-icon layui-icon-release"></i>&emsp;<cite>LayUI组件</cite></a>
-                    <dl class="layui-nav-child">
-                        <dd><a lay-href="page/plugin/other/layui.html">组件演示</a></dd>
-                        <dd><a lay-href="https://www.layui.com/doc/element/button.html#use">layui文档</a></dd>
-                        <dd><a lay-href="https://layer.layui.com/">layer弹窗组件</a></dd>
-                        <dd><a lay-href="https://www.layui.com/laydate/">laydate日期组件</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item">
-                    <a><i class="layui-icon layui-icon-unlink"></i>&emsp;<cite>多级菜单</cite></a>
-                    <dl class="layui-nav-child">
-                        <dd><a>二级菜单</a></dd>
-                        <dd>
-                            <a>二级菜单</a>
-                            <dl class="layui-nav-child">
-                                <dd><a>三级菜单</a></dd>
-                                <dd>
-                                    <a>三级菜单</a>
-                                    <dl class="layui-nav-child">
-                                        <dd><a>四级菜单</a></dd>
-                                        <dd>
-                                            <a>四级菜单</a>
-                                            <dl class="layui-nav-child">
-                                                <dd><a>五级菜单</a></dd>
-                                                <dd>
-                                                    <a lay-href="https://baidu.com">百度一下</a>
-                                                </dd>
-                                            </dl>
-                                        </dd>
-                                    </dl>
-                                </dd>
-                            </dl>
-                        </dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item">
-                    <a lay-href="//baidu.com"><i class="layui-icon layui-icon-unlink"></i>&emsp;<cite>一级菜单</cite></a>
-                </li>
-                <li class="layui-nav-item">
-                    <a lay-href="page/coq/show.html"><i class="layui-icon layui-icon-unlink"></i>&emsp;<cite>质量成本展示页面</cite></a>
-                </li>
-                <li class="layui-nav-item">
-                    <a lay-href="page/coq/project.html"><i class="layui-icon layui-icon-unlink"></i>&emsp;<cite>机种信息</cite></a>
+                    <a lay-href="page/coq/EngineeringExperiment.html"><i class="layui-icon layui-icon-unlink"></i>&emsp;<cite>机种实验信息</cite></a>
                 </li>
                 <li class="layui-nav-item">
                     <a><i class="layui-icon layui-icon-app"></i>&emsp;<cite>成本分类</cite></a>
                     <dl class="layui-nav-child">
-                        <dd><a lay-href="page/coq/costCategory/directMaterialCost.html">1.直接材料费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/jigCost.html">2.治工具费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/verificationCost.html">3.验证费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/productionCost.html">4.生产费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/reworkScrapCost.html">5.重工/报废费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/salaryCost.html">6.人员薪资费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/obaCost.html">7.OBA费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/rmaCost.html">8.RBA费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/travelCost.html">9.差旅费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/systemMaintenanceCost.html">10.系统维护折旧费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/compensation.html">11.赔偿费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/directMaterialCost.html">直接材料费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/jigCost.html">治工具费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/verificationCost.html">验证费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/productionCost.html">生产费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/reworkScrapCost.html">重工/报废费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/salaryCost.html">人员薪资费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/obaCost.html">OBA费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/rmaCost.html">RBA费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/travelCost.html">差旅费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/systemMaintenanceCost.html">系统维护折旧费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/compensation.html">赔偿费用</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item">
                     <a><i class="layui-icon layui-icon-app"></i>&emsp;<cite>报表</cite></a>
                     <dl class="layui-nav-child">
-                        <dd><a lay-href="page/coq/report/VIP-COQ-COST.html">VIP - COQ COST</a></dd>
+                        <dd><a lay-href="page/coq/report/VIP-COQ-COST.html">VIP-COQ COST</a></dd>
+                        <dd><a lay-href="page/coq/report/NEW-TOTAL-COST.html">新产品-TOTAL COST</a></dd>
+                        <dd><a lay-href="page/coq/report/NEW-TOTAL-RATIO.html">新产品-TOTAL RATIO</a></dd>
+                        <dd><a lay-href="page/coq/report/NEW-SIZE-PROJECT.html">新产品-尺寸 机种</a></dd>
+                        <dd><a lay-href="page/coq/report/NEW-POLIT-RUN.html">新产品-Polit Run</a></dd>
+                        <dd><a lay-href="page/coq/report/POLIT-RUN-TIME.html">Polit Run次数</a></dd>
+
                     </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a lay-href="page/coq/computationalLogic.html"><i class="layui-icon layui-icon-unlink"></i>&emsp;<cite>成本计算逻辑说明</cite></a>
                 </li>
             </ul>
         </div>
@@ -264,7 +137,7 @@
 
         // 默认加载主页
         index.loadHome({
-            menuPath: 'page/console/console.html',
+            menuPath: 'page/Home.html',
             menuName: '<i class="layui-icon layui-icon-home"></i>'
         });
 

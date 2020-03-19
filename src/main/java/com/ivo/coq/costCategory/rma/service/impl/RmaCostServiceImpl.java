@@ -34,12 +34,12 @@ public class RmaCostServiceImpl implements RmaCostService {
 
     @Override
     public List<RmaCost> getRmaCosts(String project) {
-        return repository.findByProject(project);
+        return repository.findByProjectOrderById(project);
     }
 
     @Override
     public List<RmaCost> getRmaCosts(String project, String stage) {
-        return repository.findByProjectAndStage(project, stage);
+        return repository.findByProjectAndStageOrderById(project, stage);
     }
 
     @Override

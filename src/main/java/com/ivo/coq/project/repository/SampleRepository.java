@@ -16,5 +16,5 @@ public interface SampleRepository extends JpaRepository<Sample, Long> {
      * @param project 机种
      * @return List<Sample>
      */
-    List<Sample> findByProject(String project);
+    List<Sample> findByProjectOrderById(String project);
 }

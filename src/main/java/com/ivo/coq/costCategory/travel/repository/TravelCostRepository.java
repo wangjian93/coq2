@@ -16,7 +16,7 @@ public interface TravelCostRepository extends JpaRepository<TravelCost, Long> {
      * @param project 机种
      * @return List<TravelCost>
      */
-    List<TravelCost> findByProject(String project);
+    List<TravelCost> findByProjectOrderById(String project);
 
     /**
      * 根据机种、阶段、阶段次数筛选

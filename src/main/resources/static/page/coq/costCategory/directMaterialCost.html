@@ -57,14 +57,17 @@
                     </div>
                 </div>
             </form>
+            <div class="layui-row">
+                <span class="layui-badge layui-badge-green pull-right">单位：RMB</span>
+            </div>
             <!-- 数据表格 -->
             <table id="tableDirectMaterialCost" lay-filter="tableDirectMaterialCost"></table>
 
 
             <div class="layui-card">
                 <div class="layui-card-header">
-                    <i class="layui-icon layui-icon-tabs"></i>
-                    <span>材料费用部分详细</span>
+                    <i class="layui-icon layui-icon-table"></i>
+                    <span>厂内直材费用部分详细</span>
                 </div>
                 <div class="layui-card-body">
                     <table id="tableMaterialCostDetail" lay-filter="tableMaterialCostDetail"></table>
@@ -73,7 +76,7 @@
 
             <div class="layui-card">
                 <div class="layui-card-header">
-                    <i class="layui-icon layui-icon-tabs"></i>
+                    <i class="layui-icon layui-icon-table"></i>
                     <span>外包薄化部分费用详情</span>
                 </div>
                 <div class="layui-card-body">
@@ -104,17 +107,17 @@
                 {type: 'numbers'},
                 {field: 'stage', title: '阶段', align: 'center'},
                 {field: 'time', title: '次数', align: 'center'},
-                {field: 'directAmount', title: 'BM部分', align: 'center',
+                {title: '厂内直材费用', align: 'center',
                     templet: function(d) {
                         return cellConvert(d.directAmount);
                     }
                 },
-                {field: 'outsourcingThinningAmount', title: '外包薄化部分', align: 'center',
+                {title: '外包薄化部分', align: 'center',
                     templet: function(d) {
                         return cellConvert(d.outsourcingThinningAmount);
                     }
                 },
-                {field: 'amount', title: '直接材料费用', align: 'center',
+                {title: '直接材料费用', align: 'center',
                     templet: function(d) {
                         return cellConvert(d.amount);
                     }
@@ -169,7 +172,7 @@
                 }
             ]],
             done: function () {
-                tableX.merges('tableMaterialCostDetail', [1,2,3,4,5], ['engineeringExperiment.sample',
+                tableX.merges('tableMaterialCostDetail', [1,2,3,4,5,6], ['engineeringExperiment.sample',
                     'engineeringExperiment.sample','engineeringExperiment.sample','engineeringExperiment.sample'
                 ,'engineeringExperiment.sample']);
             },
@@ -212,6 +215,10 @@
 
         /* 表格搜索 */
         form.on('submit(projectSearch)', function (data) {
+            if(!data.field.project) {
+                notice.msg('请选择机种', {icon: 5});
+                return false;
+            }
             var URL_DirectMaterialCost = '/coq/category/directMaterialCost/'  + data.field.project;
             var URL_MaterialCostDetail = '/coq/category/materialCostDetail/'  + data.field.project;
             var URL_OutsourcingThinningCostDetail = '/coq/category/outsourcingThinningCostDetail/'  + data.field.project;
@@ -229,8 +236,10 @@
                 return '-';
             } else if(d == null) {
                 return '';
-            } else {
+            } else if(typeof d == 'number') {
                 return numFormat(d);
+            } else {
+                return d;
             }
         };
 

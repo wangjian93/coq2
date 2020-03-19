@@ -34,7 +34,7 @@ public class SalaryCostServiceImpl implements SalaryCostService {
 
     @Override
     public List<SalaryCost> getSalaryCosts(String project) {
-        return repository.findByProject(project);
+        return repository.findByProjectOrderById(project);
     }
 
     @Override

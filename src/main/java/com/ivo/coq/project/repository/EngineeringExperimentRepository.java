@@ -16,5 +16,5 @@ public interface EngineeringExperimentRepository extends JpaRepository<Engineeri
      * @param project 机种
      * @return List<EngineeringExperiment>
      */
-    List<EngineeringExperiment> findByProject(String project);
+    List<EngineeringExperiment> findByProjectOrderById(String project);
 }

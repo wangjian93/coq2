@@ -16,5 +16,5 @@ public interface ProjectStageRepository extends JpaRepository<ProjectStage, Long
      * @param project 机种
      * @return List<ProjectStage>
      */
-    List<ProjectStage> findByProject(String project);
+    List<ProjectStage> findByProjectOrderById(String project);
 }

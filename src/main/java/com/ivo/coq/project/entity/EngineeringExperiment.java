@@ -3,7 +3,6 @@ package com.ivo.coq.project.entity;
 import com.ivo.common.model.AutoIncreaseEntityModel;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 

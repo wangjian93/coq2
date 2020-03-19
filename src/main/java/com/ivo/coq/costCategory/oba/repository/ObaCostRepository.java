@@ -16,7 +16,7 @@ public interface ObaCostRepository extends JpaRepository<ObaCost, Long> {
      * @param project 机种
      * @return List<ObaCost>
      */
-    List<ObaCost> findByProject(String project);
+    List<ObaCost> findByProjectOrderById(String project);
 
     /**
      * 根据机种、阶段筛选
@@ -24,7 +24,7 @@ public interface ObaCostRepository extends JpaRepository<ObaCost, Long> {
      * @param stage 阶段
      * @return List<ObaCost>
      */
-    List<ObaCost> findByProjectAndStage(String project, String stage);
+    List<ObaCost> findByProjectAndStageOrderById(String project, String stage);
 
     /**
      * 根据机种、阶段、阶段次数筛选

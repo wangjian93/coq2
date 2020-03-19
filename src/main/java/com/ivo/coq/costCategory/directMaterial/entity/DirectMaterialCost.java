@@ -5,7 +5,7 @@ import com.ivo.common.model.AutoIncreaseEntityModel;
 import javax.persistence.Entity;
 
 /**
- * 直接材料费用
+ * 厂内直材费用
  * @author wj
  * @version 1.0
  */

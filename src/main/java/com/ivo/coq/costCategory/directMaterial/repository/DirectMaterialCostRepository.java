@@ -16,7 +16,7 @@ public interface DirectMaterialCostRepository extends JpaRepository<DirectMateri
      * @param project 机种
      * @return List<DirectMaterialCost>
      */
-    List<DirectMaterialCost> findByProject(String project);
+    List<DirectMaterialCost> findByProjectOrderById(String project);
 
     /**
      * 根据接种、阶段筛选
@@ -24,7 +24,7 @@ public interface DirectMaterialCostRepository extends JpaRepository<DirectMateri
      * @param stage 阶段
      * @return List<DirectMaterialCost>
      */
-    List<DirectMaterialCost> findByProjectAndStage(String project, String stage);
+    List<DirectMaterialCost> findByProjectAndStageOrderById(String project, String stage);
 
     /**
      * 根据机种、阶段、阶段次数筛选

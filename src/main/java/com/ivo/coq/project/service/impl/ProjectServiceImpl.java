@@ -35,17 +35,17 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<Project> getProjectsByType(String type) {
-        return projectRepository.findByType(type);
+        return projectRepository.findByTypeOrderById(type);
     }
 
     @Override
     public List<Project> getProjectsByTypeAndSize(String type, String size) {
-        return projectRepository.findByTypeAndSize(type, size);
+        return projectRepository.findByTypeAndSizeOrderById(type, size);
     }
 
     @Override
     public List<ProjectStage> getProjectStages(String project) {
-        return stageRepository.findByProject(project);
+        return stageRepository.findByProjectOrderById(project);
     }
 
     @Override

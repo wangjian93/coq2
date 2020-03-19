@@ -35,12 +35,12 @@ public class CompensationCostServiceImpl implements CompensationCostSerivce {
 
     @Override
     public List<CompensationCost> getCompensationCosts(String project) {
-        return repository.findByProject(project);
+        return repository.findByProjectOrderById(project);
     }
 
     @Override
     public List<CompensationCost> getCompensationCosts(String project, String stage) {
-        return repository.findByProjectAndStage(project, stage);
+        return repository.findByProjectAndStageOrderById(project, stage);
     }
 
     @Override
@@ -63,6 +63,8 @@ public class CompensationCostServiceImpl implements CompensationCostSerivce {
                 compensationCost.setAmount(-1D);
             }
 
+            // 目前不计算赔偿费用
+            compensationCost.setAmount(-1D);
             compensationCostList.add(compensationCost);
         }
 

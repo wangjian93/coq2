@@ -34,12 +34,12 @@ public class VerificationCostServiceImpl implements VerificationCostService {
 
     @Override
     public List<VerificationCost> getVerificationCosts(String project) {
-        return repository.findByProject(project);
+        return repository.findByProjectOrderById(project);
     }
 
     @Override
     public List<VerificationCost> getVerificationCosts(String project, String stage) {
-        return repository.findByProjectAndStage(project, stage);
+        return repository.findByProjectAndStageOrderById(project, stage);
     }
 
     @Override

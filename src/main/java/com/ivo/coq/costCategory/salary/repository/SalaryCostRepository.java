@@ -16,7 +16,7 @@ public interface SalaryCostRepository extends JpaRepository<SalaryCost, Long> {
      * @param project 机种
      * @return List<SalaryCost>
      */
-    List<SalaryCost> findByProject(String project);
+    List<SalaryCost> findByProjectOrderById(String project);
 
     /**
      * 根据机种、阶段、阶段次数筛选

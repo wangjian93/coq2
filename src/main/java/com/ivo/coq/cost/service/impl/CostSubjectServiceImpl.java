@@ -33,7 +33,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wj
@@ -88,17 +90,22 @@ public class CostSubjectServiceImpl implements CostSubjectService {
 
     @Override
     public List<CostSubject> getCostSubjects(String project) {
-        return repository.findByProject(project);
+        return repository.findByProjectOrderById(project);
     }
 
     @Override
     public void createCostSubject(String project) {
         logger.info("创建 CostSubject >>" + project);
-        List<String> stageList = projectService.getStages(project);
         List<CostSubject> costSubjectList = new ArrayList<>();
-        for(String stage : stageList) {
-            CostSubject costSubject = new CostSubject(project, stage);
+        costSubjectList.add(new CostSubject(project, "NPRB"));
+        costSubjectList.add(new CostSubject(project, "DESIGN"));
+        costSubjectList.add(new CostSubject(project, "EVT"));
+        costSubjectList.add(new CostSubject(project, "DVT"));
+        costSubjectList.add(new CostSubject(project, "PVT"));
+        costSubjectList.add(new CostSubject(project, "MP"));
+        for(CostSubject costSubject : costSubjectList) {
             // 1. NPRB: 预防成本、内损成本
+            String stage = costSubject.getStage();
             if(stage.equals("NPRB")) {
                 costSubject.setIdentityCost(-1D);
                 costSubject.setOutLossCost(-1D);
@@ -114,8 +121,6 @@ public class CostSubjectServiceImpl implements CostSubjectService {
                 costSubject.setPreventionCost(-1D);
                 costSubject.setIdentityCost(-1D);
             }
-
-            costSubjectList.add(costSubject);
         }
         repository.saveAll(costSubjectList);
     }
@@ -314,5 +319,32 @@ public class CostSubjectServiceImpl implements CostSubjectService {
 
         costSubject.setInLossCost(inLossCost);
         costSubject.setOutLossCost(outLossCost);
+    }
+
+    @Override
+    public List<Map> getCostSubjectsConvertMap(String project) {
+        List<CostSubject> costSubjectList = repository.findByProjectOrderById(project);
+        Map<String, Map<String, Object>> map = new HashMap<>();
+        map.put("预防成本", new HashMap<>());
+        map.get("预防成本").put("costType", "预防成本");
+        map.put("鉴定成本", new HashMap<>());
+        map.get("鉴定成本").put("costType", "鉴定成本");
+        map.put("内损成本", new HashMap<>());
+        map.get("内损成本").put("costType", "内损成本");
+        map.put("外损成本", new HashMap<>());
+        map.get("外损成本").put("costType", "外损成本");
+        for(CostSubject costSubject : costSubjectList) {
+            map.get("预防成本").put(costSubject.getStage(), costSubject.getPreventionCost());
+            map.get("鉴定成本").put(costSubject.getStage(), costSubject.getIdentityCost());
+            map.get("内损成本").put(costSubject.getStage(), costSubject.getInLossCost());
+            map.get("外损成本").put(costSubject.getStage(), costSubject.getOutLossCost());
+        }
+
+        List<Map> mapList = new ArrayList<>();
+        mapList.add(map.get("预防成本"));
+        mapList.add(map.get("鉴定成本"));
+        mapList.add(map.get("内损成本"));
+        mapList.add(map.get("外损成本"));
+        return mapList;
     }
 }

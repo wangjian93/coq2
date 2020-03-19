@@ -86,12 +86,11 @@ public class CostStageServiceImpl implements CostStageService {
 
     @Override
     public List<CostStage> getCostStages(String project) {
-        return repository.findByProject(project);
+        return repository.findByProjectOrderById(project);
     }
 
     @Override
     public void computeCostStage(String project) {
-        // TODO...
         logger.info("计算CostStage >> " + project);
         List<CostStage> costStageList = getCostStages(project);
         for(CostStage costStage : costStageList) {

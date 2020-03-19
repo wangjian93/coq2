@@ -4,7 +4,9 @@ import com.ivo.common.enums.ResultEnum;
 import com.ivo.common.result.PageResult;
 import com.ivo.common.result.Result;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * 响应数据(结果)最外层对象工具

@@ -14,5 +14,5 @@ public interface CostRepository extends JpaRepository<Cost, Long> {
      * @param project 机种
      * @return Cost
      */
-    Cost findFirstByProject(String project);
+    Cost findFirstByProjectOrderById(String project);
 }

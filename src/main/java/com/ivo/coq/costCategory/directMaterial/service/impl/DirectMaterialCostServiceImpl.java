@@ -36,12 +36,12 @@ public class DirectMaterialCostServiceImpl implements DirectMaterialCostService 
 
     @Override
     public List<DirectMaterialCost> getDirectMaterialCosts(String project) {
-        return repository.findByProject(project);
+        return repository.findByProjectOrderById(project);
     }
 
     @Override
     public List<DirectMaterialCost> getDirectMaterialCosts(String project, String stage) {
-        return repository.findByProjectAndStage(project, stage);
+        return repository.findByProjectAndStageOrderById(project, stage);
     }
 
     @Override

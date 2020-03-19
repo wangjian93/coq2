@@ -16,7 +16,7 @@ public interface OutsourcingThinningCostDetailRepository extends JpaRepository<O
      * @param project 机种
      * @return List
      */
-    List<OutsourcingThinningCostDetail> findByProject(String project);
+    List<OutsourcingThinningCostDetail> findByProjectOrderById(String project);
 
     /**
      * 根据机种、阶段、次数筛选
@@ -25,5 +25,5 @@ public interface OutsourcingThinningCostDetailRepository extends JpaRepository<O
      * @param time 次数
      * @return List
      */
-    List<OutsourcingThinningCostDetail> findByProjectAndStageAndTime(String project, String stage, Integer time);
+    List<OutsourcingThinningCostDetail> findByProjectAndStageAndTimeOrderById(String project, String stage, Integer time);
 }

@@ -34,7 +34,7 @@ public class TravelCostServiceImpl implements TravelCostService {
 
     @Override
     public List<TravelCost> getTravelCosts(String project) {
-        return repository.findByProject(project);
+        return repository.findByProjectOrderById(project);
     }
 
     @Override

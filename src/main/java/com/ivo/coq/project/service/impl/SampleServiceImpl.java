@@ -24,6 +24,6 @@ public class SampleServiceImpl implements SampleService {
 
     @Override
     public List<Sample> getSamples(String project) {
-        return repository.findByProject(project);
+        return repository.findByProjectOrderById(project);
     }
 }

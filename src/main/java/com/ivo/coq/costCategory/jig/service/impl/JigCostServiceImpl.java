@@ -36,7 +36,7 @@ public class JigCostServiceImpl implements JigCostService {
 
     @Override
     public List<JigCost> getJigCosts(String project) {
-        return repository.findByProject(project);
+        return repository.findByProjectOrderById(project);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class JigCostServiceImpl implements JigCostService {
 
     @Override
     public List<JigCost> getJigCosts(String project, String stage) {
-        return repository.findByProjectAndStage(project, stage);
+        return repository.findByProjectAndStageOrderById(project, stage);
     }
 
     @Override

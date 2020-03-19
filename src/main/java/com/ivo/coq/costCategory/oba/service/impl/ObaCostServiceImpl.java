@@ -34,12 +34,12 @@ public class ObaCostServiceImpl implements ObaCostService {
 
     @Override
     public List<ObaCost> getObaCosts(String project) {
-        return repository.findByProject(project);
+        return repository.findByProjectOrderById(project);
     }
 
     @Override
     public List<ObaCost> getObaCosts(String project, String stage) {
-        return repository.findByProjectAndStage(project, stage);
+        return repository.findByProjectAndStageOrderById(project, stage);
     }
 
     @Override

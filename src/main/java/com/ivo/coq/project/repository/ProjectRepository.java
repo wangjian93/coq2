@@ -16,7 +16,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
      * @param type 类型
      * @return List<ProjectStage>
      */
-    List<Project> findByType(String type);
+    List<Project> findByTypeOrderById(String type);
 
     /**
      * 根据类型、尺寸筛选
@@ -24,6 +24,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
      * @param size 尺寸
      * @return List<ProjectStage>
      */
-    List<Project> findByTypeAndSize(String type, String size);
+    List<Project> findByTypeAndSizeOrderById(String type, String size);
 
 }

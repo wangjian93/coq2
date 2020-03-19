@@ -34,12 +34,12 @@ public class ReworkScrapCostServiceImpl implements ReworkScrapCostService {
 
     @Override
     public List<ReworkScrapCost> getReworkScraps(String project) {
-        return repository.findByProject(project);
+        return repository.findByProjectOrderById(project);
     }
 
     @Override
     public List<ReworkScrapCost> getReworkScrapCosts(String project, String stage) {
-        return repository.findByProjectAndStage(project, stage);
+        return repository.findByProjectAndStageOrderById(project, stage);
     }
 
     @Override

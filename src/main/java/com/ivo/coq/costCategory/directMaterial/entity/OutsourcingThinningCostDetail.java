@@ -1,5 +1,6 @@
 package com.ivo.coq.costCategory.directMaterial.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ivo.common.model.AutoIncreaseEntityModel;
 
 import javax.persistence.Entity;
@@ -46,6 +47,7 @@ public class OutsourcingThinningCostDetail extends AutoIncreaseEntityModel {
     /**
      * PR起草时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date peDrafterDate;
 
     /**
@@ -91,7 +93,7 @@ public class OutsourcingThinningCostDetail extends AutoIncreaseEntityModel {
     /**
      * 币别
      */
-    private Double currency;
+    private String currency;
 
     /**
      * PR总费用
@@ -224,11 +226,11 @@ public class OutsourcingThinningCostDetail extends AutoIncreaseEntityModel {
         this.quantity = quantity;
     }
 
-    public Double getCurrency() {
+    public String getCurrency() {
         return currency;
     }
 
-    public void setCurrency(Double currency) {
+    public void setCurrency(String currency) {
         this.currency = currency;
     }
 

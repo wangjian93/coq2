@@ -66,13 +66,15 @@ public class CostTest extends AbstractTest {
     @Autowired
     private SystemMaintenanceCostService systemMaintenanceCostService;
 
-    private static String project = "N1568V R0";
+    private static String project1 = "N1339 R0";
+    private static String project2 = "N1339 R1";
 
     @Test
-    public void test() {}
+    public void test() {
+        compute("N1568V R0");
+    }
 
-    @Test
-    public void create() {
+    public void create(String project) {
         costService.createCost(project);
         costSubjectService.createCostSubject(project);
         costStageService.createCostStage(project);
@@ -90,8 +92,7 @@ public class CostTest extends AbstractTest {
         compensationCostSerivce.createCompensationCost(project);
     }
 
-    @Test
-    public void compute() {
+    public void compute(String project) {
         costStageService.computeCostStage(project);
         costSubjectService.computeCostSubject(project);
         costService.computeCost(project);

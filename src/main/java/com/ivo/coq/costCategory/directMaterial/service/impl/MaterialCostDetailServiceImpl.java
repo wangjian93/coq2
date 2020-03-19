@@ -24,11 +24,11 @@ public class MaterialCostDetailServiceImpl implements MaterialCostDetailService 
 
     @Override
     public List<MaterialCostDetail> getMaterialCostDetails(String project) {
-        return repository.findByProject(project);
+        return repository.findByProjectOrderById(project);
     }
 
     @Override
     public List<MaterialCostDetail> getMaterialCostDetails(String project, String stage, Integer time) {
-        return repository.findByProjectAndStageAndTime(project, stage, time);
+        return repository.findByProjectAndStageAndTimeOrderById(project, stage, time);
     }
 }

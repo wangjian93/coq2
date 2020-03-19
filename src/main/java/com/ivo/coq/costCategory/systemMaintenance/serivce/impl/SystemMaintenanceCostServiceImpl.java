@@ -34,7 +34,7 @@ public class SystemMaintenanceCostServiceImpl implements SystemMaintenanceCostSe
 
     @Override
     public List<SystemMaintenanceCost> getSystemMaintenanceCosts(String project) {
-        return repository.findByProject(project);
+        return repository.findByProjectOrderById(project);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class SystemMaintenanceCostServiceImpl implements SystemMaintenanceCostSe
             // 人员工资费用只有DESIGN阶段
             if(!stage.equals("DESIGN")) {
                 systemMaintenanceCost.setAmount(-1D);
-                systemMaintenanceCost.setIdentityAmount(-1D);
+                systemMaintenanceCost.setInLossAmount(-1D);
                 systemMaintenanceCost.setIdentityAmount(-1D);
             }
             systemMaintenanceCostList.add(systemMaintenanceCost);

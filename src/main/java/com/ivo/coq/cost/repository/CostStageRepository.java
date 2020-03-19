@@ -16,5 +16,5 @@ public interface CostStageRepository extends JpaRepository<CostStage, Long> {
      * @param project 机种
      * @return List<CostStage>
      */
-    List<CostStage> findByProject(String project);
+    List<CostStage> findByProjectOrderById(String project);
 }
