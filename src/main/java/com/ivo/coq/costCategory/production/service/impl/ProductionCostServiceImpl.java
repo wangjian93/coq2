@@ -1,6 +1,6 @@
 package com.ivo.coq.costCategory.production.service.impl;
 
-import com.ivo.coq.project.entity.ProjectStage;
+import com.ivo.coq.project.entity.Stage;
 import com.ivo.coq.project.service.ProjectService;
 import com.ivo.coq.costCategory.production.entity.ProductionCost;
 import com.ivo.coq.costCategory.production.repository.ProductionCostRepository;
@@ -51,9 +51,9 @@ public class ProductionCostServiceImpl implements ProductionCostService {
     public void createProductionCost(String project) {
         logger.info("创建 ProductionCost >> " + project);
 
-        List<ProjectStage> projectStageList = projectService.getProjectStages(project);
+        List<Stage> stageList = projectService.getProjectStages(project);
         List<ProductionCost> productionCostList = new ArrayList<>();
-        for(ProjectStage projectStage : projectStageList) {
+        for(Stage projectStage : stageList) {
             ProductionCost productionCost = new ProductionCost(projectStage.getProject(), projectStage.getStage(), projectStage.getTime());
 
             String stage = productionCost.getStage();

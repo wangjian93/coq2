@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ivo.rest.oracle.mapper.OracleMapper">
+
+  <!-- 获取单片材料费用 （展开BOM）-->
+  <select id="getProductPerAmount" parameterType="java.lang.String" resultType="java.lang.Double">
+    SELECT sum(qty/base_qty*base_qty/100000*(CASE vprsv WHEN 'S' THEN stprs/peinh ELSE verpr/peinh END)) AS mtrlprice
+    FROM SOR.WMM_BOM_MASTER MASTER
+           LEFT JOIN SOR.WMM_BOM_ITEM ITEM ON MASTER.BOM_MASTER_KEY=ITEM.BOM_MASTER_KEY AND ITEM.INVALID_DT=TO_DATE('9999-12-31','YYYY-MM-DD')
+           LEFT JOIN EXF.SZA_PSI_MBEW c ON item.mtrl_id=c.matnr AND master.fab_id=c.bwkey
+           LEFT JOIN SAPEIF.ZMAP_MAT M ON MASTER.mtrl_id = M.Matnr AND MASTER.PROD_VER_ID = M.VERID
+    WHERE MASTER.fab_id='1000' AND ITEM.Alt_Item_Ranking_Order IN ('00','01')
+      AND m.prodid = #{product}
+  </select>
+
+  <!-- 获取工单费用 -->
+  <select id="getWoAmount" parameterType="java.lang.String" resultType="java.lang.Double">
+    SELECT sum(dmbtr)
+    FROM (
+        SELECT a.matnr,
+               sum(CASE BWART WHEN '261' THEN a.menge*c.price WHEN '262' THEN 0-a.menge*c.price WHEN 'Z91' THEN 0-a.menge*c.price ELSE a.menge*c.price END) AS dmbtr,
+               sum(CASE BWART WHEN '261' THEN a.menge WHEN '262' THEN 0-a.menge WHEN 'Z91' THEN 0-a.menge ELSE a.menge END) AS menge
+        FROM exf.sap_aufm a
+            LEFT JOIN (
+                select matnr, dmbtr, menge, (CASE menge WHEN 0 THEN 0 ELSE dmbtr/menge END) as price
+                from (
+                    SELECT matnr,
+                           sum(CASE BWART WHEN '261' THEN dmbtr WHEN '262' THEN 0-dmbtr END) AS dmbtr,
+                           sum(CASE BWART WHEN '261' THEN menge WHEN '262' THEN 0-menge END) AS menge
+                    FROM
+                         exf.sap_aufm a
+                    WHERE BWART IN ('261','262')
+                      AND aufnr = #{wo}
+                    GROUP BY matnr
+                    )
+                )
+                c ON a.matnr=c.matnr
+        WHERE aufnr = #{wo}
+          AND BWART IN ('261','262','Z91','Z92')
+          AND  a.matnr not in  ( select matnr from EXF.sap_mara where matkl in ('002','003','004','005','006')
+        )
+        GROUP BY a.matnr
+    )
+  </select>
+
+  <!-- 获取料号的单价 -->
+  <select id="getMaterialPrice" parameterType="java.lang.String" resultType="java.lang.Double">
+    select sum(price)
+    from (
+        select matnr , bwkey, case vprsv when 'S' then stprs else verpr end as price
+        from  EXF.SZA_PSI_MBEW
+        where bwtar = ' ' and matnr = #{material}
+        )
+  </select>
+
+</mapper>

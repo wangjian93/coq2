@@ -9,8 +9,11 @@ import com.ivo.coq.cost.entity.CostSubject;
 import com.ivo.coq.cost.service.CostService;
 import com.ivo.coq.cost.service.CostStageService;
 import com.ivo.coq.cost.service.CostSubjectService;
+import com.ivo.coq.project.entity.Milestone;
 import com.ivo.coq.project.entity.Project;
-import com.ivo.coq.project.entity.ProjectStage;
+import com.ivo.coq.project.entity.ProjectSchedule;
+import com.ivo.coq.project.entity.Stage;
+import com.ivo.coq.project.service.MilestoneService;
 import com.ivo.coq.project.service.ProjectScheduleService;
 import com.ivo.coq.project.service.ProjectService;
 import com.ivo.coq.costCategory.compensation.entity.CompensationCost;
@@ -35,12 +38,14 @@ import com.ivo.coq.costCategory.travel.entity.TravelCost;
 import com.ivo.coq.costCategory.travel.service.TravelCostService;
 import com.ivo.coq.costCategory.verification.entity.VerificationCost;
 import com.ivo.coq.costCategory.verification.service.VerificationCostService;
+import com.ivo.coq.project.service.StageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,6 +92,10 @@ public class CoqController {
 
     private VerificationCostService verificationCostService;
 
+    private StageService stageService;
+
+    private MilestoneService milestoneService;
+
     @Autowired
     public CoqController(ProjectService projectService, ProjectScheduleService projectScheduleService,
                          CostService costService, CostSubjectService costSubjectService,
@@ -95,7 +104,8 @@ public class CoqController {
                          ObaCostService obaCostService, ProductionCostService productionCostService,
                          ReworkScrapCostService reworkScrapCostService, RmaCostService rmaCostService,
                          SalaryCostService salaryCostService, SystemMaintenanceCostService systemMaintenanceCostService,
-                         TravelCostService travelCostService, VerificationCostService verificationCostService) {
+                         TravelCostService travelCostService, VerificationCostService verificationCostService,
+                         StageService stageService, MilestoneService milestoneService) {
         this.projectService = projectService;
         this.projectScheduleService = projectScheduleService;
         this.costService = costService;
@@ -112,6 +122,8 @@ public class CoqController {
         this.systemMaintenanceCostService = systemMaintenanceCostService;
         this.travelCostService = travelCostService;
         this.verificationCostService = verificationCostService;
+        this.stageService = stageService;
+        this.milestoneService = milestoneService;
     }
 
     /**
@@ -154,8 +166,8 @@ public class CoqController {
      */
     @GetMapping("/projectStages/{project}")
     public PageResult getProjectStages(@PathVariable("project") String project) {
-        List<ProjectStage> projectStageList = projectService.getProjectStages(project);
-        return ResultUtil.successPage(projectStageList);
+        List<Stage> stageList = stageService.getStage(project);
+        return ResultUtil.successPage(stageList);
     }
 
     /**
@@ -166,6 +178,33 @@ public class CoqController {
     @GetMapping("/projectSchedules/{project}")
     public Result projectSchedules(@PathVariable("project") String project) {
         Map map = projectScheduleService.getSchedules(project);
+        return ResultUtil.success(map);
+    }
+
+    /**
+     * 获取机种进度
+     * @param project 机种
+     * @return Result
+     */
+    @GetMapping("/milestone/{project}")
+    public Result milestone(@PathVariable("project") String project) {
+        List<Milestone> milestoneList = milestoneService.getMilestone(project);
+        List<Map> list1 = new ArrayList<>();
+        List<Map> list2 = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        for(Milestone milestone : milestoneList) {
+            Map map1 = new HashMap();
+            map1.put("stage", milestone.getMilestone());
+            map1.put("date", sdf.format(milestone.getEndDate()));
+            list1.add(map1);
+            Map map2 = new HashMap();
+            map2.put("stage", milestone.getMilestone());
+            map2.put("date", sdf.format(milestone.getEndDatePlan()));
+            list2.add(map2);
+        }
+        Map<String, List> map = new HashMap<>();
+        map.put("V00", list1);
+        map.put("V01", list2);
         return ResultUtil.success(map);
     }
 

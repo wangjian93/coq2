@@ -1,15 +1,21 @@
 package com.ivo.coq.costCategory.directMaterial.entity;
 
 import com.ivo.common.model.AutoIncreaseEntityModel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
- * 厂内直材费用
+ * 直接材料成本 = 厂内直材费用 + 外包薄化部分费用 - 出货费用
  * @author wj
  * @version 1.0
  */
 @Entity
+@Table(name = "coq_cost_Direct_material")
+@Setter
+@Getter
 public class DirectMaterialCost extends AutoIncreaseEntityModel {
 
     /**
@@ -28,7 +34,7 @@ public class DirectMaterialCost extends AutoIncreaseEntityModel {
     private Integer time;
 
     /**
-     * 直接材料部分费用
+     * 厂内直材费用
      */
     private Double directAmount;
 
@@ -36,6 +42,11 @@ public class DirectMaterialCost extends AutoIncreaseEntityModel {
      * 外包薄化部分费用
      */
     private Double outsourcingThinningAmount;
+
+    /**
+     * 出货费用
+     */
+    private Double shipmentAmount;
 
     /**
      * 总费用
@@ -49,53 +60,5 @@ public class DirectMaterialCost extends AutoIncreaseEntityModel {
         this.project = project;
         this.stage = stage;
         this.time = time;
-    }
-
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
-    }
-
-    public String getStage() {
-        return stage;
-    }
-
-    public void setStage(String stage) {
-        this.stage = stage;
-    }
-
-    public Integer getTime() {
-        return time;
-    }
-
-    public void setTime(Integer time) {
-        this.time = time;
-    }
-
-    public Double getDirectAmount() {
-        return directAmount;
-    }
-
-    public void setDirectAmount(Double directAmount) {
-        this.directAmount = directAmount;
-    }
-
-    public Double getOutsourcingThinningAmount() {
-        return outsourcingThinningAmount;
-    }
-
-    public void setOutsourcingThinningAmount(Double outsourcingThinningAmount) {
-        this.outsourcingThinningAmount = outsourcingThinningAmount;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
     }
 }

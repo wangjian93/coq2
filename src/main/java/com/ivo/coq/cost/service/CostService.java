@@ -2,6 +2,8 @@ package com.ivo.coq.cost.service;
 
 import com.ivo.coq.cost.entity.Cost;
 
+import java.util.List;
+
 /**
  * 机种成本服务接口
  * @author wj
@@ -15,6 +17,12 @@ public interface CostService {
      * @return Cost
      */
     Cost getCost(String project);
+
+    /**
+     * 获取所有机种的成本
+     * @return List<Cost>
+     */
+    List<Cost> getCosts();
 
     /**
      * 创建Cost

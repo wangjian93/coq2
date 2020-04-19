@@ -2,18 +2,21 @@ package com.ivo.coq.costCategory.directMaterial.entity;
 
 import com.ivo.common.model.AutoIncreaseEntityModel;
 import com.ivo.coq.project.entity.EngineeringExperiment;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.List;
 
 /**
- * 直接材料成本的材料部分费用详细
+ * 厂内直材部分费用
  * @author wj
  * @version 1.0
  */
 @Entity
+@Table(name = "coq_cost_Direct_material_detail")
+@Setter
+@Getter
 public class MaterialCostDetail extends AutoIncreaseEntityModel {
 
     /**
@@ -32,82 +35,39 @@ public class MaterialCostDetail extends AutoIncreaseEntityModel {
     private Integer time;
 
     /**
-     * 工程实验单信息
+     * ee单
      */
-    @ManyToOne
-    @JoinColumn(name = "EngineeringExperiment_FK")
-    private EngineeringExperiment engineeringExperiment;
+    private String ee;
 
     /**
-     * 单片材料费用 （ARRAY/CELL）
+     * 厂别
      */
-    private Double perMaterialAmount;
+    private String plant;
 
     /**
-     * 工单中费用 （LCM）
-     */
-    private Double woAmount;
-
-    /**
-     * 材料部分费用
-     * ARRAY/CELL：单片材料费用 * 投产数量
-     * LCM：工单中费用
+     * 费用
+     * 1.LCM:工单费用
+     * 2.Array:展BOM单片材料费用*实验数量
+     * 3.CELL:工程试验单中料号单价*实验数量理论参考量
      */
     private Double amount;
 
-    public String getProject() {
-        return project;
-    }
+    @OneToMany(mappedBy = "materialCostDetail", cascade = CascadeType.ALL)
+    List<MaterialArrayProductAmount> productAmountList;
 
-    public void setProject(String project) {
-        this.project = project;
-    }
+    @OneToMany(mappedBy = "materialCostDetail", cascade = CascadeType.ALL)
+    List<MaterialCellMaterialAmount> materialAmountList;
 
-    public String getStage() {
-        return stage;
-    }
+    @OneToMany(mappedBy = "materialCostDetail", cascade = CascadeType.ALL)
+    List<MaterialLcmWoAmount> woAmountList;
 
-    public void setStage(String stage) {
-        this.stage = stage;
-    }
+    public MaterialCostDetail() {}
 
-    public Integer getTime() {
-        return time;
-    }
-
-    public void setTime(Integer time) {
-        this.time = time;
-    }
-
-    public EngineeringExperiment getEngineeringExperiment() {
-        return engineeringExperiment;
-    }
-
-    public void setEngineeringExperiment(EngineeringExperiment engineeringExperiment) {
-        this.engineeringExperiment = engineeringExperiment;
-    }
-
-    public Double getPerMaterialAmount() {
-        return perMaterialAmount;
-    }
-
-    public void setPerMaterialAmount(Double perMaterialAmount) {
-        this.perMaterialAmount = perMaterialAmount;
-    }
-
-    public Double getWoAmount() {
-        return woAmount;
-    }
-
-    public void setWoAmount(Double woAmount) {
-        this.woAmount = woAmount;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public MaterialCostDetail(EngineeringExperiment engineeringExperiment) {
+        this.project = engineeringExperiment.getProject();
+        this.stage = engineeringExperiment.getSample().getStage();
+        this.time = engineeringExperiment.getSample().getTime();
+        this.ee = engineeringExperiment.getEeOrder();
+        this.plant = engineeringExperiment.getPlant();
     }
 }

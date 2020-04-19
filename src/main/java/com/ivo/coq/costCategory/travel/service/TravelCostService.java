@@ -32,4 +32,10 @@ public interface TravelCostService {
      * @param project 机种
      */
     void createTravelCost(String project);
+
+    /**
+     * 计算机种的差旅交际费用
+     * @param project 机种
+     */
+    void computeTravelCost(String project);
 }

@@ -1,6 +1,6 @@
 package com.ivo.coq.costCategory.compensation.service.impl;
 
-import com.ivo.coq.project.entity.ProjectStage;
+import com.ivo.coq.project.entity.Stage;
 import com.ivo.coq.project.service.ProjectService;
 import com.ivo.coq.costCategory.compensation.entity.CompensationCost;
 import com.ivo.coq.costCategory.compensation.repository.CompensationCostRepository;
@@ -51,9 +51,9 @@ public class CompensationCostServiceImpl implements CompensationCostSerivce {
     @Override
     public void createCompensationCost(String project) {
         logger.info("创建 CompensationCost >>" + project);
-        List<ProjectStage> projectStageList = projectService.getProjectStages(project);
+        List<Stage> stageList = projectService.getProjectStages(project);
         List<CompensationCost> compensationCostList = new ArrayList<>();
-        for(ProjectStage projectStage : projectStageList) {
+        for(Stage projectStage : stageList) {
             CompensationCost compensationCost = new CompensationCost(projectStage.getProject(), projectStage.getStage(),
                     projectStage.getTime());
 

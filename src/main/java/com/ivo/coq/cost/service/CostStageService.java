@@ -19,14 +19,14 @@ public interface CostStageService {
     List<CostStage> getCostStages(String project);
 
     /**
-     * 计算机种的阶段成本
-     * @param project 机种
-     */
-    void computeCostStage(String project);
-
-    /**
      * 创建机种的阶段成本
      * @param project 机种
      */
     void createCostStage(String project);
+
+    /**
+     * 计算机种的阶段成本
+     * @param project 机种
+     */
+    void computeCostStage(String project);
 }

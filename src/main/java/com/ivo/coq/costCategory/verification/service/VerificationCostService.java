@@ -34,4 +34,10 @@ public interface VerificationCostService {
      * @param project 机种
      */
     void crateVerificationCost(String project);
+
+    /**
+     * 计算机种的验证费用
+     * @param project 机种
+     */
+    void computeVerificationCost(String project);
 }

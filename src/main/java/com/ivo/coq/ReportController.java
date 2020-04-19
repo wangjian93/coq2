@@ -3,11 +3,14 @@ package com.ivo.coq;
 import com.ivo.common.result.PageResult;
 import com.ivo.common.utils.ResultUtil;
 import com.ivo.coq.cost.entity.CostSubject;
+import com.ivo.coq.cost.service.CostService;
 import com.ivo.coq.cost.service.CostSubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,11 +21,14 @@ import java.util.List;
 @RequestMapping("/coq/report")
 public class ReportController {
 
+    private CostService costService;
     private CostSubjectService costSubjectService;
 
     @Autowired
-    public ReportController(CostSubjectService costSubjectService) {
+    public ReportController(CostSubjectService costSubjectService,
+                            CostService costService) {
         this.costSubjectService = costSubjectService;
+        this.costService = costService;
     }
 
     /**
@@ -51,5 +57,18 @@ public class ReportController {
             }
         }
         return ResultUtil.successPage(list);
+    }
+
+    /**
+     * 获取时间段内所有开案机种的成本
+     * 新产品 - TOTAL RATIO报表
+     * @param fromDate 开始
+     * @param toDate 结束
+     * @return PageResult
+     */
+    @PostMapping("/cost")
+    public PageResult getCost(@DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
+                              @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate) {
+        return ResultUtil.successPage(costService.getCosts());
     }
 }

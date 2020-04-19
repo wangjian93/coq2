@@ -4,7 +4,6 @@ import com.ivo.common.utils.DoubleUtil;
 import com.ivo.coq.cost.entity.CostSubject;
 import com.ivo.coq.cost.repository.CostSubjectRepository;
 import com.ivo.coq.cost.service.CostSubjectService;
-import com.ivo.coq.project.service.ProjectService;
 import com.ivo.coq.costCategory.compensation.entity.CompensationCost;
 import com.ivo.coq.costCategory.compensation.service.CompensationCostSerivce;
 import com.ivo.coq.costCategory.directMaterial.entity.DirectMaterialCost;
@@ -27,8 +26,7 @@ import com.ivo.coq.costCategory.travel.entity.TravelCost;
 import com.ivo.coq.costCategory.travel.service.TravelCostService;
 import com.ivo.coq.costCategory.verification.entity.VerificationCost;
 import com.ivo.coq.costCategory.verification.service.VerificationCostService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,13 +40,10 @@ import java.util.Map;
  * @version 1.0
  */
 @Service
+@Slf4j
 public class CostSubjectServiceImpl implements CostSubjectService {
 
-    private static Logger logger = LoggerFactory.getLogger(CostSubjectServiceImpl.class);
-
     private CostSubjectRepository repository;
-
-    private ProjectService projectService;
 
     private SalaryCostService salaryCostService;
     private TravelCostService travelCostService;
@@ -63,7 +58,7 @@ public class CostSubjectServiceImpl implements CostSubjectService {
     private CompensationCostSerivce compensationCostSerivce;
 
     @Autowired
-    public CostSubjectServiceImpl(CostSubjectRepository repository, ProjectService projectService,
+    public CostSubjectServiceImpl(CostSubjectRepository repository,
                                   SalaryCostService salaryCostService, TravelCostService travelCostService,
                                   JigCostService jigCostService, SystemMaintenanceCostService systemMaintenanceCostService,
                                   DirectMaterialCostService directMaterialCostService,
@@ -74,7 +69,6 @@ public class CostSubjectServiceImpl implements CostSubjectService {
                                   RmaCostService rmaCostService,
                                   CompensationCostSerivce compensationCostSerivce) {
         this.repository = repository;
-        this.projectService = projectService;
         this.salaryCostService = salaryCostService;
         this.travelCostService = travelCostService;
         this.jigCostService = jigCostService;
@@ -95,7 +89,8 @@ public class CostSubjectServiceImpl implements CostSubjectService {
 
     @Override
     public void createCostSubject(String project) {
-        logger.info("创建 CostSubject >>" + project);
+        log.info("创建 CostSubject >>" + project);
+        repository.deleteAll(getCostSubjects(project));
         List<CostSubject> costSubjectList = new ArrayList<>();
         costSubjectList.add(new CostSubject(project, "NPRB"));
         costSubjectList.add(new CostSubject(project, "DESIGN"));
@@ -127,19 +122,23 @@ public class CostSubjectServiceImpl implements CostSubjectService {
 
     @Override
     public void computeCostSubject(String project) {
-        logger.info("计算 CostSubject >>" + project);
+        log.info("计算 CostSubject >>" + project);
         List<CostSubject> costSubjectList = getCostSubjects(project);
         for(CostSubject costSubject : costSubjectList) {
             String stage = costSubject.getStage();
+            // 1. NPRB: 预防成本、内损成本
             if(stage.equals("NPRB")) {
                 computeCostSubjectForNPRB(costSubject);
             }
+            // 2. DESIGN: 预防成本、鉴定成本、内损成本
             if(stage.equals("DESIGN")) {
                 computeCostSubjectForDesign(costSubject);
             }
+            // 3. EVT/DVT/PVT: 预防成本、鉴定成本、内损成本、外损成本
             if(stage.equals("EVT") || stage.equals("DVT") || stage.equals("PVT")) {
                 computeCostSubjectForEVT_DVT_PVT(costSubject);
             }
+            // 4. MP: 内损、外损
             if(stage.equals("MP")) {
                 computeCostSubjectForMP(costSubject);
             }
@@ -157,10 +156,13 @@ public class CostSubjectServiceImpl implements CostSubjectService {
     private void computeCostSubjectForNPRB(CostSubject costSubject) {
         SalaryCost salaryCost = salaryCostService.getSalaryCost(costSubject.getProject(), costSubject.getStage(), null);
         TravelCost travelCost = travelCostService.getTravelCost(costSubject.getProject(), costSubject.getStage(), null);
+
         // 预防
-        Double preventionCost = DoubleUtil.sum(salaryCost.getPreventionAmount(), travelCost.getPreventionAmount());
+        Double preventionCost = DoubleUtil.sum(salaryCost == null ? null : salaryCost.getPreventionAmount(),
+                travelCost == null ? null : travelCost.getPreventionAmount());
         // 内损
-        Double inLossCost = DoubleUtil.sum(salaryCost.getInLossAmount(), travelCost.getInLossAmount());
+        Double inLossCost = DoubleUtil.sum(salaryCost == null ? null : salaryCost.getInLossAmount(),
+                travelCost == null ? null : travelCost.getInLossAmount());
 
         costSubject.setPreventionCost(preventionCost);
         costSubject.setInLossCost(inLossCost);
@@ -178,12 +180,15 @@ public class CostSubjectServiceImpl implements CostSubjectService {
         JigCost jigCost = jigCostService.getJigCost(costSubject.getProject(), costSubject.getStage(), null);
         SystemMaintenanceCost systemMaintenanceCost = systemMaintenanceCostService
                 .getSystemMaintenanceCost(costSubject.getProject(), costSubject.getStage(), null);
+
         // 预防
-        Double preventionCost = DoubleUtil.sum(salaryCost.getPreventionAmount(), jigCost.getAmount());
+        Double preventionCost = DoubleUtil.sum(salaryCost == null ? null : salaryCost.getPreventionAmount(),
+                jigCost == null ? null : jigCost.getAmount());
         // 鉴定
-        Double identityCost = systemMaintenanceCost.getIdentityAmount();
+        Double identityCost = systemMaintenanceCost == null ? null : systemMaintenanceCost.getIdentityAmount();
         // 内损
-        Double inLossCost = DoubleUtil.sum(salaryCost.getInLossAmount(), systemMaintenanceCost.getInLossAmount());
+        Double inLossCost = DoubleUtil.sum(salaryCost == null ? null : salaryCost.getInLossAmount(),
+                systemMaintenanceCost == null ? null : systemMaintenanceCost.getInLossAmount());
 
         costSubject.setPreventionCost(preventionCost);
         costSubject.setInLossCost(inLossCost);
@@ -216,61 +221,77 @@ public class CostSubjectServiceImpl implements CostSubjectService {
         Double outLossCost = null;
 
         // 直接材料：阶段1为预防，其他为内损
-        for(DirectMaterialCost directMaterialCost : directMaterialCostList) {
-            if(1 == directMaterialCost.getTime()) {
-                preventionCost = DoubleUtil.sum(preventionCost, directMaterialCost.getAmount());
-            } else {
-                inLossCost = DoubleUtil.sum(inLossCost, directMaterialCost.getAmount());
+        if(directMaterialCostList != null) {
+            for(DirectMaterialCost directMaterialCost : directMaterialCostList) {
+                if(1 == directMaterialCost.getTime()) {
+                    preventionCost = DoubleUtil.sum(preventionCost, directMaterialCost.getAmount());
+                } else {
+                    inLossCost = DoubleUtil.sum(inLossCost, directMaterialCost.getAmount());
+                }
             }
         }
 
         // 治工具：阶段1为预防，其他为内损
-        for(JigCost jigCost : jigCostList) {
-            if(1 == jigCost.getTime()) {
-                preventionCost = DoubleUtil.sum(preventionCost, jigCost.getAmount());
-            } else {
-                inLossCost = DoubleUtil.sum(inLossCost, jigCost.getAmount());
+        if(jigCostList != null) {
+            for(JigCost jigCost : jigCostList) {
+                if(1 == jigCost.getTime()) {
+                    preventionCost = DoubleUtil.sum(preventionCost, jigCost.getAmount());
+                } else {
+                    inLossCost = DoubleUtil.sum(inLossCost, jigCost.getAmount());
+                }
             }
         }
 
         // 生产费用：阶段1为预防，其他为内损
-        for(ProductionCost productionCost : productionCostList) {
-            if (1 == productionCost.getTime()) {
-                preventionCost = DoubleUtil.sum(preventionCost, productionCost.getAmount());
-            } else {
-                inLossCost = DoubleUtil.sum(inLossCost, productionCost.getAmount());
+        if(productionCostList != null) {
+            for(ProductionCost productionCost : productionCostList) {
+                if (1 == productionCost.getTime()) {
+                    preventionCost = DoubleUtil.sum(preventionCost, productionCost.getAmount());
+                } else {
+                    inLossCost = DoubleUtil.sum(inLossCost, productionCost.getAmount());
+                }
             }
         }
 
         // 验证费用：EVT/DVT阶段1为鉴定，其他为内损
-        for(VerificationCost verificationCost : verificationCostList) {
-            if (1 == verificationCost.getTime() &&
-                    (verificationCost.getStage().equals("EVT") || verificationCost.getStage().equals("DVT"))
-            ) {
-                identityCost = DoubleUtil.sum(identityCost, verificationCost.getAmount());
-            } else {
-                inLossCost = DoubleUtil.sum(inLossCost, verificationCost.getAmount());
+        if(verificationCostList != null) {
+            for(VerificationCost verificationCost : verificationCostList) {
+                if (1 == verificationCost.getTime() &&
+                        (verificationCost.getStage().equals("EVT") || verificationCost.getStage().equals("DVT"))
+                ) {
+                    identityCost = DoubleUtil.sum(identityCost, verificationCost.getAmount());
+                } else {
+                    inLossCost = DoubleUtil.sum(inLossCost, verificationCost.getAmount());
+                }
             }
         }
 
         // 重工/报废：内损
-        for(ReworkScrapCost reworkScrapCost : reworkScrapCostList) {
-            inLossCost = DoubleUtil.sum(inLossCost, reworkScrapCost.getAmount());
+        if(reworkScrapCostList != null) {
+            for(ReworkScrapCost reworkScrapCost : reworkScrapCostList) {
+                inLossCost = DoubleUtil.sum(inLossCost, reworkScrapCost.getAmount());
+            }
         }
 
         // OBA：外损
-        for(ObaCost obaCost : obaCostList) {
-            outLossCost = DoubleUtil.sum(outLossCost, obaCost.getAmount());
+        if(obaCostList != null) {
+            for(ObaCost obaCost : obaCostList) {
+                outLossCost = DoubleUtil.sum(outLossCost, obaCost.getAmount());
+            }
         }
 
         // RMA：外损
-        for(RmaCost rmaCost : rmaCostList) {
-            outLossCost = DoubleUtil.sum(outLossCost, rmaCost.getAmount());
+        if(rmaCostList != null) {
+            for(RmaCost rmaCost : rmaCostList) {
+                outLossCost = DoubleUtil.sum(outLossCost, rmaCost.getAmount());
+            }
         }
 
         // 赔偿：外损
-        for(CompensationCost compensationCost : compensationCostList) {
-            outLossCost = DoubleUtil.sum(outLossCost, compensationCost.getAmount());
+        if(compensationCostList != null) {
+            for(CompensationCost compensationCost : compensationCostList) {
+                outLossCost = DoubleUtil.sum(outLossCost, compensationCost.getAmount());
+            }
         }
 
         costSubject.setPreventionCost(preventionCost);
@@ -298,23 +319,32 @@ public class CostSubjectServiceImpl implements CostSubjectService {
         Double outLossCost = null;
 
         // 重工/报废：内损
-        for(ReworkScrapCost reworkScrapCost : reworkScrapCostList) {
-            inLossCost = DoubleUtil.sum(inLossCost, reworkScrapCost.getAmount());
+        if(reworkScrapCostList != null) {
+            for(ReworkScrapCost reworkScrapCost : reworkScrapCostList) {
+                inLossCost = DoubleUtil.sum(inLossCost, reworkScrapCost.getAmount());
+            }
         }
 
         // OBA：外损
-        for(ObaCost obaCost : obaCostList) {
-            outLossCost = DoubleUtil.sum(outLossCost, obaCost.getAmount());
+        if(obaCostList != null) {
+            for(ObaCost obaCost : obaCostList) {
+                outLossCost = DoubleUtil.sum(outLossCost, obaCost.getAmount());
+            }
         }
 
+
         // RMA：外损
-        for(RmaCost rmaCost : rmaCostList) {
-            outLossCost = DoubleUtil.sum(outLossCost, rmaCost.getAmount());
+        if(rmaCostList != null) {
+            for(RmaCost rmaCost : rmaCostList) {
+                outLossCost = DoubleUtil.sum(outLossCost, rmaCost.getAmount());
+            }
         }
 
         // 赔偿：外损
-        for(CompensationCost compensationCost : compensationCostList) {
-            outLossCost = DoubleUtil.sum(outLossCost, compensationCost.getAmount());
+        if(compensationCostList != null) {
+            for(CompensationCost compensationCost : compensationCostList) {
+                outLossCost = DoubleUtil.sum(outLossCost, compensationCost.getAmount());
+            }
         }
 
         costSubject.setInLossCost(inLossCost);

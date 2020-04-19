@@ -26,4 +26,16 @@ public interface VerificationCostPlantDetailService {
      * @return List
      */
     List<VerificationCostPlantDetail> getVerificationCostPlantDetail(String project, String stage, Integer time);
+
+    /**
+     * 从QMS同步机种的厂内验证信息
+     * @param project 机种
+     */
+    void syncVerificationCostPlantDetail(String project);
+
+    /**
+     * 计算机种的厂内验证费用
+     * @param project 机种
+     */
+    void computeVerificationCostPlantDetail(String project);
 }

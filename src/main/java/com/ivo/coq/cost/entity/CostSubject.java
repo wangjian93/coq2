@@ -1,6 +1,8 @@
 package com.ivo.coq.cost.entity;
 
 import com.ivo.common.model.AutoIncreaseEntityModel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -11,6 +13,9 @@ import javax.persistence.Table;
  * @version 1.0
  */
 @Entity
+@Table(name = "coq_cost_subject")
+@Setter
+@Getter
 public class CostSubject extends AutoIncreaseEntityModel {
 
     /**
@@ -48,53 +53,5 @@ public class CostSubject extends AutoIncreaseEntityModel {
     public CostSubject(String project, String stage) {
         this.project = project;
         this.stage = stage;
-    }
-
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
-    }
-
-    public String getStage() {
-        return stage;
-    }
-
-    public void setStage(String stage) {
-        this.stage = stage;
-    }
-
-    public Double getPreventionCost() {
-        return preventionCost;
-    }
-
-    public void setPreventionCost(Double preventionCost) {
-        this.preventionCost = preventionCost;
-    }
-
-    public Double getIdentityCost() {
-        return identityCost;
-    }
-
-    public void setIdentityCost(Double identityCost) {
-        this.identityCost = identityCost;
-    }
-
-    public Double getInLossCost() {
-        return inLossCost;
-    }
-
-    public void setInLossCost(Double inLossCost) {
-        this.inLossCost = inLossCost;
-    }
-
-    public Double getOutLossCost() {
-        return outLossCost;
-    }
-
-    public void setOutLossCost(Double outLossCost) {
-        this.outLossCost = outLossCost;
     }
 }

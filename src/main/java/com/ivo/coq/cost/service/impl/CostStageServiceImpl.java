@@ -3,8 +3,7 @@ package com.ivo.coq.cost.service.impl;
 import com.ivo.coq.cost.entity.CostStage;
 import com.ivo.coq.cost.repository.CostStageRepository;
 import com.ivo.coq.cost.service.CostStageService;
-import com.ivo.coq.project.entity.ProjectStage;
-import com.ivo.coq.project.service.ProjectService;
+import com.ivo.coq.project.entity.Stage;
 import com.ivo.coq.costCategory.compensation.entity.CompensationCost;
 import com.ivo.coq.costCategory.compensation.service.CompensationCostSerivce;
 import com.ivo.coq.costCategory.directMaterial.entity.DirectMaterialCost;
@@ -27,8 +26,8 @@ import com.ivo.coq.costCategory.travel.entity.TravelCost;
 import com.ivo.coq.costCategory.travel.service.TravelCostService;
 import com.ivo.coq.costCategory.verification.entity.VerificationCost;
 import com.ivo.coq.costCategory.verification.service.VerificationCostService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.ivo.coq.project.service.StageService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,13 +39,10 @@ import java.util.List;
  * @version 1.0
  */
 @Service
+@Slf4j
 public class CostStageServiceImpl implements CostStageService {
 
-    private static Logger logger = LoggerFactory.getLogger(CostStageServiceImpl.class);
-
     private CostStageRepository repository;
-
-    private ProjectService projectService;
 
     private SalaryCostService salaryCostService;
     private TravelCostService travelCostService;
@@ -60,17 +56,19 @@ public class CostStageServiceImpl implements CostStageService {
     private RmaCostService rmaCostService;
     private CompensationCostSerivce compensationCostSerivce;
 
+    private StageService stageService;
+
     @Autowired
-    public CostStageServiceImpl(CostStageRepository repository, ProjectService projectService,
+    public CostStageServiceImpl(CostStageRepository repository,
                                 SalaryCostService salaryCostService, TravelCostService travelCostService,
                                 JigCostService jigCostService, SystemMaintenanceCostService systemMaintenanceCostService,
                                 DirectMaterialCostService directMaterialCostService,
                                 ProductionCostService productionCostService,
                                 VerificationCostService verificationCostService,
                                 ReworkScrapCostService reworkScrapCostService, ObaCostService obaCostService,
-                                RmaCostService rmaCostService, CompensationCostSerivce compensationCostSerivce) {
+                                RmaCostService rmaCostService, CompensationCostSerivce compensationCostSerivce,
+                                StageService stageService) {
         this.repository = repository;
-        this.projectService = projectService;
         this.salaryCostService = salaryCostService;
         this.travelCostService = travelCostService;
         this.jigCostService = jigCostService;
@@ -82,6 +80,7 @@ public class CostStageServiceImpl implements CostStageService {
         this.obaCostService = obaCostService;
         this.rmaCostService = rmaCostService;
         this.compensationCostSerivce = compensationCostSerivce;
+        this.stageService = stageService;
     }
 
     @Override
@@ -91,7 +90,7 @@ public class CostStageServiceImpl implements CostStageService {
 
     @Override
     public void computeCostStage(String project) {
-        logger.info("计算CostStage >> " + project);
+        log.info("计算CostStage >> " + project);
         List<CostStage> costStageList = getCostStages(project);
         for(CostStage costStage : costStageList) {
             String stage = costStage.getStage();
@@ -99,47 +98,60 @@ public class CostStageServiceImpl implements CostStageService {
 
             // 直接材料
             DirectMaterialCost directMaterialCost = directMaterialCostService.getDirectMaterialCost(project, stage, time);
-            costStage.setDirectMaterialCost(directMaterialCost.getAmount());
+            if(directMaterialCost != null)
+                costStage.setDirectMaterialCost(directMaterialCost.getAmount());
 
             // 治工具
             JigCost jigCost = jigCostService.getJigCost(project, stage, time);
-            costStage.setJigCost(jigCost.getAmount());
+            if(jigCost != null)
+                costStage.setJigCost(jigCost.getAmount());
 
             // 验证费用
             VerificationCost verificationCost = verificationCostService.getVerificationCost(project, stage, time);
-            costStage.setVerificationCost(verificationCost.getAmount());
+            if(verificationCost != null)
+                costStage.setVerificationCost(verificationCost.getAmount());
+
 
             // 生产费用
             ProductionCost productionCost = productionCostService.getProductionCost(project, stage, time);
-            costStage.setProductionCost(productionCost.getAmount());
+            if(productionCost != null)
+                costStage.setProductionCost(productionCost.getAmount());
+
 
             // 重工/报废费用
             ReworkScrapCost reworkScrapCost = reworkScrapCostService.getReworkScrapCost(project, stage, time);
-            costStage.setReworkScrapCost(reworkScrapCost.getAmount());
+            if(reworkScrapCost != null)
+                costStage.setReworkScrapCost(reworkScrapCost.getAmount());
 
             // 人员薪资
             SalaryCost salaryCost = salaryCostService.getSalaryCost(project, stage, time);
-            costStage.setSalaryCost(salaryCost.getAmount());
+            if(salaryCost != null)
+                costStage.setSalaryCost(salaryCost.getAmount());
 
             // RMA
             RmaCost rmaCost = rmaCostService.getRmaCost(project, stage, time);
-            costStage.setRmaCost(rmaCost.getAmount());
+            if(rmaCost != null)
+                costStage.setRmaCost(rmaCost.getAmount());
 
             // OBA
             ObaCost obaCost = obaCostService.getObaCost(project, stage, time);
-            costStage.setObaCost(obaCost.getAmount());
+            if(obaCost != null)
+                costStage.setObaCost(obaCost.getAmount());
 
             // 差旅费
             TravelCost travelCost = travelCostService.getTravelCost(project, stage, time);
-            costStage.setTravelCost(travelCost.getAmount());
+            if(travelCost != null)
+                costStage.setTravelCost(travelCost.getAmount());
 
             // 系统维护折旧费
             SystemMaintenanceCost systemMaintenanceCost = systemMaintenanceCostService.getSystemMaintenanceCost(project, stage, time);
-            costStage.setSystemMaintenanceCost(systemMaintenanceCost.getAmount());
+            if(systemMaintenanceCost != null)
+                costStage.setSystemMaintenanceCost(systemMaintenanceCost.getAmount());
 
             // 赔偿费用
             CompensationCost compensationCost = compensationCostSerivce.getCompensationCost(project, stage, time);
-            costStage.setCompensationCost(compensationCost.getAmount());
+            if(compensationCost != null)
+                costStage.setCompensationCost(compensationCost.getAmount());
         }
 
         repository.saveAll(costStageList);
@@ -147,10 +159,11 @@ public class CostStageServiceImpl implements CostStageService {
 
     @Override
     public void createCostStage(String project) {
-        logger.info("创建 CostStage >>" + project);
-        List<ProjectStage> projectStageList = projectService.getProjectStages(project);
+        log.info("创建 CostStage >>" + project);
+        repository.deleteAll(getCostStages(project));
+        List<Stage> stageList = stageService.getStage(project);
         List<CostStage> costStageList = new ArrayList<>();
-        for(ProjectStage projectStage : projectStageList) {
+        for(Stage projectStage : stageList) {
             CostStage costStage = new CostStage(projectStage.getProject(), projectStage.getStage(), projectStage.getTime());
             String stage = costStage.getStage();
 

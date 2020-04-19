@@ -1,17 +1,18 @@
 package com.ivo.coq.costCategory.oba.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ivo.common.model.AutoIncreaseEntityModel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
-import java.util.Date;
-
 /**
  * OBA费用详情
  * @author wj
  * @version 1.0
  */
 @Entity
+@Setter
+@Getter
 public class ObaCostDetail extends AutoIncreaseEntityModel {
 
     /**
@@ -25,6 +26,11 @@ public class ObaCostDetail extends AutoIncreaseEntityModel {
     private String stage;
 
     /**
+     * 阶段次数
+     */
+    private Integer time;
+
+    /**
      * PE单号
      */
     private String peNumber;
@@ -32,8 +38,7 @@ public class ObaCostDetail extends AutoIncreaseEntityModel {
     /**
      * 发生时间
      */
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private Date happenTime;
+    private String happenTime;
 
     /**
      * OBA类型
@@ -55,59 +60,9 @@ public class ObaCostDetail extends AutoIncreaseEntityModel {
      */
     private Double amount;
 
-    public String getProject() {
-        return project;
-    }
+    public ObaCostDetail() {}
 
-    public void setProject(String project) {
+    public ObaCostDetail(String project) {
         this.project = project;
-    }
-
-    public String getPeNumber() {
-        return peNumber;
-    }
-
-    public void setPeNumber(String peNumber) {
-        this.peNumber = peNumber;
-    }
-
-    public Date getHappenTime() {
-        return happenTime;
-    }
-
-    public void setHappenTime(Date happenTime) {
-        this.happenTime = happenTime;
-    }
-
-    public String getObaType() {
-        return obaType;
-    }
-
-    public void setObaType(String obaType) {
-        this.obaType = obaType;
-    }
-
-    public Double getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Double quantity) {
-        this.quantity = quantity;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
     }
 }

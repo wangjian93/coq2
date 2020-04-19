@@ -1,6 +1,8 @@
 package com.ivo.coq.costCategory.salary.entity;
 
 import com.ivo.common.model.AutoIncreaseEntityModel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 
@@ -10,6 +12,8 @@ import javax.persistence.Entity;
  * @version 1.0
  */
 @Entity
+@Setter
+@Getter
 public class SalaryCost extends AutoIncreaseEntityModel {
 
     /**
@@ -48,53 +52,5 @@ public class SalaryCost extends AutoIncreaseEntityModel {
         this.project = project;
         this.stage = stage;
         this.time = time;
-    }
-
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
-    }
-
-    public String getStage() {
-        return stage;
-    }
-
-    public void setStage(String stage) {
-        this.stage = stage;
-    }
-
-    public Integer getTime() {
-        return time;
-    }
-
-    public void setTime(Integer time) {
-        this.time = time;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-
-    public Double getPreventionAmount() {
-        return preventionAmount;
-    }
-
-    public void setPreventionAmount(Double preventionAmount) {
-        this.preventionAmount = preventionAmount;
-    }
-
-    public Double getInLossAmount() {
-        return inLossAmount;
-    }
-
-    public void setInLossAmount(Double inLossAmount) {
-        this.inLossAmount = inLossAmount;
     }
 }

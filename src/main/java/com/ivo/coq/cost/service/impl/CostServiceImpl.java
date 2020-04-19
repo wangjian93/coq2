@@ -6,8 +6,7 @@ import com.ivo.coq.cost.entity.CostSubject;
 import com.ivo.coq.cost.repository.CostRepository;
 import com.ivo.coq.cost.service.CostService;
 import com.ivo.coq.cost.service.CostSubjectService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +17,8 @@ import java.util.List;
  * @version 1.0
  */
 @Service
+@Slf4j
 public class CostServiceImpl implements CostService {
-
-    private static Logger logger = LoggerFactory.getLogger(CostServiceImpl.class);
 
     private CostRepository repository;
 
@@ -38,15 +36,24 @@ public class CostServiceImpl implements CostService {
     }
 
     @Override
+    public List<Cost> getCosts() {
+        return repository.findAll();
+    }
+
+    @Override
     public void createCost(String project) {
-        logger.info("创建 Cost >>" + project);
-        Cost cost = new Cost(project);
-        repository.save(cost);
+        log.info("创建 Cost >>" + project);
+        if(getCost(project) == null) {
+            Cost cost = new Cost(project);
+            repository.save(cost);
+        } else {
+            log.info(" Cost >>" + project + "已存在");
+        }
     }
 
     @Override
     public void computeCost(String project) {
-        logger.info("计算 Cost >>" + project);
+        log.info("计算 Cost >>" + project);
         List<CostSubject> costSubjectList = costSubjectService.getCostSubjects(project);
 
         // 预防费用
@@ -57,12 +64,20 @@ public class CostServiceImpl implements CostService {
         Double inLossCost = null;
         // 外损费用
         Double outLossCost = null;
-        for(CostSubject costSubject : costSubjectList) {
-            preventionCost = DoubleUtil.sum(preventionCost, costSubject.getPreventionCost());
-            identityCost = DoubleUtil.sum(identityCost, costSubject.getIdentityCost());
-            inLossCost = DoubleUtil.sum(inLossCost, costSubject.getInLossCost());
-            outLossCost = DoubleUtil.sum(outLossCost, costSubject.getOutLossCost());
+
+        if(costSubjectList != null) {
+            for(CostSubject costSubject : costSubjectList) {
+                if(costSubject.getPreventionCost() != null && -1 != costSubject.getPreventionCost())
+                    preventionCost = DoubleUtil.sum(preventionCost, costSubject.getPreventionCost());
+                if(costSubject.getIdentityCost() != null && -1 != costSubject.getIdentityCost())
+                    identityCost = DoubleUtil.sum(identityCost, costSubject.getIdentityCost());
+                if(costSubject.getInLossCost() != null && -1 != costSubject.getInLossCost())
+                    inLossCost = DoubleUtil.sum(inLossCost, costSubject.getInLossCost());
+                if(costSubject.getOutLossCost() != null && -1 != costSubject.getOutLossCost())
+                    outLossCost = DoubleUtil.sum(outLossCost, costSubject.getOutLossCost());
+            }
         }
+
         // 必要费用
         Double necessaryCost = DoubleUtil.sum(preventionCost, identityCost);
         // 多余费用

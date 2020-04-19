@@ -11,6 +11,32 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <style>
+        .layui-table-view .layui-table[lay-size="sm"] .layui-table-cell {
+            height: auto;
+        }
+        .layui-table-cell {
+            height: auto;
+            padding: 0 0;
+        }
+        .div_border {
+            border-width: 1px;
+            border-style: solid;
+            border-color:#e6e6e6;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+        .plan {
+            margin: -5px 0px;
+            text-align: center;
+        }
+        .plan .plan_child {
+            height: 30px;
+            line-height: 30px;
+        }
+    </style>
 </head>
 <body>
 <!-- 加载动画 -->
@@ -83,37 +109,68 @@
                 {title: '阶段', align: 'center',
                     templet: function (d) { return  d.sample.stage; }
                 },
-                {title: '阶段次数', align: 'center',
+                {title: '次数', align: 'center',
                     templet: function (d) { return  d.sample.time; }
                 },
-                {field: 'sample.process', title: 'Process', align: 'center',
+                {title: 'Process', align: 'center',
                     templet: function (d) { return  d.sample.process; }
                 },
-                // {field: 'sample.inDate', title: '投产日期', align: 'center',
-                //     templet: function (d) { return  d.sample.inDate; }
-                // },
-                // {field: 'sample.outDate', title: '产出日期', align: 'center',
-                //     templet: function (d) { return  d.sample.outDate; }
-                // },
-                // {field: 'sample.inQuantity', title: '投入数量', align: 'center',
-                //     templet: function (d) { return  d.sample.inQuantity; }
-                // },
-                // {field: 'sample.outQuantity', title: '产出数量', align: 'center',
-                //     templet: function (d) { return  d.sample.outQuantity; }
-                // },
+                {title: 'ProcessTime', align: 'center',
+                    templet: function (d) { return  d.sample.processTime; }
+                },
+                {field: 'sample.inDate', title: '投产日期', align: 'center',
+                    templet: function (d) { return  d.sample.inDate; }
+                },
+                {field: 'sample.outDate', title: '产出日期', align: 'center',
+                    templet: function (d) { return  d.sample.outDate; }
+                },
+                {field: 'sample.inQuantity', title: '投入数量', align: 'center',
+                    templet: function (d) { return  d.sample.inQuantity; }
+                },
+                {field: 'sample.outQuantity', title: '产出数量', align: 'center',
+                    templet: function (d) { return  d.sample.outQuantity; }
+                },
                 {title: '实验申请单', align: 'center',
                     templet: function (d) { return  d.sample.orderNumber; }
                 },
                 {field: 'eeOrder', title: '工程实验单', align: 'center'},
                 {field: 'plant', title: '工厂', align: 'center'},
-                {field: 'productId', title: 'Product ID', align: 'center'},
-                {field: 'pfcd', title: 'PFCD(BEOL)', align: 'center'},
-                {field: 'tft', title: 'PFCD(TFT)', align: 'center'},
-                {field: 'cf', title: 'PFCD(CF)', align: 'center'},
-                {field: 'wo', title: '工单', align: 'center'}
+                {title: 'Product', align: 'center',
+                    templet: function(data) {
+                        var div = document.createElement("div");
+                        div.className = 'plan';
+                        for(var i=0; i<data.productList.length; i++) {
+                            var childDiv = document.createElement("div");
+                            childDiv.innerText = data.productList[i].product;
+                            childDiv.className = 'plan_child div_border';
+                            div.append(childDiv);
+                        }
+
+                        var options = document.createElement("div");
+                        options.append(div);
+                        return options.innerHTML;
+                    }
+                },
+                {title: '工单', align: 'center',
+                    templet: function(data) {
+                        var div = document.createElement("div");
+                        div.className = 'plan';
+                        for(var i=0; i<data.woList.length; i++) {
+                            var childDiv = document.createElement("div");
+                            childDiv.innerText = data.woList[i].wo;
+                            childDiv.className = 'plan_child div_border';
+                            div.append(childDiv);
+                        }
+
+                        var options = document.createElement("div");
+                        options.append(div);
+                        return options.innerHTML;
+                    }
+                }
             ]],
             done: function () {
-                tableX.merges('tableEngineeringExperiment', [1,2,3,4], ['sample', 'sample', 'sample','sample']);
+                tableX.merges('tableEngineeringExperiment', [1,2,3,4,5,6,7,8,9], ['sample', 'sample', 'sample','sample',
+                    'sample','sample','sample','sample','sample']);
             },
             size: 'sm'
         });

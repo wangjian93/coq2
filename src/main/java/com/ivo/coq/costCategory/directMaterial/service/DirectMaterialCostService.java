@@ -12,12 +12,18 @@ import java.util.List;
 public interface DirectMaterialCostService {
 
     /**
-     * 获取机种的直接材料费用列表
+     * 获取机种的直接材料费用
      * @param project 机种
      * @return List<DirectMaterialCost>
      */
     List<DirectMaterialCost> getDirectMaterialCosts(String project);
 
+    /**
+     * 获取机种阶段的直接材料费用
+     * @param project 机种
+     * @param stage 阶段
+     * @return
+     */
     List<DirectMaterialCost> getDirectMaterialCosts(String project, String stage);
 
     /**
@@ -34,4 +40,10 @@ public interface DirectMaterialCostService {
      * @param project 机种
      */
     void createDirectMaterialCost(String project);
+
+    /**
+     * 计算机种的直接材料费用
+     * @param project 机种
+     */
+    void computeDirectMaterialCost(String project);
  }

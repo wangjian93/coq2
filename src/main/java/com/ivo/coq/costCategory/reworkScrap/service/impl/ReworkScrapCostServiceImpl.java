@@ -1,6 +1,6 @@
 package com.ivo.coq.costCategory.reworkScrap.service.impl;
 
-import com.ivo.coq.project.entity.ProjectStage;
+import com.ivo.coq.project.entity.Stage;
 import com.ivo.coq.project.service.ProjectService;
 import com.ivo.coq.costCategory.reworkScrap.entity.ReworkScrapCost;
 import com.ivo.coq.costCategory.reworkScrap.repository.ReworkScrapCostRepository;
@@ -51,9 +51,9 @@ public class ReworkScrapCostServiceImpl implements ReworkScrapCostService {
     public void createReworkScrapCost(String project) {
         logger.info("创建 ReworkScrapCost >> " + project);
 
-        List<ProjectStage> projectStageList = projectService.getProjectStages(project);
+        List<Stage> stageList = projectService.getProjectStages(project);
         List<ReworkScrapCost> reworkScrapCostList = new ArrayList<>();
-        for(ProjectStage projectStage : projectStageList) {
+        for(Stage projectStage : stageList) {
             ReworkScrapCost reworkScrapCost = new ReworkScrapCost(projectStage.getProject(), projectStage.getStage(), projectStage.getTime());
 
             String stage = reworkScrapCost.getStage();

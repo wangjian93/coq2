@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ivo.rest.bm.mapper.BmMapper">
+
+  <!-- 根据PR获取机种的外包薄化费用 -->
+  <select id="getBmOutsourcingThinning" parameterType="java.lang.String" resultType="com.ivo.rest.bm.entity.BmModel">
+    select a.TrackingNumber as pr,
+           a.DateOfCreate as prDrafterDate,
+           a.Owner_FK as prDrafter,
+           b.ItemLine as prItem,
+           b.BudgetType as budgetType,
+           b.MaterialGroup_FK as materialGroup,
+           c.MaterialGroupName as materialGroupName,
+           b.BudgetNumber as budgetNumber,
+           b.Specification as specification,
+           b.UnitPrice as unitPrice,
+           b.Quantity as quantity,
+           b.Currency_FK as currency,
+           b.UnitPrice*b.Quantity AS prAmount,
+           (select DISTINCT p.SubTotal from MM_D_PurchaseOrderRequisitionItem p where p.ValidFlag=1 and p.PurchaseRequisitionItemCode = a.SapCode+'_'+cast(b.ItemLine as varchar)) as poAmount
+    FROM MM_D_PurchaseRequisitionItem b
+        LEFT JOIN MM_M_PurchaseRequisition a on b.PurchaseRequisition_FK=a.PurchaseRequisition_ID and a.ValidFlag=1 and b.ValidFlag=1 and a.OrderTask_FK='980'
+        LEFT JOIN MM_O_MaterialGroup c on c.MaterialGroup_ID=b.MaterialGroup_FK and c.ValidFlag=1
+        LEFT JOIN MM_O_Material m on m.Material_ID=b.Material_FK and m.ValidFlag=1
+    where a.TrackingNumber = #{pr}
+  </select>
+
+  <!-- 获取机种的BM治工具费用 -->
+  <select id="getBmJig" resultType="com.ivo.rest.bm.entity.BmModel">
+    select a.TrackingNumber as pr,
+           a.DateOfCreate as prDrafterDate,
+           a.Owner_FK as prDrafter,
+           b.ItemLine as prItem,
+           b.BudgetType as budgetType,
+           b.MaterialGroup_FK as materialGroup,
+           c.MaterialGroupName as materialGroupName,
+           b.BudgetNumber as budgetNumber,
+           b.Specification as specification,
+           b.UnitPrice as unitPrice,
+           b.Quantity as quantity,
+           b.Currency_FK as currency,
+           b.UnitPrice*b.Quantity AS prAmount ,
+           (select DISTINCT p.SubTotal from MM_D_PurchaseOrderRequisitionItem p where p.ValidFlag=1 and p.PurchaseRequisitionItemCode = a.SapCode+'_'+cast(b.ItemLine as varchar)) as poAmount
+    FROM MM_D_PurchaseRequisitionItem b
+        LEFT JOIN MM_M_PurchaseRequisition a on b.PurchaseRequisition_FK=a.PurchaseRequisition_ID and a.ValidFlag=1 and b.ValidFlag=1 and a.OrderTask_FK='980'
+        LEFT JOIN MM_O_MaterialGroup c on c.MaterialGroup_ID=b.MaterialGroup_FK and c.ValidFlag=1
+        LEFT JOIN MM_O_Material m on m.Material_ID=b.Material_FK and m.ValidFlag=1
+    where (
+          (b.BudgetType='资本' AND c.MaterialGroupName LIKE '%固定资产%') or
+          (b.BudgetType='其他' AND c.MaterialGroupName NOT LIKE '%费用-委外加工费%' AND c.MaterialGroupName NOT LIKE '%服务-检测%')
+          )
+      AND b.BudgetNumber LIKE ('%N1568V-R0%')
+      AND a.DateOfCreate BETWEEN #{fromDate} AND #{toDate}
+    ORDER BY a.TrackingNumber
+  </select>
+
+  <!-- 获取机种的BM验证费用 -->
+  <select id="获取机种的BM验证费用" resultType="com.ivo.rest.bm.entity.BmModel">
+    select a.TrackingNumber as pr,
+           a.DateOfCreate as prDrafterDate,
+           a.Owner_FK as prDrafter,
+           b.ItemLine as prItem,
+           b.BudgetType as budgetType,
+           b.MaterialGroup_FK as materialGroup,
+           c.MaterialGroupName as materialGroupName,
+           b.BudgetNumber as budgetNumber,
+           b.Specification as specification,
+           b.UnitPrice as unitPrice,
+           b.Quantity as quantity,
+           b.Currency_FK as currency,
+           b.UnitPrice*b.Quantity AS prAmount ,
+           (select DISTINCT p.SubTotal from MM_D_PurchaseOrderRequisitionItem p where p.ValidFlag=1 and p.PurchaseRequisitionItemCode = a.SapCode+'_'+cast(b.ItemLine as varchar)) as poAmount
+    FROM MM_D_PurchaseRequisitionItem b
+           LEFT JOIN MM_M_PurchaseRequisition a on b.PurchaseRequisition_FK=a.PurchaseRequisition_ID and a.ValidFlag=1 and b.ValidFlag=1 and a.OrderTask_FK='980'
+           LEFT JOIN MM_O_MaterialGroup c on c.MaterialGroup_ID=b.MaterialGroup_FK and c.ValidFlag=1
+           LEFT JOIN MM_O_Material m on m.Material_ID=b.Material_FK and m.ValidFlag=1
+    where b.BudgetType='其他'
+      AND c.MaterialGroupName LIKE '%服务-检测%'
+      AND b.BudgetNumber LIKE ('%N1568V-R0%')
+      AND a.DateOfCreate BETWEEN #{fromDate} AND #{toDate}
+    ORDER BY a.TrackingNumber
+  </select>
+
+</mapper>

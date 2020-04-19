@@ -11,5 +11,7 @@ import java.util.List;
  */
 public interface ObaCostDetailRepository extends JpaRepository<ObaCostDetail, Long> {
 
-    List<ObaCostDetail> findByProjectOrderById(String project);
+    List<ObaCostDetail> findByProject(String project);
+
+    List<ObaCostDetail> findByProjectAndStageAndTime(String project, String stage, Integer time);
 }

@@ -23,7 +23,7 @@ public interface SalaryCostService {
      * @param project 机种
      * @param stage 阶段
      * @param time 阶段次数
-     * @return
+     * @return SalaryCost
      */
     SalaryCost getSalaryCost(String project, String stage, Integer time);
 
@@ -32,4 +32,10 @@ public interface SalaryCostService {
      * @param project 机种
      */
     void createSalaryCost(String project);
+
+    /**
+     * 计算机种的人员工资
+     * @param project 机种
+     */
+    void computeSalaryCost(String project);
 }

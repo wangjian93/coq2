@@ -2,6 +2,8 @@ package com.ivo.coq.costCategory.travel.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ivo.common.model.AutoIncreaseEntityModel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import java.util.Date;
@@ -12,7 +14,12 @@ import java.util.Date;
  * @version 1.0
  */
 @Entity
+@Setter
+@Getter
 public class TravelCostDetail extends AutoIncreaseEntityModel {
+
+    public static final String TYPE_preventionCost = "预防";
+    public static final String TYPE_inLossCost = "内损";
 
     /**
      * 机种
@@ -21,6 +28,8 @@ public class TravelCostDetail extends AutoIncreaseEntityModel {
 
     /**
      * 成本类型，属于预防、内损
+     * KICK OFF ~ NPRB 属于预防
+     * NPRB ~ DESIGN 属于内损
      */
     private String costType;
 
@@ -70,91 +79,9 @@ public class TravelCostDetail extends AutoIncreaseEntityModel {
      */
     private Double entertainmentAmount;
 
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
+    public TravelCostDetail() {}
+    public TravelCostDetail(String project, String costType) {
         this.project = project;
-    }
-
-    public String getCostType() {
-        return costType;
-    }
-
-    public void setCostType(String costType) {
         this.costType = costType;
-    }
-
-    public String getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(String employee) {
-        this.employee = employee;
-    }
-
-    public String getTravelNumber() {
-        return travelNumber;
-    }
-
-    public void setTravelNumber(String travelNumber) {
-        this.travelNumber = travelNumber;
-    }
-
-    public Date getTravelDate() {
-        return travelDate;
-    }
-
-    public void setTravelDate(Date travelDate) {
-        this.travelDate = travelDate;
-    }
-
-    public Double getTransportationAmount() {
-        return transportationAmount;
-    }
-
-    public void setTransportationAmount(Double transportationAmount) {
-        this.transportationAmount = transportationAmount;
-    }
-
-    public Double getAccommodationAmount() {
-        return accommodationAmount;
-    }
-
-    public void setAccommodationAmount(Double accommodationAmount) {
-        this.accommodationAmount = accommodationAmount;
-    }
-
-    public Double getTelphoneAmount() {
-        return telphoneAmount;
-    }
-
-    public void setTelphoneAmount(Double telphoneAmount) {
-        this.telphoneAmount = telphoneAmount;
-    }
-
-    public Double getMiscAmount() {
-        return miscAmount;
-    }
-
-    public void setMiscAmount(Double miscAmount) {
-        this.miscAmount = miscAmount;
-    }
-
-    public Double getIvomiscAmount() {
-        return ivomiscAmount;
-    }
-
-    public void setIvomiscAmount(Double ivomiscAmount) {
-        this.ivomiscAmount = ivomiscAmount;
-    }
-
-    public Double getEntertainmentAmount() {
-        return entertainmentAmount;
-    }
-
-    public void setEntertainmentAmount(Double entertainmentAmount) {
-        this.entertainmentAmount = entertainmentAmount;
     }
 }

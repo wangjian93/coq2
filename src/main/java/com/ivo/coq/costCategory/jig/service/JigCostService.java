@@ -34,4 +34,10 @@ public interface JigCostService {
      * @param project 机种
      */
     void createJigCost(String project);
+
+    /**
+     * 计算机种的治工具费用
+     * @param project 机种
+     */
+    void computeJigCost(String project);
 }

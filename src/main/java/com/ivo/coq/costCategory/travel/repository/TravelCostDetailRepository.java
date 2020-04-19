@@ -16,5 +16,16 @@ public interface TravelCostDetailRepository extends JpaRepository<TravelCostDeta
      * @param project 机种
      * @return List
      */
-    List<TravelCostDetail> findByProjectOrderById(String project);
+    List<TravelCostDetail> findByProject(String project);
+
+
+    /**
+     * 根据机种、成本类型筛选
+     * @param project 机种
+     * @param type 成本类型
+     * @return
+     */
+    List<TravelCostDetail> findByProjectAndCostType(String project, String type);
+
+
 }

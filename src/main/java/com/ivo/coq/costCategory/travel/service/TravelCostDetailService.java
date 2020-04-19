@@ -16,4 +16,18 @@ public interface TravelCostDetailService {
      * @return List<TravelCostDetail>
      */
     List<TravelCostDetail> getTravelCostDetail(String project);
+
+    /**
+     * 根据类型获取机种的差旅费用
+     * @param project 机种
+     * @param type 成本类型
+     * @return
+     */
+    List<TravelCostDetail> getTravelCostDetail(String project, String type);
+
+    /**
+     * 从出差报支单同步差旅信息
+     * @param project 机种
+     */
+    void syncTravelCostDetail(String project);
 }

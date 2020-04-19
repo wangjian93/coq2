@@ -2,9 +2,14 @@ package com.ivo.test;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import javax.transaction.Transactional;
 
 /**
  * @author wj
@@ -12,6 +17,8 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Transactional
+@Rollback(false)
 public abstract class AbstractTest {
 
     /**

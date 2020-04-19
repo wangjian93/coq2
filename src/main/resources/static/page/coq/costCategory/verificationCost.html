@@ -134,28 +134,28 @@
             cols: [[
                 {type: 'numbers'},
                 {field:'stage', title: '阶段', align: 'center'},
-                {field:'time', title: '阶段次数', align: 'center'},
-                {field:'pr', title: 'PR', align: 'center'},
+                {field:'pr', title: 'PR', align: 'center', width: 110},
                 {field:'prDrafter', title: 'PR起草人', align: 'center'},
-                {field:'peDrafterDate', title: 'PR起草时间', align: 'center'},
-                {field:'prItem', title: 'Item', align: 'center'},
+                {field:'prDrafterDate', title: 'PR起草时间', align: 'center'},
+                // {field:'prItem', title: 'Item', align: 'center'},
                 {field:'budgetType', title: '预算形式', align: 'center'},
                 {field:'materialGroup', title: '物料组', align: 'center'},
-                {field:'materialGroupName', title: '物料组描述', align: 'center'},
+                {field:'materialGroupName', title: '物料组描述', align: 'center', width: 140},
                 {field:'budgetNumber', title: '预算编号', align: 'center'},
                 {field:'specification', title: '品名规格', align: 'center'},
-                {field:'unitPrice', title: '单价', align: 'center'},
-                {field:'quantity', title: '数量', align: 'center'},
-                {field:'currency', title: '币别', align: 'center'},
+                // {field:'unitPrice', title: '单价', align: 'center'},
+                // {field:'quantity', title: '数量', align: 'center'},
+                // {field:'currency', title: '币别', align: 'center'},
                 {title: 'PR费用', align: 'center',
                     templet: function (d) { return cellConvert(d.prAmount);}
                 },
                 {title: 'PO总费用', align: 'center',
                     templet: function (d) { return cellConvert(d.poAmount);}
-                }
+                },
+                {field:'time', title: '阶段次数', align: 'center'}
             ]],
             done: function () {
-                tableX.merges('tableVerificationCostBmDetail', [1]);
+                tableX.merges('tableVerificationCostBmDetail', [1,2]);
             },
             size: 'sm'
         });

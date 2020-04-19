@@ -26,4 +26,10 @@ public interface OutsourcingThinningCostDetailService {
      * @return List<OutsourcingThinningCostDetail>
      */
     List<OutsourcingThinningCostDetail> getOutsourcingThinningCostDetails(String project, String stage, Integer time);
+
+    /**
+     * 同步获取机种外包薄化费用
+     * @param project 机种
+     */
+    void syncOutsourcingThinningCostDetail(String project);
 }

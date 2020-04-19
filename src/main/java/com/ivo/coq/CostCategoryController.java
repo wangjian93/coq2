@@ -6,13 +6,13 @@ import com.ivo.coq.costCategory.compensation.service.CompensationCostSerivce;
 import com.ivo.coq.costCategory.directMaterial.service.DirectMaterialCostService;
 import com.ivo.coq.costCategory.directMaterial.service.MaterialCostDetailService;
 import com.ivo.coq.costCategory.directMaterial.service.OutsourcingThinningCostDetailService;
+import com.ivo.coq.costCategory.directMaterial.service.ShipmentCostDetailService;
 import com.ivo.coq.costCategory.jig.service.JigCostDetailService;
 import com.ivo.coq.costCategory.jig.service.JigCostService;
 import com.ivo.coq.costCategory.oba.service.ObaCostDetailService;
 import com.ivo.coq.costCategory.oba.service.ObaCostService;
 import com.ivo.coq.costCategory.production.service.ProductionCostDetailService;
 import com.ivo.coq.costCategory.production.service.ProductionCostService;
-import com.ivo.coq.costCategory.reworkScrap.entity.ReworkScrapCostDetail;
 import com.ivo.coq.costCategory.reworkScrap.service.ReworkScrapCostDetailService;
 import com.ivo.coq.costCategory.reworkScrap.service.ReworkScrapCostService;
 import com.ivo.coq.costCategory.salary.service.SalaryCostService;
@@ -41,6 +41,8 @@ public class CostCategoryController {
     private MaterialCostDetailService materialCostDetailService;
 
     private OutsourcingThinningCostDetailService outsourcingThinningCostDetailService;
+
+    private ShipmentCostDetailService shipmentCostDetailService;
 
     private JigCostService jigCostService;
     private JigCostDetailService jigCostDetailService;
@@ -83,8 +85,8 @@ public class CostCategoryController {
                                   ProductionCostService productionCostService,
                                   ProductionCostDetailService productionCostDetailService,
                                   ReworkScrapCostService reworkScrapCostService,
-                                  ReworkScrapCostDetailService reworkScrapCostDetailService
-
+                                  ReworkScrapCostDetailService reworkScrapCostDetailService,
+                                  ShipmentCostDetailService shipmentCostDetailService
     ) {
         this.directMaterialCostService = directMaterialCostService;
         this.materialCostDetailService = materialCostDetailService;
@@ -105,6 +107,7 @@ public class CostCategoryController {
         this.productionCostDetailService = productionCostDetailService;
         this.reworkScrapCostService = reworkScrapCostService;
         this.reworkScrapCostDetailService = reworkScrapCostDetailService;
+        this.shipmentCostDetailService = shipmentCostDetailService;
     }
 
     /**
@@ -129,6 +132,16 @@ public class CostCategoryController {
 
     /**
      * 获取机种直接材料费用-外包薄化费用部分
+     * @param project 机种
+     * @return PageResult
+     */
+    @GetMapping("/shipmentCostDetail/{project}")
+    public PageResult shipmentCostDetailService(@PathVariable("project") String project) {
+        return ResultUtil.successPage(shipmentCostDetailService.getShipmentCostDetail(project));
+    }
+
+    /**
+     * 获取机种直接材料费用-出货费用部分
      * @param project 机种
      * @return PageResult
      */

@@ -34,4 +34,10 @@ public interface ObaCostService {
      * @param project 机种
      */
     void createObaCost(String project);
+
+    /**
+     * 计算机种的OBA费用
+     * @param project 机种
+     */
+    void computeObaCost(String project);
 }

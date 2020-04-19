@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ivo.rest.plm.mapper.PlmMapper">
+  <!-- 查询PLM中的试验管理-->
+  <select id="getProjectSample" parameterType="java.lang.String" resultType="com.ivo.rest.plm.entity.PlmSample">
+    select
+      p.name as project,
+      m.DESCRIPTION as stage,
+      s.PROCESS as process,
+      s.TIME as time,
+      s.PROCESSTIME as processTime,
+      s.SCHEDULE_IN as inDate,
+      s.SCHEDULE_OUT as outDate,
+      s.QUANTITY_IN as inQuantity,
+      s.QUANTITY_OUT as outQuantity,
+      s.ORDER_NUMBER as orderNumber
+    from im_sample s
+    LEFT JOIN sch_milestone_schema m on m.id=s.MILESTONE_FK
+    LEFT JOIN im_project p on p.ID = s.PROJECT_FK
+    where m.IS_VALID=1 and p.IS_VALID=1 and s.IS_VALID = 1 and
+          p.NAME = #{project}
+    ORDER BY s.ID
+  </select>
+
+  <!-- 查询PLM中的项目成员-->
+  <select id="getMember" parameterType="java.lang.String" resultType="com.ivo.rest.plm.entity.PlmMember">
+    select
+      p.name as project,
+      a.USER_FK as user,
+      u.name as name,
+      r.ROLE_NAME as role
+    from im_project_actor a
+           LEFT JOIN im_project p on p.ID = a.PROJECT_FK
+           LEFT JOIN im_project_role r on r.ROLE_ID = a.ROLE_FK
+           LEFT JOIN idm_user u on u.USER_ID = a.USER_FK
+    where a.IS_VALID=1 and p.IS_VALID=1 and r.IS_VALID=1
+      and p.name = #{project}
+    ORDER BY r.SORT
+  </select>
+
+  <!-- 查询PLM中的机种进度信息 -->
+  <select id="getMilestone" parameterType="java.lang.String" resultType="com.ivo.rest.plm.entity.PlmMilestone">
+    select
+      p.name as project,
+      m.END_DATE_PLAN as endDatePlan,
+      m.END_DATE as endDate,
+      s.DESCRIPTION as milestone
+    from im_milestone m
+    LEFT JOIN im_project p on p.ID = m.PROJECT_FK
+    LEFT JOIN sch_milestone_schema s on s.ID = m.MILESTONE_FK
+    where m.IS_VALID=1 and p.IS_VALID=1
+    and s.sort &lt; 90
+    and p.name = #{project}
+    order by s.sort
+  </select>
+</mapper>

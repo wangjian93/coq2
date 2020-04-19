@@ -16,7 +16,7 @@ public interface MaterialCostDetailRepository extends JpaRepository<MaterialCost
      * @param project 机种
      * @return List
      */
-    List<MaterialCostDetail> findByProjectOrderById(String project);
+    List<MaterialCostDetail> findByProject(String project);
 
     /**
      * 根据机种、阶段、次数筛选

@@ -1,6 +1,6 @@
 package com.ivo.coq.costCategory.rma.service.impl;
 
-import com.ivo.coq.project.entity.ProjectStage;
+import com.ivo.coq.project.entity.Stage;
 import com.ivo.coq.project.service.ProjectService;
 import com.ivo.coq.costCategory.rma.entity.RmaCost;
 import com.ivo.coq.costCategory.rma.repository.RmaCostRepository;
@@ -51,9 +51,9 @@ public class RmaCostServiceImpl implements RmaCostService {
     public void createRmaCost(String project) {
         logger.info("创建 RmaCost >> " + project);
 
-        List<ProjectStage> projectStageList = projectService.getProjectStages(project);
+        List<Stage> stageList = projectService.getProjectStages(project);
         List<RmaCost> rmaCostList = new ArrayList<>();
-        for(ProjectStage projectStage : projectStageList) {
+        for(Stage projectStage : stageList) {
             RmaCost rmaCost = new RmaCost(projectStage.getProject(), projectStage.getStage(), projectStage.getTime());
 
             String stage = rmaCost.getStage();

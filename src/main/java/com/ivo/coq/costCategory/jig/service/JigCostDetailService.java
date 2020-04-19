@@ -26,4 +26,10 @@ public interface JigCostDetailService {
      * @return List<JigCostDetail>
      */
     List<JigCostDetail> getJigCostDetail(String project, String stage, Integer time);
+
+    /**
+     * 从BM同步治工具费用
+     * @param project 机种
+     */
+    void syncJigCostDetail(String project);
 }

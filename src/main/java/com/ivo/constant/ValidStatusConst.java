@@ -16,4 +16,5 @@ public class ValidStatusConst {
      * 正常有效状态码
      */
     public static final byte VALID = 1;
+
 }

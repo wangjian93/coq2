@@ -16,7 +16,7 @@ public interface VerificationCostBmDetailRepository extends JpaRepository<Verifi
      * @param project 机种
      * @return List
      */
-    List<VerificationCostBmDetail> findByProjectOrderById(String project);
+    List<VerificationCostBmDetail> findByProject(String project);
 
     /**
      * 根据机种、阶段、次数筛选
@@ -25,5 +25,5 @@ public interface VerificationCostBmDetailRepository extends JpaRepository<Verifi
      * @param time 次数
      * @return List
      */
-    List<VerificationCostBmDetail> findByProjectAndStageAndTimeOrderById(String project, String stage, Integer time);
+    List<VerificationCostBmDetail> findByProjectAndStageAndTime(String project, String stage, Integer time);
 }

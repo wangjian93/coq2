@@ -1,10 +1,14 @@
 package com.ivo.coq.project.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ivo.common.model.AutoIncreaseEntityModel;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 机种的实验管理信息，来源于PLM实验管理
@@ -12,6 +16,9 @@ import java.util.Date;
  * @version 1.0
  */
 @Entity
+@Table(name = "coq_project_sample")
+@Setter
+@Getter
 public class Sample extends AutoIncreaseEntityModel {
 
     /**
@@ -33,6 +40,11 @@ public class Sample extends AutoIncreaseEntityModel {
      * Process
      */
     private String process;
+
+    /**
+     * processTime
+     */
+    private String processTime;
 
     /**
      * PLM中投产日期
@@ -61,79 +73,7 @@ public class Sample extends AutoIncreaseEntityModel {
      */
     private String  orderNumber;
 
-    public Sample() {}
-
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
-    }
-
-    public String getStage() {
-        return stage;
-    }
-
-    public void setStage(String stage) {
-        this.stage = stage;
-    }
-
-    public Integer getTime() {
-        return time;
-    }
-
-    public void setTime(Integer time) {
-        this.time = time;
-    }
-
-    public String getProcess() {
-        return process;
-    }
-
-    public void setProcess(String process) {
-        this.process = process;
-    }
-
-    public Date getInDate() {
-        return inDate;
-    }
-
-    public void setInDate(Date inDate) {
-        this.inDate = inDate;
-    }
-
-    public Date getOutDate() {
-        return outDate;
-    }
-
-    public void setOutDate(Date outDate) {
-        this.outDate = outDate;
-    }
-
-    public Double getInQuantity() {
-        return inQuantity;
-    }
-
-    public void setInQuantity(Double inQuantity) {
-        this.inQuantity = inQuantity;
-    }
-
-    public Double getOutQuantity() {
-        return outQuantity;
-    }
-
-    public void setOutQuantity(Double outQuantity) {
-        this.outQuantity = outQuantity;
-    }
-
-    public String getOrderNumber() {
-        return orderNumber;
-    }
-
-    public void setOrderNumber(String orderNumber) {
-        this.orderNumber = orderNumber;
-    }
-
-
+    @OneToMany(mappedBy = "sample", cascade = CascadeType.ALL)
+    @JsonIgnore
+    List<EngineeringExperiment> engineeringExperimentList;
 }

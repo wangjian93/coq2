@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ivo.rest.qms.mapper.QmsMapper">
+  <!-- 从QMS获取机种的验证信息-->
+  <select id="getQmsVerification" parameterType="java.lang.String" resultType="com.ivo.rest.qms.entity.QmsVerification">
+    SELECT
+           i.type as verificationType,
+           i.vname as verificationSubject,
+           i.term as verificationCondition,
+           i.number as verificationQuantity,
+           i.unit as verificationUnit,
+           i.stage as verificationStage
+    FROM im_project_verifyitem i
+        LEFT JOIN im_project_verify v on i.VERIFY_FK = v.ID
+    WHERE v.IS_VALID=1 and i.IS_VALID=1
+      and v.name = #{project}
+  </select>
+
+  <select id="getQmsOba" parameterType="java.lang.String" resultType="com.ivo.rest.qms.entity.QmsOba">
+     SELECT
+           z.MODELID as project,
+           z.QUANTITY as quantity,
+           z.PCSPRICE as price,
+           z.TOTALPRICE as amount,
+           p.OPE_NUMBER as peNumber,
+           p.OPR_TYPE as obaType,
+           p.HAPPENTIME as happenTime
+    from (
+           select a.MODELID, a.OPR_FK, a.QUANTITY,  a.PCSPRICE, a.TOTALPRICE from qms_d_artifical a where a.IS_VALID=1
+           union all
+           SELECT c.MODELID, c.OPR_FK, c.QUANTITY, c.UNITPRICE as PCSPRICE, c.TOTALPRICE from qms_d_place c where c.IS_VALID=1
+         ) z
+        LEFT JOIN qms_m_opr p on p.ID = z.OPR_FK
+    WHERE z.MODELID = #{project}
+  </select>
+
+</mapper>

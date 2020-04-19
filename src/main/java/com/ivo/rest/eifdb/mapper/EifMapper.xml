@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ivo.rest.eifdb.mapper.EifMapper">
+  <!-- 根据ED单查询出EE单 -->
+  <select id="getEeByEd" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT e.TrackingNumber as ee
+    FROM PP_M_EngineeringExperiment e
+    WHERE e.ValidFlag=1
+      AND e.OrderTask_FK = '980'
+      AND e.EDTrackingNumber = #{ed}
+  </select>
+
+  <!-- 获取EE单厂别 -->
+  <select id="getPlantForEE" parameterType="java.lang.String" resultType="java.lang.String">
+    select
+           CASE e.Fab_FK
+               WHEN 'KS1A' THEN 'ARRAY'
+               WHEN 'KS1B' THEN 'CELL'
+               WHEN 'KS1C' THEN 'LCM'
+               ELSE ''
+               END as plant
+    FROM PP_M_EngineeringExperiment e
+    WHERE e.ValidFlag=1
+      AND e.TrackingNumber = #{ee}
+  </select>
+
+  <!-- 获取EE单（Array/Cell）中的产品 -->
+  <select id="getEifEngineeringExperimentProduct" parameterType="java.lang.String" resultType="com.ivo.rest.eifdb.entity.EifEngineeringExperimentProduct">
+    SELECT
+      p.ProductCode1 as product, p.ProductCode2 as tft, p.ProductCode3 as cf, e.ExpQty as expQty
+    FROM PP_D_EngineeringExperimentProduct p
+        LEFT JOIN PP_M_EngineeringExperiment e on e.EngineeringExperiment_ID = p.EngineeringExperiment_FK
+    WHERE p.ValidFlag=1 AND e.ValidFlag=1
+      AND e.TrackingNumber = #{ee}
+  </select>
+
+  <!-- 获取EE单（CELL）中的料号 -->
+  <select id="getEifEngineeringExperimentMaterial" parameterType="java.lang.String" resultType="com.ivo.rest.eifdb.entity.EifEngineeringExperimentMaterial">
+    SELECT
+      m.MaterialGroup_FK as materialGroup, m.Material_FK as material, m.SignalQuality as expQty
+    FROM PP_D_EngineeringExperimentMaterial m
+           LEFT JOIN PP_D_EngineeringExperimentProduct p on p.EngineeringExperimentProduct_ID = m.EngineeringExperimentProduct_FK
+           LEFT JOIN PP_M_EngineeringExperiment e on e.EngineeringExperiment_ID = p.EngineeringExperiment_FK
+    WHERE m.ValidFlag=1 AND p.ValidFlag=1 AND e.ValidFlag=1
+      AND e.TrackingNumber = #{ee}
+  </select>
+
+  <!-- 获取EE单（LCM）中的工单 -->
+  <select id="getEngineeringExperimentWo" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT w.WorkOrderNumber as wo FROM PP_D_EngineeringExperimentWorderItem w
+        LEFT JOIN PP_M_EngineeringExperiment e on e.EngineeringExperiment_ID = w.EngineeringExperiment_FK
+    WHERE e.ValidFlag=1 AND w.ValidFlag=1
+      AND e.TrackingNumber = #{ee}
+  </select>
+
+  <!-- 根据OEE获取到对应的PR -->
+  <select id="getPrByOee" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT o.PRTrackingNumber FROM PP_M_OutsourceEngineeringExperiment o WHERE o.TrackingNumber=#{oee}
+  </select>
+
+</mapper>

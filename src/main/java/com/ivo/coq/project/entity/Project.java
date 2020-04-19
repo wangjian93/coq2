@@ -1,8 +1,11 @@
 package com.ivo.coq.project.entity;
 
 import com.ivo.common.model.AutoIncreaseEntityModel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * 机种
@@ -11,6 +14,9 @@ import javax.persistence.Entity;
  * @version 1.0
  */
 @Entity
+@Table(name = "coq_project")
+@Setter
+@Getter
 public class Project extends AutoIncreaseEntityModel {
 
     /**
@@ -27,29 +33,4 @@ public class Project extends AutoIncreaseEntityModel {
      * 机种尺寸
      */
     private String size;
-
-
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
-    }
 }

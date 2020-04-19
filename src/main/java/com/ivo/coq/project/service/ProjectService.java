@@ -1,7 +1,7 @@
 package com.ivo.coq.project.service;
 
 import com.ivo.coq.project.entity.Project;
-import com.ivo.coq.project.entity.ProjectStage;
+import com.ivo.coq.project.entity.Stage;
 
 import java.util.List;
 
@@ -36,9 +36,9 @@ public interface ProjectService {
     /**
      * 获取机种的阶段
      * @param project 机种名
-     * @return List<ProjectStage>
+     * @return List<Stage>
      */
-    List<ProjectStage> getProjectStages(String project);
+    List<Stage> getProjectStages(String project);
 
     /**
      * 获取机种的阶段，不带次数

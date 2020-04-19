@@ -1,16 +1,48 @@
 spring:
   datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/coq3?useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-    username: root
-    password: root
-    driver-class-name: com.mysql.jdbc.Driver
     druid:
+      # 主数据源  Mysql
+      primary:
+        url: jdbc:mysql://localhost:3306/coq4?useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+        username: root
+        password: root
+      # ORACLE数据源
+      secondary:
+        url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.10.2.233)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=10.10.2.234)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=kabedw)))
+        username: etl
+        password: etl
+      # SQL SERVER数据源
+      third:
+        url: jdbc:jtds:sqlserver://10.20.2.81/EIFDB
+        username: ERP_COQ
+        password: EIM_ERP_COQ@202004
+        validation-query: SELECT 1
+      # MYSQL数据源  PLM
+      fourth:
+        url: jdbc:mysql://10.20.2.53:3306/imdb?useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+        username: ivoim
+        password: imuser2018_09
+      # MYSQL数据源  QMS
+      five:
+        url: jdbc:mysql://10.20.2.53:3306/kmdb?useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+        username: ivokm
+        password: ivokm2
+
       aop-patterns: com.ivo.coq.*
 
   jpa:
+    show-sql: true
     hibernate:
       ddl-auto: update
+#      primary-dialect: org.hibernate.dialect.MySQL5Dialect
+      primary-dialect: com.ivo.common.mysql.MySQLDialectUTF8
+      secondary-dialect: org.hibernate.dialect.Oracle10gDialect
+      third-dialect: org.hibernate.dialect.SQLServer2012Dialect
+    open-in-view: true
 
   jackson:
     time-zone: GMT+8
+
+logging:
+  level:
+    com.ivo.rest: debug

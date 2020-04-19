@@ -1,8 +1,11 @@
 package com.ivo.coq.cost.entity;
 
 import com.ivo.common.model.AutoIncreaseEntityModel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * 机种各阶段的成本详细
@@ -10,6 +13,9 @@ import javax.persistence.Entity;
  * @version 1.0
  */
 @Entity
+@Table(name = "coq_cost_stage")
+@Setter
+@Getter
 public class CostStage extends AutoIncreaseEntityModel {
 
     /**
@@ -89,117 +95,5 @@ public class CostStage extends AutoIncreaseEntityModel {
         this.project = project;
         this.stage = stage;
         this.time = time;
-    }
-
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
-    }
-
-    public String getStage() {
-        return stage;
-    }
-
-    public void setStage(String stage) {
-        this.stage = stage;
-    }
-
-    public Integer getTime() {
-        return time;
-    }
-
-    public void setTime(Integer time) {
-        this.time = time;
-    }
-
-    public Double getDirectMaterialCost() {
-        return directMaterialCost;
-    }
-
-    public void setDirectMaterialCost(Double directMaterialCost) {
-        this.directMaterialCost = directMaterialCost;
-    }
-
-    public Double getJigCost() {
-        return jigCost;
-    }
-
-    public void setJigCost(Double jigCost) {
-        this.jigCost = jigCost;
-    }
-
-    public Double getVerificationCost() {
-        return verificationCost;
-    }
-
-    public void setVerificationCost(Double verificationCost) {
-        this.verificationCost = verificationCost;
-    }
-
-    public Double getProductionCost() {
-        return productionCost;
-    }
-
-    public void setProductionCost(Double productionCost) {
-        this.productionCost = productionCost;
-    }
-
-    public Double getReworkScrapCost() {
-        return reworkScrapCost;
-    }
-
-    public void setReworkScrapCost(Double reworkScrapCost) {
-        this.reworkScrapCost = reworkScrapCost;
-    }
-
-    public Double getSalaryCost() {
-        return salaryCost;
-    }
-
-    public void setSalaryCost(Double salaryCost) {
-        this.salaryCost = salaryCost;
-    }
-
-    public Double getTravelCost() {
-        return travelCost;
-    }
-
-    public void setTravelCost(Double travelCost) {
-        this.travelCost = travelCost;
-    }
-
-    public Double getRmaCost() {
-        return rmaCost;
-    }
-
-    public void setRmaCost(Double rmaCost) {
-        this.rmaCost = rmaCost;
-    }
-
-    public Double getObaCost() {
-        return obaCost;
-    }
-
-    public void setObaCost(Double obaCost) {
-        this.obaCost = obaCost;
-    }
-
-    public Double getCompensationCost() {
-        return compensationCost;
-    }
-
-    public void setCompensationCost(Double compensationCost) {
-        this.compensationCost = compensationCost;
-    }
-
-    public Double getSystemMaintenanceCost() {
-        return systemMaintenanceCost;
-    }
-
-    public void setSystemMaintenanceCost(Double systemMaintenanceCost) {
-        this.systemMaintenanceCost = systemMaintenanceCost;
     }
 }

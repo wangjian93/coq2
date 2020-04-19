@@ -138,7 +138,6 @@
             elem: '#tableCostSubject',
             url: '',
             cols: [[
-                {type: 'numbers'},
                 {field: 'stage', title: '阶段', align: 'center'},
                 {field: 'preventionCost', title: '预防费用', align: 'center',
                     templet: function(d) {
@@ -170,7 +169,7 @@
             url: '',
             cols: [[
                 {field: 'stage', title: '阶段', align: 'center'},
-                {field: 'time', title: '次数', align: 'center', width: 30},
+                {field: 'time', title: '次数', align: 'center', width: 50},
                 {field: 'directMaterialCost', title: '直接材料费用', align: 'center',
                     templet: function(d) {
                         return cellConvert(d.directMaterialCost);
@@ -227,9 +226,6 @@
                     }
                 }
             ]],
-            done: function () {
-                tableX.merges('tableCostStage', [1]);
-            },
             size: 'sm'
         });
 

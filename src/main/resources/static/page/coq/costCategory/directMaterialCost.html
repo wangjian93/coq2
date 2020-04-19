@@ -11,6 +11,32 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <style>
+        .layui-table-view .layui-table[lay-size="sm"] .layui-table-cell {
+            height: auto;
+        }
+        .layui-table-cell {
+            height: auto;
+            padding: 0 0;
+        }
+        .div_border {
+            border-width: 1px;
+            border-style: solid;
+            border-color:#e6e6e6;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+        .plan {
+            margin: -5px 0px;
+            text-align: center;
+        }
+        .plan .plan_child {
+            height: 30px;
+            line-height: 30px;
+        }
+    </style>
 </head>
 <body>
 <!-- 加载动画 -->
@@ -63,7 +89,7 @@
             <!-- 数据表格 -->
             <table id="tableDirectMaterialCost" lay-filter="tableDirectMaterialCost"></table>
 
-
+            <br>
             <div class="layui-card">
                 <div class="layui-card-header">
                     <i class="layui-icon layui-icon-table"></i>
@@ -81,6 +107,16 @@
                 </div>
                 <div class="layui-card-body">
                     <table id="tableOutsourcingThinningCostDetail" lay-filter="tableOutsourcingThinningCostDetail"></table>
+                </div>
+            </div>
+
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="layui-icon layui-icon-table"></i>
+                    <span>出货部分费用详情</span>
+                </div>
+                <div class="layui-card-body">
+                    <table id="tableShipmentCostDetail" lay-filter="tableShipmentCostDetail"></table>
                 </div>
             </div>
         </div>
@@ -117,6 +153,11 @@
                         return cellConvert(d.outsourcingThinningAmount);
                     }
                 },
+                {title: '出货费用', align: 'center',
+                    templet: function(d) {
+                        return cellConvert(d.shipmentAmount);
+                    }
+                },
                 {title: '直接材料费用', align: 'center',
                     templet: function(d) {
                         return cellConvert(d.amount);
@@ -133,48 +174,182 @@
             elem: '#tableMaterialCostDetail',
             url: '',
             cols: [[
-                {type: 'numbers'},
-                {field:'stage', title: '阶段', align: 'center'},
-                {field:'time', title: '阶段次数', align: 'center'},
-                {title: 'Process', align: 'center',
-                    templet: function (d) { return  cellConvert(d.engineeringExperiment.sample.process); }
+                {type: 'numbers', rowspan: 2},
+                {field:'stage', title: '阶段', align: 'center', width: 60, rowspan: 2},
+                {field:'time', title: '次数', align: 'center', width: 60, rowspan: 2},
+                {field:'plant', title: '工厂', align: 'center', width: 80, rowspan: 2},
+                {field:'amount', title: '直材费用', align: 'center', rowspan: 2},
+                {field:'ee', title: 'EE单', align: 'center', width: 110, rowspan: 2},
+                {title: 'Cell', align: 'center', colspan: 4},
+                {title: 'Array', align: 'center', colspan: 4},
+                {title: 'Lcm', align: 'center', colspan: 2}
+            ],[
+                {title: '料号', align: 'center',
+                    templet: function(data) {
+                        var div = document.createElement("div");
+                        div.className = 'plan';
+                        for(var i=0; i<data.materialAmountList.length; i++) {
+                            var childDiv = document.createElement("div");
+                            childDiv.innerText = data.materialAmountList[i].material;
+                            childDiv.className = 'plan_child div_border';
+                            div.append(childDiv);
+                        }
+
+                        var options = document.createElement("div");
+                        options.append(div);
+                        return options.innerHTML;
+                    }
                 },
-                {title: '投产数量', align: 'center',
-                    templet: function (d) { return  cellConvert(d.engineeringExperiment.sample.inQuantity); }
+                {title: '料号价格', align: 'center',
+                    templet: function(data) {
+                        var div = document.createElement("div");
+                        div.className = 'plan';
+                        for(var i=0; i<data.materialAmountList.length; i++) {
+                            var childDiv = document.createElement("div");
+                            childDiv.innerText = data.materialAmountList[i].materialPrice;
+                            childDiv.className = 'plan_child div_border';
+                            div.append(childDiv);
+                        }
+
+                        var options = document.createElement("div");
+                        options.append(div);
+                        return options.innerHTML;
+                    }
                 },
-                {title: '实验申请单', align: 'center',
-                    templet: function (d) { return  cellConvert(d.engineeringExperiment.sample.orderNumber); }
+                {title: '数量', align: 'center',
+                    templet: function(data) {
+                        var div = document.createElement("div");
+                        div.className = 'plan';
+                        for(var i=0; i<data.materialAmountList.length; i++) {
+                            var childDiv = document.createElement("div");
+                            childDiv.innerText = data.materialAmountList[i].quantity;
+                            childDiv.className = 'plan_child div_border';
+                            div.append(childDiv);
+                        }
+
+                        var options = document.createElement("div");
+                        options.append(div);
+                        return options.innerHTML;
+                    }
                 },
-                {title: '工程实验单', align: 'center',
-                    templet: function (d) { return  cellConvert(d.engineeringExperiment.eeOrder); }
-                },
-                {title: '工厂', align: 'center',
-                    templet: function (d) { return  cellConvert(d.engineeringExperiment.plant); }
-                },
-                {title: 'Product ID', align: 'center',
-                    templet: function (d) { return  cellConvert(d.engineeringExperiment.productId); }
-                },
-                {title: 'PFCD(BEOL)', align: 'center',
-                    templet: function (d) { return  cellConvert(d.engineeringExperiment.pfcd); }
-                },
-                {title: '工单', align: 'center',
-                    templet: function (d) { return  cellConvert(d.engineeringExperiment.wo); }
+                {title: '费用', align: 'center',
+                    templet: function(data) {
+                        var div = document.createElement("div");
+                        div.className = 'plan';
+                        for(var i=0; i<data.materialAmountList.length; i++) {
+                            var childDiv = document.createElement("div");
+                            childDiv.innerText = data.materialAmountList[i].amount;
+                            childDiv.className = 'plan_child div_border';
+                            div.append(childDiv);
+                        }
+
+                        var options = document.createElement("div");
+                        options.append(div);
+                        return options.innerHTML;
+                    }
                 },
 
-                {title: '单片材料费用', align: 'center',
-                    templet: function (d) { return  cellConvert(d.perMaterialAmount); }
+                {title: 'Product', align: 'center',
+                    templet: function(data) {
+                        var div = document.createElement("div");
+                        div.className = 'plan';
+                        for(var i=0; i<data.productAmountList.length; i++) {
+                            var childDiv = document.createElement("div");
+                            childDiv.innerText = data.productAmountList[i].product;
+                            childDiv.className = 'plan_child div_border';
+                            div.append(childDiv);
+                        }
+
+                        var options = document.createElement("div");
+                        options.append(div);
+                        return options.innerHTML;
+                    }
                 },
-                {title: '工单中费用', align: 'center',
-                    templet: function (d) { return  cellConvert(d.woAmount); }
+                {title: '单片费用', align: 'center',
+                    templet: function(data) {
+                        var div = document.createElement("div");
+                        div.className = 'plan';
+                        for(var i=0; i<data.productAmountList.length; i++) {
+                            var childDiv = document.createElement("div");
+                            childDiv.innerText = data.productAmountList[i].perAmount;
+                            childDiv.className = 'plan_child div_border';
+                            div.append(childDiv);
+                        }
+
+                        var options = document.createElement("div");
+                        options.append(div);
+                        return options.innerHTML;
+                    }
                 },
-                {title: '材料部分费用', align: 'center',
-                    templet: function (d) { return  cellConvert(d.amount); }
+                {title: '数量', align: 'center',
+                    templet: function(data) {
+                        var div = document.createElement("div");
+                        div.className = 'plan';
+                        for(var i=0; i<data.productAmountList.length; i++) {
+                            var childDiv = document.createElement("div");
+                            childDiv.innerText = data.productAmountList[i].quantity;
+                            childDiv.className = 'plan_child div_border';
+                            div.append(childDiv);
+                        }
+
+                        var options = document.createElement("div");
+                        options.append(div);
+                        return options.innerHTML;
+                    }
+                },
+                {title: '费用', align: 'center',
+                    templet: function(data) {
+                        var div = document.createElement("div");
+                        div.className = 'plan';
+                        for(var i=0; i<data.productAmountList.length; i++) {
+                            var childDiv = document.createElement("div");
+                            childDiv.innerText = data.productAmountList[i].amount;
+                            childDiv.className = 'plan_child div_border';
+                            div.append(childDiv);
+                        }
+
+                        var options = document.createElement("div");
+                        options.append(div);
+                        return options.innerHTML;
+                    }
+                },
+
+                {title: '工单', align: 'center',
+                    templet: function(data) {
+                        var div = document.createElement("div");
+                        div.className = 'plan';
+                        for(var i=0; i<data.woAmountList.length; i++) {
+                            var childDiv = document.createElement("div");
+                            childDiv.innerText = data.woAmountList[i].wo;
+                            childDiv.className = 'plan_child div_border';
+                            div.append(childDiv);
+                        }
+
+                        var options = document.createElement("div");
+                        options.append(div);
+                        return options.innerHTML;
+                    }
+                },
+                {title: '工单费用', align: 'center',
+                    templet: function(data) {
+                        var div = document.createElement("div");
+                        div.className = 'plan';
+                        for(var i=0; i<data.woAmountList.length; i++) {
+                            var childDiv = document.createElement("div");
+                            childDiv.innerText = data.woAmountList[i].woAmount;
+                            childDiv.className = 'plan_child div_border';
+                            div.append(childDiv);
+                        }
+
+                        var options = document.createElement("div");
+                        options.append(div);
+                        return options.innerHTML;
+                    }
                 }
             ]],
             done: function () {
-                tableX.merges('tableMaterialCostDetail', [1,2,3,4,5,6], ['engineeringExperiment.sample',
-                    'engineeringExperiment.sample','engineeringExperiment.sample','engineeringExperiment.sample'
-                ,'engineeringExperiment.sample']);
+                // tableX.merges('tableMaterialCostDetail', [1,2,3], ['engineeringExperiment.sample',
+                //     'engineeringExperiment.sample'], ['engineeringExperiment']);
             },
             size: 'sm'
         });
@@ -212,6 +387,20 @@
             size: 'sm'
         });
 
+        table.render({
+            elem: '#tableShipmentCostDetail',
+            url: '',
+            cols: [[
+                {type: 'numbers'},
+                {field:'stage', title: '阶段', align: 'center'},
+                {field:'time', title: '阶段次数', align: 'center'},
+                {field:'quantity', title: '出货数量', align: 'center'},
+                {field:'perAmount', title: '出货单价', align: 'center'},
+                {field:'amount', title: '费用', align: 'center'}
+            ]],
+            size: 'sm'
+        });
+
 
         /* 表格搜索 */
         form.on('submit(projectSearch)', function (data) {
@@ -222,10 +411,12 @@
             var URL_DirectMaterialCost = '/coq/category/directMaterialCost/'  + data.field.project;
             var URL_MaterialCostDetail = '/coq/category/materialCostDetail/'  + data.field.project;
             var URL_OutsourcingThinningCostDetail = '/coq/category/outsourcingThinningCostDetail/'  + data.field.project;
+            var URL_ShipmentCostDetail = '/coq/category/shipmentCostDetail/'  + data.field.project;
 
             table.reload('tableDirectMaterialCost', {url: URL_DirectMaterialCost});
             table.reload('tableMaterialCostDetail', {url: URL_MaterialCostDetail});
             table.reload('tableOutsourcingThinningCostDetail', {url: URL_OutsourcingThinningCostDetail});
+            table.reload('tableShipmentCostDetail', {url: URL_ShipmentCostDetail});
             return false;
         });
 

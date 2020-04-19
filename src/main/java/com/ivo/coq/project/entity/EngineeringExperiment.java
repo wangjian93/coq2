@@ -1,33 +1,28 @@
 package com.ivo.coq.project.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ivo.common.model.AutoIncreaseEntityModel;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * ARRAY/CELL/LCM工程实验信息，来源工程实验单
- * ARRAY: ProductID
- * CELL: PFCD/TFT/CF
- * LCM: 工单
  * @author wj
  * @version 1.0
  */
 @Entity
+@Table(name = "coq_project_Engineering_Experiment")
+@Setter
+@Getter
 public class EngineeringExperiment extends AutoIncreaseEntityModel {
 
     /**
      * 机种
      */
     private String project;
-
-    /**
-     * 实验信息
-     */
-    @ManyToOne
-    @JoinColumn(name = "Sample_FK")
-    private Sample sample;
 
     /**
      * EE单
@@ -40,101 +35,36 @@ public class EngineeringExperiment extends AutoIncreaseEntityModel {
     private String plant;
 
     /**
-     * Product ID
+     * 实验信息
      */
-    private String productId;
+    @ManyToOne
+    @JoinColumn(name = "Sample_ID")
+    private Sample sample;
 
     /**
-     * PFCD(BEOL)
+     * Array、cell工程试验单的产品
      */
-    private String pfcd;
+    @OneToMany(mappedBy = "engineeringExperiment", cascade = CascadeType.ALL)
+    List<EngineeringExperimentProduct> productList;
 
     /**
-     * PFCD(TFT)
+     * CELL工程试验单的料号
      */
-    private String tft;
+    @OneToMany(mappedBy = "engineeringExperiment", cascade = CascadeType.ALL)
+    List<EngineeringExperimentMaterial> materialList;
 
     /**
-     * PFCD(CF)
+     * LCM工程试验单的工单
      */
-    private String cf;
+    @OneToMany(mappedBy = "engineeringExperiment", cascade = CascadeType.ALL)
+    List<EngineeringExperimentWo> woList;
 
-    /**
-     * 工单
-     */
-    private String wo;
 
     public EngineeringExperiment() {}
 
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
-    }
-
-    public Sample getSample() {
-        return sample;
-    }
-
-    public void setSample(Sample sample) {
+    public EngineeringExperiment(Sample sample, String eeOrder, String project) {
         this.sample = sample;
-    }
-
-    public String getEeOrder() {
-        return eeOrder;
-    }
-
-    public void setEeOrder(String eeOrder) {
-        this.eeOrder = eeOrder;
-    }
-
-    public String getPlant() {
-        return plant;
-    }
-
-    public void setPlant(String plant) {
-        this.plant = plant;
-    }
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
-        this.productId = productId;
-    }
-
-    public String getPfcd() {
-        return pfcd;
-    }
-
-    public void setPfcd(String pfcd) {
-        this.pfcd = pfcd;
-    }
-
-    public String getTft() {
-        return tft;
-    }
-
-    public void setTft(String tft) {
-        this.tft = tft;
-    }
-
-    public String getCf() {
-        return cf;
-    }
-
-    public void setCf(String cf) {
-        this.cf = cf;
-    }
-
-    public String getWo() {
-        return wo;
-    }
-
-    public void setWo(String wo) {
-        this.wo = wo;
+        this.eeOrder = eeOrder.trim().toUpperCase();
+        this.project = project.trim().toUpperCase();
     }
 }

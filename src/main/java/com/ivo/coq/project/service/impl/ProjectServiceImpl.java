@@ -1,14 +1,15 @@
 package com.ivo.coq.project.service.impl;
 
 import com.ivo.coq.project.entity.Project;
-import com.ivo.coq.project.entity.ProjectStage;
+import com.ivo.coq.project.entity.Stage;
 import com.ivo.coq.project.repository.ProjectRepository;
-import com.ivo.coq.project.repository.ProjectStageRepository;
+import com.ivo.coq.project.repository.StageRepository;
 import com.ivo.coq.project.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -20,10 +21,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     private ProjectRepository projectRepository;
 
-    private ProjectStageRepository stageRepository;
+    private StageRepository stageRepository;
 
     @Autowired
-    public ProjectServiceImpl(ProjectRepository projectRepository, ProjectStageRepository stageRepository) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, StageRepository stageRepository) {
         this.projectRepository = projectRepository;
         this.stageRepository = stageRepository;
     }
@@ -44,17 +45,19 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectStage> getProjectStages(String project) {
-        return stageRepository.findByProjectOrderById(project);
+    public List<Stage> getProjectStages(String project) {
+        List list = stageRepository.findByProject(project);
+        Collections.sort(list);
+        return list;
     }
 
     @Override
     public List<String> getStages(String project) {
-        List<ProjectStage> projectStageList = getProjectStages(project);
+        List<Stage> projectStageList = getProjectStages(project);
         List<String> stageList = new ArrayList<String>();
-        for(ProjectStage projectStage : projectStageList) {
-            if(!stageList.contains(projectStage.getStage())) {
-                stageList.add(projectStage.getStage());
+        for(Stage stage : projectStageList) {
+            if(!stageList.contains(stage.getStage())) {
+                stageList.add(stage.getStage());
             }
         }
         return stageList;

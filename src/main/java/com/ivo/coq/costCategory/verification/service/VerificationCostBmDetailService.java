@@ -26,4 +26,10 @@ public interface VerificationCostBmDetailService {
      * @return List<VerificationCostBmDetail>
      */
     List<VerificationCostBmDetail> getVerificationCostBmDetail(String project, String stage, Integer time);
+
+    /**
+     * 同步获取机种的BM验证费用
+     * @param project 机种
+     */
+    void syncVerificationCostBmDetail(String project);
 }

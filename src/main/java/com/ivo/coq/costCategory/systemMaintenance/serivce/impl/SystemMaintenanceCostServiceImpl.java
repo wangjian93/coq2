@@ -1,6 +1,6 @@
 package com.ivo.coq.costCategory.systemMaintenance.serivce.impl;
 
-import com.ivo.coq.project.entity.ProjectStage;
+import com.ivo.coq.project.entity.Stage;
 import com.ivo.coq.project.service.ProjectService;
 import com.ivo.coq.costCategory.systemMaintenance.entity.SystemMaintenanceCost;
 import com.ivo.coq.costCategory.systemMaintenance.repository.SystemMaintenanceCostRepository;
@@ -46,9 +46,9 @@ public class SystemMaintenanceCostServiceImpl implements SystemMaintenanceCostSe
     public void createSystemMaintenanceCos(String project) {
         logger.info("创建 SystemMaintenanceCost >> " + project);
 
-        List<ProjectStage> projectStageList = projectService.getProjectStages(project);
+        List<Stage> stageList = projectService.getProjectStages(project);
         List<SystemMaintenanceCost> systemMaintenanceCostList = new ArrayList<>();
-        for(ProjectStage projectStage : projectStageList) {
+        for(Stage projectStage : stageList) {
             SystemMaintenanceCost systemMaintenanceCost = new SystemMaintenanceCost(projectStage.getProject(),
                     projectStage.getStage(), projectStage.getTime());
 

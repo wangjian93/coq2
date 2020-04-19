@@ -1,13 +1,16 @@
 package com.ivo.coq.costCategory.directMaterial.service.impl;
 
-import com.ivo.coq.project.entity.ProjectStage;
+import com.ivo.common.utils.DoubleUtil;
+import com.ivo.coq.costCategory.directMaterial.entity.MaterialCostDetail;
+import com.ivo.coq.costCategory.directMaterial.entity.OutsourcingThinningCostDetail;
+import com.ivo.coq.costCategory.directMaterial.service.MaterialCostDetailService;
+import com.ivo.coq.costCategory.directMaterial.service.OutsourcingThinningCostDetailService;
+import com.ivo.coq.project.entity.Stage;
 import com.ivo.coq.project.service.ProjectService;
-import com.ivo.coq.costCategory.compensation.service.impl.CompensationCostServiceImpl;
 import com.ivo.coq.costCategory.directMaterial.entity.DirectMaterialCost;
 import com.ivo.coq.costCategory.directMaterial.repository.DirectMaterialCostRepository;
 import com.ivo.coq.costCategory.directMaterial.service.DirectMaterialCostService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,19 +22,25 @@ import java.util.List;
  * @version 1.0
  */
 @Service
+@Slf4j
 public class DirectMaterialCostServiceImpl implements DirectMaterialCostService {
-
-    private static Logger logger = LoggerFactory.getLogger(CompensationCostServiceImpl.class);
-
 
     private DirectMaterialCostRepository repository;
 
     private ProjectService projectService;
 
+    private MaterialCostDetailService materialCostDetailService;
+
+    private OutsourcingThinningCostDetailService outsourcingThinningCostDetailService;
+
     @Autowired
-    public DirectMaterialCostServiceImpl(DirectMaterialCostRepository repository, ProjectService projectService) {
+    public DirectMaterialCostServiceImpl(DirectMaterialCostRepository repository, ProjectService projectService,
+                                         MaterialCostDetailService materialCostDetailService,
+                                         OutsourcingThinningCostDetailService outsourcingThinningCostDetailService) {
         this.repository = repository;
         this.projectService = projectService;
+        this.materialCostDetailService = materialCostDetailService;
+        this.outsourcingThinningCostDetailService = outsourcingThinningCostDetailService;
     }
 
     @Override
@@ -51,11 +60,11 @@ public class DirectMaterialCostServiceImpl implements DirectMaterialCostService 
 
     @Override
     public void createDirectMaterialCost(String project) {
-        logger.info("创建 DirectMaterialCost >>" + project);
-
-        List<ProjectStage> projectStageList = projectService.getProjectStages(project);
+        log.info("创建 DirectMaterialCost >>" + project);
+        repository.deleteAll(getDirectMaterialCosts(project));
+        List<Stage> stageList = projectService.getProjectStages(project);
         List<DirectMaterialCost> directMaterialCostList = new ArrayList<>();
-        for(ProjectStage projectStage : projectStageList) {
+        for(Stage projectStage : stageList) {
             DirectMaterialCost directMaterialCost = new DirectMaterialCost(projectStage.getProject(), projectStage.getStage(),
                     projectStage.getTime());
 
@@ -64,12 +73,54 @@ public class DirectMaterialCostServiceImpl implements DirectMaterialCostService 
             if(!stage.equals("EVT") && !stage.equals("DVT") && !stage.equals("PVT")) {
                 directMaterialCost.setDirectAmount(-1D);
                 directMaterialCost.setOutsourcingThinningAmount(-1D);
+                directMaterialCost.setShipmentAmount(-1D);
                 directMaterialCost.setAmount(-1D);
             }
 
             directMaterialCostList.add(directMaterialCost);
         }
 
+        repository.saveAll(directMaterialCostList);
+    }
+
+    @Override
+    public void computeDirectMaterialCost(String project) {
+        log.info("计算 DirectMaterialCost >>" + project);
+        List<DirectMaterialCost> directMaterialCostList = getDirectMaterialCosts(project);
+        for(DirectMaterialCost directMaterialCost : directMaterialCostList) {
+            // 厂内直材
+            if(null == directMaterialCost.getDirectAmount() || -1 != directMaterialCost.getDirectAmount()) {
+                List<MaterialCostDetail> materialCostDetailList = materialCostDetailService.getMaterialCostDetails(
+                        directMaterialCost.getProject(), directMaterialCost.getStage(), directMaterialCost.getTime()
+                );
+                if(materialCostDetailList != null && materialCostDetailList.size() > 0) {
+                    Double d = directMaterialCost.getDirectAmount();
+                    for(MaterialCostDetail materialCostDetail : materialCostDetailList) {
+                        d = DoubleUtil.sum(d , materialCostDetail.getAmount());
+                    }
+                    directMaterialCost.setDirectAmount(d);
+                }
+            }
+            // 外包薄化
+            if(null == directMaterialCost.getOutsourcingThinningAmount() || -1 != directMaterialCost.getOutsourcingThinningAmount()) {
+                List<OutsourcingThinningCostDetail> outsourcingThinningCostDetailList =
+                        outsourcingThinningCostDetailService.getOutsourcingThinningCostDetails(
+                                directMaterialCost.getProject(), directMaterialCost.getStage(), directMaterialCost.getTime()
+                        );
+                if(outsourcingThinningCostDetailList != null && outsourcingThinningCostDetailList.size() > 0) {
+                    Double d = directMaterialCost.getOutsourcingThinningAmount();
+                    for(OutsourcingThinningCostDetail outsourcingThinningCostDetail : outsourcingThinningCostDetailList) {
+                        d = DoubleUtil.sum(d , outsourcingThinningCostDetail.getPoAmount());
+                    }
+                    directMaterialCost.setOutsourcingThinningAmount(d);
+                }
+            }
+            // 直接材料成本
+            if(null == directMaterialCost.getAmount() || -1 != directMaterialCost.getAmount()) {
+                Double amount = DoubleUtil.sum(directMaterialCost.getDirectAmount(), directMaterialCost.getOutsourcingThinningAmount());
+                directMaterialCost.setAmount(amount);
+            }
+        }
         repository.saveAll(directMaterialCostList);
     }
 }
