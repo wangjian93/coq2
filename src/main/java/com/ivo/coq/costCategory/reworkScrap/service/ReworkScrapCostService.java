@@ -1,5 +1,7 @@
 package com.ivo.coq.costCategory.reworkScrap.service;
 
+import com.ivo.coq.costCategory.reworkScrap.entity.ReworkScrapCostArray;
+import com.ivo.coq.costCategory.reworkScrap.entity.ReworkScrapCostCell;
 import com.ivo.coq.costCategory.reworkScrap.entity.ReworkScrapCost;
 
 import java.util.List;
@@ -16,7 +18,7 @@ public interface ReworkScrapCostService {
      * @param project 机种
      * @return List<ReworkScrapCost>
      */
-    List<ReworkScrapCost> getReworkScraps(String project);
+    List<ReworkScrapCost> getReworkScrapCosts(String project);
 
     List<ReworkScrapCost> getReworkScrapCosts(String project, String stage);
 
@@ -34,4 +36,10 @@ public interface ReworkScrapCostService {
      * @param project 机种
      */
     void createReworkScrapCost(String project);
+
+    /**
+     * 计算机种的重工报废费用
+     * @param project 机种
+     */
+    void computeReworkScrapCost(String project);
 }

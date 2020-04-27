@@ -151,6 +151,38 @@
                         return options.innerHTML;
                     }
                 },
+                {title: 'TFT', align: 'center',
+                    templet: function(data) {
+                        var div = document.createElement("div");
+                        div.className = 'plan';
+                        for(var i=0; i<data.productList.length; i++) {
+                            var childDiv = document.createElement("div");
+                            childDiv.innerText = data.productList[i].tft;
+                            childDiv.className = 'plan_child div_border';
+                            div.append(childDiv);
+                        }
+
+                        var options = document.createElement("div");
+                        options.append(div);
+                        return options.innerHTML;
+                    }
+                },
+                {title: 'CF', align: 'center',
+                    templet: function(data) {
+                        var div = document.createElement("div");
+                        div.className = 'plan';
+                        for(var i=0; i<data.productList.length; i++) {
+                            var childDiv = document.createElement("div");
+                            childDiv.innerText = data.productList[i].cf;
+                            childDiv.className = 'plan_child div_border';
+                            div.append(childDiv);
+                        }
+
+                        var options = document.createElement("div");
+                        options.append(div);
+                        return options.innerHTML;
+                    }
+                },
                 {title: '工单', align: 'center',
                     templet: function(data) {
                         var div = document.createElement("div");

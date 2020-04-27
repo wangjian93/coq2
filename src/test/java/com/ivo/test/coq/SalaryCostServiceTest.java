@@ -33,15 +33,18 @@ public class SalaryCostServiceTest extends AbstractTest {
         salaryCostService.createSalaryCost(PROJECT);
     }
 
-    public void a2_() {
-
+    @Test
+    public void a2_syncSalaryCostDetail() {
+        salaryCostDetailService.syncSalaryCostDetail(PROJECT);
     }
 
-    public void a3_() {
-
+    @Test
+    public void a3_salaryCostNormalHoursDetailService() {
+        salaryCostNormalHoursDetailService.syncSalaryCostNormalHoursDetail(PROJECT);
     }
 
-    public void a4_() {
-
+    @Test
+    public void a4_computeSalaryCost() {
+        salaryCostService.computeSalaryCost(PROJECT);
     }
 }

@@ -11,7 +11,7 @@ import javax.persistence.Entity;
  * @author wj
  * @version 1.0
  */
-@Entity
+@Entity(name = "coq_cost_salary")
 @Setter
 @Getter
 public class SalaryCost extends AutoIncreaseEntityModel {

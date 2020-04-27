@@ -1,5 +1,6 @@
 package com.ivo.coq;
 
+import com.ivo.common.enums.PlantEnum;
 import com.ivo.common.result.PageResult;
 import com.ivo.common.utils.ResultUtil;
 import com.ivo.coq.costCategory.compensation.service.CompensationCostSerivce;
@@ -15,6 +16,8 @@ import com.ivo.coq.costCategory.production.service.ProductionCostDetailService;
 import com.ivo.coq.costCategory.production.service.ProductionCostService;
 import com.ivo.coq.costCategory.reworkScrap.service.ReworkScrapCostDetailService;
 import com.ivo.coq.costCategory.reworkScrap.service.ReworkScrapCostService;
+import com.ivo.coq.costCategory.salary.service.SalaryCostDetailService;
+import com.ivo.coq.costCategory.salary.service.SalaryCostNormalHoursDetailService;
 import com.ivo.coq.costCategory.salary.service.SalaryCostService;
 import com.ivo.coq.costCategory.systemMaintenance.serivce.SystemMaintenanceCostService;
 import com.ivo.coq.costCategory.travel.service.TravelCostDetailService;
@@ -22,6 +25,7 @@ import com.ivo.coq.costCategory.travel.service.TravelCostService;
 import com.ivo.coq.costCategory.verification.service.VerificationCostBmDetailService;
 import com.ivo.coq.costCategory.verification.service.VerificationCostPlantDetailService;
 import com.ivo.coq.costCategory.verification.service.VerificationCostService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,6 +56,8 @@ public class CostCategoryController {
     private VerificationCostPlantDetailService verificationCostPlantDetailService;
 
     private SalaryCostService salaryCostService;
+    private SalaryCostDetailService salaryCostDetailService;
+    private SalaryCostNormalHoursDetailService salaryCostNormalHoursDetailService;
 
     private TravelCostService travelCostService;
     private TravelCostDetailService travelCostDetailService;
@@ -85,8 +91,11 @@ public class CostCategoryController {
                                   ProductionCostService productionCostService,
                                   ProductionCostDetailService productionCostDetailService,
                                   ReworkScrapCostService reworkScrapCostService,
-                                  ReworkScrapCostDetailService reworkScrapCostDetailService,
-                                  ShipmentCostDetailService shipmentCostDetailService
+                                  ShipmentCostDetailService shipmentCostDetailService,
+                                  SalaryCostDetailService salaryCostDetailService,
+                                  SalaryCostNormalHoursDetailService salaryCostNormalHoursDetailService,
+                                  ReworkScrapCostDetailService reworkScrapCostDetailService
+
     ) {
         this.directMaterialCostService = directMaterialCostService;
         this.materialCostDetailService = materialCostDetailService;
@@ -106,8 +115,10 @@ public class CostCategoryController {
         this.productionCostService = productionCostService;
         this.productionCostDetailService = productionCostDetailService;
         this.reworkScrapCostService = reworkScrapCostService;
-        this.reworkScrapCostDetailService = reworkScrapCostDetailService;
         this.shipmentCostDetailService = shipmentCostDetailService;
+        this.salaryCostDetailService = salaryCostDetailService;
+        this.salaryCostNormalHoursDetailService = salaryCostNormalHoursDetailService;
+        this.reworkScrapCostDetailService = reworkScrapCostDetailService;
     }
 
     /**
@@ -211,6 +222,26 @@ public class CostCategoryController {
     }
 
     /**
+     * 获取机种人员薪资费用-详细
+     * @param project 机种
+     * @return PageResult
+     */
+    @GetMapping("/salaryCost/salaryCostDetail/{project}")
+    public PageResult getSalaryCostDetail(@PathVariable("project") String project) {
+        return ResultUtil.successPage(salaryCostDetailService.getSalaryCostDetail(project));
+    }
+
+    /**
+     * 获取机种人员薪资费用-标准工时
+     * @param project 机种
+     * @return PageResult
+     */
+    @GetMapping("/salaryCost/normalHoursDetail/{project}")
+    public PageResult getNormalHoursDetail(@PathVariable("project") String project) {
+        return ResultUtil.successPage(salaryCostNormalHoursDetailService.getSalaryCostNormalHoursDetail(project));
+    }
+
+    /**
      * 获取机种差旅费用
      * @param project 机种
      * @return PageResult
@@ -291,14 +322,32 @@ public class CostCategoryController {
         return ResultUtil.successPage(productionCostDetailService.getProductionCostDetail(project));
     }
 
+    /**
+     * 获取机种重工报废费用
+     * @param project 机种
+     * @return PageResult
+     */
     @GetMapping("/reworkScrapCost/{project}")
     public PageResult getReworkScrapCost(@PathVariable("project") String project) {
-        return ResultUtil.successPage(reworkScrapCostService.getReworkScraps(project));
+        return ResultUtil.successPage(reworkScrapCostService.getReworkScrapCosts(project));
     }
 
-    @GetMapping("/reworkScrapCostDetail/{project}")
-    public PageResult getReworkScrapCostDetail(@PathVariable("project") String project) {
-        return ResultUtil.successPage(reworkScrapCostDetailService.getReworkScrapCostDetail(project));
+    /**
+     * 获取机种各厂的重工报废费用明细
+     * @param project 机种
+     * @return PageResult
+     */
+    @GetMapping("/reworkScrapCostDetail/{project}/{plant}")
+    public PageResult getReworkScrapCostDetail(@PathVariable("project") String project, @PathVariable("plant") String plant) {
+        if(StringUtils.equalsIgnoreCase(plant, PlantEnum.Array.getPlant())) {
+            return ResultUtil.successPage(reworkScrapCostDetailService.getReworkScrapCostArray(project));
+        } else if(StringUtils.equalsIgnoreCase(plant, PlantEnum.Cell.getPlant())) {
+            return ResultUtil.successPage(reworkScrapCostDetailService.getReworkScrapCostCell(project));
+        } else if(StringUtils.equalsIgnoreCase(plant, PlantEnum.Lcm.getPlant())) {
+            return ResultUtil.successPage(reworkScrapCostDetailService.getReworkScrapCostLcm(project));
+        } else {
+            return ResultUtil.successPage(null);
+        }
     }
 
 }

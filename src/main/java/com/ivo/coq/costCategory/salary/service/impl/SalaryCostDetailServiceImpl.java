@@ -59,7 +59,7 @@ public class SalaryCostDetailServiceImpl implements SalaryCostDetailService {
         // 基本薪资
         Double baseSalary = baseSalaryRepository.findFirstByLabel(BaseSalary.LABEL_BASE).getBaseSalary();
         // Delay天数
-        int delayDays = milestoneService.getDelayDays(project, StageEnum.NPRB.getStage());
+        Double delayDays = (double) milestoneService.getDelayDays(project, StageEnum.NPRB.getStage());
         repository.deleteAll(getSalaryCostDetail(project));
         List<RoleWorkDays> roleWorkDaysList = roleWorkDaysRepository.findAll();
         List<SalaryCostDetail> salaryCostDetailList = new ArrayList<>();
@@ -75,11 +75,11 @@ public class SalaryCostDetailServiceImpl implements SalaryCostDetailService {
             // 预防部分:（基本薪资/21.75）* 工作日 * 人数
             Double d = DoubleUtil.divide(baseSalary, 21.75);
             Double preventionAmount = DoubleUtil.multiply(d,
-                    (double) salaryCostDetail.getWorkDays(), (double) salaryCostDetail.getPersonNumber());
+                    salaryCostDetail.getWorkDays(), (double) salaryCostDetail.getPersonNumber());
             salaryCostDetail.setPreventionAmount(preventionAmount);
             // 内损部分：基本薪资/21.75）* delay天数 * 人数
             Double inLossAmount = DoubleUtil.multiply(d,
-                    (double) salaryCostDetail.getDelayDays(), (double) salaryCostDetail.getPersonNumber());
+                    salaryCostDetail.getDelayDays(), (double) salaryCostDetail.getPersonNumber());
             salaryCostDetail.setInLossAmount(inLossAmount);
             salaryCostDetailList.add(salaryCostDetail);
         }

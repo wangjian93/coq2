@@ -93,15 +93,17 @@ public class SalaryCostServiceImpl implements SalaryCostService {
         }
         nprbSalaryCost.setPreventionAmount(preventionAmount);
         nprbSalaryCost.setInLossAmount(inLossAmount);
+        nprbSalaryCost.setAmount(DoubleUtil.sum(preventionAmount, inLossAmount));
 
         Double preventionAmount_ = null;
         Double inLossAmount_ = null;
         for(SalaryCostNormalHoursDetail salaryCostNormalHoursDetail : salaryCostNormalHoursDetailList) {
-            preventionAmount = DoubleUtil.sum(preventionAmount, salaryCostNormalHoursDetail.getPreventionAmount());
-            inLossAmount = DoubleUtil.sum(inLossAmount, salaryCostNormalHoursDetail.getInLossAmount());
+            preventionAmount_ = DoubleUtil.sum(preventionAmount_, salaryCostNormalHoursDetail.getPreventionAmount());
+            inLossAmount_ = DoubleUtil.sum(inLossAmount_, salaryCostNormalHoursDetail.getInLossAmount());
         }
         designSalaryCost.setPreventionAmount(preventionAmount_);
         designSalaryCost.setInLossAmount(inLossAmount_);
+        designSalaryCost.setAmount(DoubleUtil.sum(preventionAmount_, inLossAmount_));
 
         repository.save(nprbSalaryCost);
         repository.save(designSalaryCost);

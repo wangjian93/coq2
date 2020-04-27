@@ -307,8 +307,7 @@ public class CoqController {
      */
     @GetMapping("/reworkScrapCosts/{project}")
     public PageResult getReworkScrapCost(@PathVariable("project") String project) {
-        List<ReworkScrapCost> reworkScrapCostList = reworkScrapCostService.getReworkScraps(project);
-        return ResultUtil.successPage(reworkScrapCostList);
+        return ResultUtil.successPage(reworkScrapCostService.getReworkScrapCosts(project));
     }
 
     /**

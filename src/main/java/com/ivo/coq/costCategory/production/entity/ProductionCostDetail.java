@@ -1,6 +1,8 @@
 package com.ivo.coq.costCategory.production.entity;
 
 import com.ivo.common.model.AutoIncreaseEntityModel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 
@@ -9,7 +11,9 @@ import javax.persistence.Entity;
  * @author wj
  * @version 1.0
  */
-@Entity
+@Setter
+@Getter
+@Entity(name = "coq_cost_production_detail")
 public class ProductionCostDetail extends AutoIncreaseEntityModel {
 
     /**
@@ -38,6 +42,11 @@ public class ProductionCostDetail extends AutoIncreaseEntityModel {
     private Double inQuantity;
 
     /**
+     * 试验单
+     */
+    private String orderNumber;
+
+    /**
      * 厂别
      */
     private String plant;
@@ -52,68 +61,10 @@ public class ProductionCostDetail extends AutoIncreaseEntityModel {
      */
     private Double amount;
 
-
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
+    public ProductionCostDetail() {}
+    public ProductionCostDetail(String project, String stage, Integer time) {
         this.project = project;
-    }
-
-    public String getStage() {
-        return stage;
-    }
-
-    public void setStage(String stage) {
         this.stage = stage;
-    }
-
-    public Integer getTime() {
-        return time;
-    }
-
-    public void setTime(Integer time) {
         this.time = time;
-    }
-
-    public String getProcess() {
-        return Process;
-    }
-
-    public void setProcess(String process) {
-        Process = process;
-    }
-
-    public Double getInQuantity() {
-        return inQuantity;
-    }
-
-    public void setInQuantity(Double inQuantity) {
-        this.inQuantity = inQuantity;
-    }
-
-    public String getPlant() {
-        return plant;
-    }
-
-    public void setPlant(String plant) {
-        this.plant = plant;
-    }
-
-    public Double getPerAmount() {
-        return perAmount;
-    }
-
-    public void setPerAmount(Double perAmount) {
-        this.perAmount = perAmount;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
     }
 }

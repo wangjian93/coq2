@@ -62,7 +62,7 @@ public class SalaryCostNormalHoursDetailServiceImpl implements SalaryCostNormalH
         // 底薪
         Double baseSalary = baseSalaryRepository.findFirstByLabel(BaseSalary.LABEL_RD).getBaseSalary();
         // Delay天数
-        int delayDays = milestoneService.getDelayDays(project, StageEnum.Design.getStage());
+        Double delayDays = (double) milestoneService.getDelayDays(project, StageEnum.Design.getStage());
         List<RdNormalHours> rdNormalHoursList = rdNormalHoursRepository.findAll();
         List<SalaryCostNormalHoursDetail> salaryCostNormalHoursDetails = new ArrayList<>();
         for(RdNormalHours rdNormalHours : rdNormalHoursList) {
@@ -75,10 +75,10 @@ public class SalaryCostNormalHoursDetailServiceImpl implements SalaryCostNormalH
 
             // 预防： （底薪/21.75）* 工作日
             Double d = DoubleUtil.divide(baseSalary, 21.75);
-            Double preventionAmount = DoubleUtil.multiply(d, (double) salaryCostNormalHoursDetail.getWorkDays());
+            Double preventionAmount = DoubleUtil.multiply(d, salaryCostNormalHoursDetail.getWorkDays());
             salaryCostNormalHoursDetail.setPreventionAmount(preventionAmount);
             // 内损： （底薪/21.75）* delay天数
-            Double inLossAmount = DoubleUtil.multiply(d, (double) salaryCostNormalHoursDetail.getDelayDays());
+            Double inLossAmount = DoubleUtil.multiply(d, salaryCostNormalHoursDetail.getDelayDays());
             salaryCostNormalHoursDetail.setInLossAmount(inLossAmount);
 
             salaryCostNormalHoursDetails.add(salaryCostNormalHoursDetail);

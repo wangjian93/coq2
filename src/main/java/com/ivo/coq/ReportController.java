@@ -5,6 +5,8 @@ import com.ivo.common.utils.ResultUtil;
 import com.ivo.coq.cost.entity.CostSubject;
 import com.ivo.coq.cost.service.CostService;
 import com.ivo.coq.cost.service.CostSubjectService;
+import com.ivo.coq.report.entity.InLossAmount;
+import com.ivo.coq.report.service.InLossAmountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +26,15 @@ public class ReportController {
     private CostService costService;
     private CostSubjectService costSubjectService;
 
+    private InLossAmountService inLossAmountService;
+
     @Autowired
     public ReportController(CostSubjectService costSubjectService,
-                            CostService costService) {
+                            CostService costService,
+                            InLossAmountService inLossAmountService) {
         this.costSubjectService = costSubjectService;
         this.costService = costService;
+        this.inLossAmountService = inLossAmountService;
     }
 
     /**
@@ -71,4 +77,17 @@ public class ReportController {
                               @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate) {
         return ResultUtil.successPage(costService.getCosts());
     }
+
+    @PostMapping("/inLossAmount")
+    public PageResult getInLossAmount(@DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
+                                      @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate, String FAB_ID) {
+        return  ResultUtil.successPage(inLossAmountService.getInLossAmount(FAB_ID, fromDate, toDate));
+    }
+
+    @PostMapping("/inLossAmountDetail")
+    public PageResult getInLossAmountDetail(
+            @DateTimeFormat(pattern = "yyyy-MM-dd") Date FAB_DATE, String FAB_ID) {
+        return  ResultUtil.successPage(inLossAmountService.getInLossAmountDetail(FAB_ID, FAB_DATE));
+    }
+
 }

@@ -1,6 +1,8 @@
 package com.ivo.coq.costCategory.reworkScrap.entity;
 
 import com.ivo.common.model.AutoIncreaseEntityModel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 
@@ -9,7 +11,9 @@ import javax.persistence.Entity;
  * @author wj
  * @version 1.0
  */
-@Entity
+@Setter
+@Getter
+@Entity(name = "coq_cost_rework_scrap")
 public class ReworkScrapCost extends AutoIncreaseEntityModel {
 
     /**
@@ -43,58 +47,9 @@ public class ReworkScrapCost extends AutoIncreaseEntityModel {
     private Double scrapAmount;
 
     public ReworkScrapCost() {}
-
     public ReworkScrapCost(String project, String stage, Integer time) {
         this.project = project;
         this.stage = stage;
         this.time = time;
-    }
-
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
-    }
-
-    public String getStage() {
-        return stage;
-    }
-
-    public void setStage(String stage) {
-        this.stage = stage;
-    }
-
-    public Integer getTime() {
-        return time;
-    }
-
-    public void setTime(Integer time) {
-        this.time = time;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-
-    public Double getReworkAmount() {
-        return reworkAmount;
-    }
-
-    public void setReworkAmount(Double reworkAmount) {
-        this.reworkAmount = reworkAmount;
-    }
-
-    public Double getScrapAmount() {
-        return scrapAmount;
-    }
-
-    public void setScrapAmount(Double scrapAmount) {
-        this.scrapAmount = scrapAmount;
     }
 }

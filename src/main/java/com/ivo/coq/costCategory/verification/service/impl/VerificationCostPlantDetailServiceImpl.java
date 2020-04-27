@@ -1,8 +1,12 @@
 package com.ivo.coq.costCategory.verification.service.impl;
 
+import com.ivo.common.utils.DoubleUtil;
 import com.ivo.coq.costCategory.verification.entity.VerificationCostPlantDetail;
+import com.ivo.coq.costCategory.verification.entity.VerificationSubject;
 import com.ivo.coq.costCategory.verification.repository.VerificationCostPlantDetailRepository;
 import com.ivo.coq.costCategory.verification.service.VerificationCostPlantDetailService;
+import com.ivo.coq.costCategory.verification.service.VerificationInPlantBasicService;
+import com.ivo.coq.costCategory.verification.service.VerificationSubjectService;
 import com.ivo.rest.qms.QmsService;
 import com.ivo.rest.qms.entity.QmsVerification;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -24,10 +29,17 @@ public class VerificationCostPlantDetailServiceImpl implements VerificationCostP
 
     private QmsService qmsService;
 
+    private VerificationInPlantBasicService verificationInPlantBasicService;
+    private VerificationSubjectService verificationSubjectService;
+
     @Autowired
-    public VerificationCostPlantDetailServiceImpl(VerificationCostPlantDetailRepository repository, QmsService qmsService) {
+    public VerificationCostPlantDetailServiceImpl(VerificationCostPlantDetailRepository repository, QmsService qmsService,
+                                                  VerificationInPlantBasicService verificationInPlantBasicService,
+                                                  VerificationSubjectService verificationSubjectService) {
         this.repository = repository;
         this.qmsService = qmsService;
+        this.verificationInPlantBasicService = verificationInPlantBasicService;
+        this.verificationSubjectService = verificationSubjectService;
     }
 
     @Override
@@ -61,6 +73,10 @@ public class VerificationCostPlantDetailServiceImpl implements VerificationCostP
                     time = Integer.parseInt(string_s[1]);
                 }
             }
+            // 如果time在QMS中没维护默认到1
+            if(time == null) {
+                time = 1;
+            }
 
             VerificationCostPlantDetail plantDetail = new VerificationCostPlantDetail();
             plantDetail.setProject(project);
@@ -80,7 +96,48 @@ public class VerificationCostPlantDetailServiceImpl implements VerificationCostP
     @Override
     public void computeVerificationCostPlantDetail(String project) {
         log.info("计算机种的厂内验证费用 " + project);
+        List<VerificationCostPlantDetail> verificationInPlantDetailList = getVerificationCostPlantDetail(project);
+        int year = 2019;
+        Double manPowerCostPer = verificationInPlantBasicService.getManPowerCostPer(year);
+        Double maintainCostPer =  verificationInPlantBasicService.getMaintainCostPer(year);
+        verificationInPlantDetailList.forEach(verificationInPlantDetail -> {
 
+            // 计算单片人力费用
+            verificationInPlantDetail.setManPowerAmountPer(manPowerCostPer);
+
+            // 计算单片维护费用
+            verificationInPlantDetail.setMaintainAmountPer(maintainCostPer);
+
+            // 计算单片电费
+            VerificationSubject verificationSubject = verificationSubjectService.getVerificationSubject(
+                    verificationInPlantDetail.getVerificationSubject());
+            if(verificationSubject != null) {
+                verificationInPlantDetail.setElectricityBillAmountPer(verificationSubject.getElectricityBillPer());
+            }
+
+            Double quantity = verificationInPlantDetail.getVerificationQuantity();
+
+            // 计算人力费用
+            verificationInPlantDetail.setManPowerAmount(
+                    DoubleUtil.multiply(quantity, verificationInPlantDetail.getManPowerAmountPer()));
+
+            // 计算维护费用
+            verificationInPlantDetail.setMaintainAmount(
+                    DoubleUtil.multiply(quantity, verificationInPlantDetail.getMaintainAmountPer()));
+
+            // 计算电费
+            verificationInPlantDetail.setElectricityBillAmount(
+                    DoubleUtil.multiply(quantity, verificationInPlantDetail.getElectricityBillAmountPer())
+            );
+
+            // 计算产内验证费用
+            verificationInPlantDetail.setAmount(
+                    DoubleUtil.sum(verificationInPlantDetail.getManPowerAmount(), verificationInPlantDetail.getMaintainAmount(),
+                            verificationInPlantDetail.getElectricityBillAmount())
+            );
+        });
+
+        repository.saveAll(verificationInPlantDetailList);
 
     }
 }

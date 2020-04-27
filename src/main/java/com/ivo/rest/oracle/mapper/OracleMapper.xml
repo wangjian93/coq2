@@ -55,4 +55,139 @@
         )
   </select>
 
+  <!-- 获取Array的重工报废数据 -->
+  <select id="getOracleReworkScrapArray" resultType="com.ivo.rest.oracle.entity.OracleReworkScrapArray">
+    select a.*,b.prod_model_id from (
+    select fab_date,prod_id,route_id,ope_id,EVT_CATE,sum(qty) qty from (
+    select distinct fab_date,prod_id,route_id,ope_id,EVT_CATE,sht_id,qty from (
+    select fab_date,prod_id,cr_route_id route_id,cr_ope_id ope_id ,
+    case when EVT_CATE IN ('LOGF', 'LFAB', 'LFRW', 'LFAT') then 'Rework' ELSE 'Scrp' END EVT_CATE,sht_id,
+    count(*)  qty
+    from sor.wpp_asht_his a
+    where
+    a.prod_id=#{prodId}
+    and
+    fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+    and ( (EVT_CATE IN ('LOGF', 'LFAB', 'LFRW', 'LFAT') and (cr_route_id like 'R%P' OR cr_route_id like 'B%')) or EVT_CATE ='SCRP')
+    group by fab_date,prod_id,cr_route_id,cr_ope_id,case when EVT_CATE IN ('LOGF', 'LFAB', 'LFRW', 'LFAT') then 'Rework' ELSE 'Scrp' END,sht_id
+    ) a
+    ) b group by  fab_date,prod_id,route_id,ope_id,EVT_CATE
+    ) a left join (
+    select substr(prod_id,4) newPord,prod_model_id from dm.m_prod_d
+    ) b on a.prod_id=b.newPord
+  </select>
+
+  <!-- 获取Cell的重工报废数据 -->
+  <select id="getOracleReworkScrapCell" resultType="com.ivo.rest.oracle.entity.OracleReworkScrapCell">
+    select a.*,b.prod_model_id from (
+    select fab_date,prod_id,ary_prod_id,product_typ,nx_ope_id,EVT_CATE,count(sht_id)  qty ,0 qty_0800
+    from sor.wpp_Csht_his
+    where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+    and evt_cate in ('LFRW','PIRW','RWTP','QTRW','REWK','REVW','RESS','LGRW','FERW','ARWK','SCRP')
+    and prod_id in (#{tft},#{cf})
+    and nx_ope_id &lt; '0500'
+    group by fab_date,prod_id,ary_prod_id,nx_ope_id,EVT_CATE,product_typ
+    union all
+    select fab_date,prod_id,ary_prod_id,product_typ,nx_ope_id,EVT_CATE,count(pnl_id)  pnl_qty,0 qty_0800
+    from sor.wpp_Csht_his
+    where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+    and evt_cate in ('LFRW','PIRW','RWTP','QTRW','REWK','REVW','RESS','LGRW','FERW','ARWK','SCRP')
+    and  prod_id in (#{prodId})
+    and sht_pnl_flg='P' and nx_ope_id &lt;&gt;'0820'
+    group by fab_date,prod_id,ary_prod_id,nx_ope_id,EVT_CATE,product_typ
+    union all
+    select a.fab_date,a.prod_id,a.ary_prod_id,a.product_typ,a.nx_ope_id,a.EVT_CATE,count(a.pnl_id) qty,count(b.cr_ope_id) qty_0800 from (
+    select DISTINCT fab_date,prod_id,product_typ,nx_ope_id,EVT_CATE,PNL_ID,ary_prod_id
+    from sor.wpp_Csht_his a
+    where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+    and prod_id in (#{prodId})
+    and EVT_CATE IN ('SCRP') AND nx_ope_id='0820'
+    ) a left join (
+    select distinct fab_date,prod_id,cr_ope_id,EVT_CATE,PNL_ID,ary_prod_id
+    from sor.wpp_Csht_his a
+    where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+    and prod_id in (#{prodId})
+    and cr_ope_id='0800' and EVT_CATE='LOGF'
+    )b on a.pnl_id=b.pnl_id
+    group by a.fab_date,a.prod_id,a.ary_prod_id,a.product_typ,a.nx_ope_id,a.EVT_CATE
+    ) a left join (
+    select substr(prod_id,4) newPord,prod_model_id from dm.m_prod_d
+    ) b on a.prod_id=b.newPord
+  </select>
+
+  <!-- 获取LCM1的重工报废数据 -->
+  <select id="getOracleReworkScrapLcm1" resultType="com.ivo.rest.oracle.entity.OracleReworkScrapLcm">
+    select a.*,b.prod_model_id from (
+    select fab_date,wo_id,cr_ope_id,EVT_CATE,count(pnl_id)  qty  ,' ' scrp_m_ope_id,prod_id
+    from sor.wpp_nm1sht_his a
+    where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+    and evt_cate in ('LFRW')
+    and wo_id in (#{wo})
+    group by fab_date,wo_id,cr_ope_id,EVT_CATE,prod_id
+    union all
+    select  c.fab_date,c.wo_id,c.cr_ope_id,c.EVT_CATE,count(c.pnl_id) qty,d.cr_ope_id scrp_m_ope_id,c.prod_id
+    from (
+    select fab_date,wo_id,cr_ope_id,EVT_CATE,pnl_id,prod_id from sor.wpp_nm1sht_his
+    where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+    and wo_id in (#{wo})
+    and evt_cate in ('SCRP')
+    ) c left join (
+    select  a.fab_date,a.wo_id,a.pnl_id,cr_ope_id,EVT_CATE,b.time,a.prod_id from (
+    select fab_date,wo_id,pnl_id,cr_ope_id,EVT_CATE,time,prod_id
+    from sor.wpp_nm1sht_his a
+    where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+    and evt_cate='LFRW'
+    and wo_id in (#{wo})
+    ) a left join (
+    select fab_date,wo_id,pnl_id,max(time) time,prod_id
+    from sor.wpp_nm1sht_his a
+    where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+    and  evt_cate='LFRW'
+    and wo_id in (#{wo})
+    group by fab_date,wo_id, pnl_id,prod_id
+    ) b on  a.wo_id=b.wo_id and a.pnl_id=b.pnl_id and a.time=b.time and a.fab_date=b.fab_date
+    ) d on c.wo_id=d.wo_id and c.pnl_id=d.pnl_id and d.time is not null and c.fab_date=d.fab_date
+    group by c.fab_date,c.wo_id,c.cr_ope_id,c.EVT_CATE,d.cr_ope_id,c.prod_id
+    ) a left join (
+    select substr(prod_id,4) newPord,prod_model_id from dm.m_prod_d
+    ) b on a.prod_id=b.newPord
+  </select>
+
+  <!-- 获取LCM2的重工报废数据 -->
+  <select id="getOracleReworkScrapLcm2" resultType="com.ivo.rest.oracle.entity.OracleReworkScrapLcm">
+    select a.*,b.prod_model_id from (
+    select fab_date,wo_id,cr_ope_id,EVT_CATE,count(pnl_id)  qty  ,' ' scrp_m_ope_id,prod_id
+    from sor.wpp_m2sht_his a
+    where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+    and evt_cate in ('LFRW')
+    and wo_id in (#{wo})
+    group by fab_date,wo_id,cr_ope_id,EVT_CATE,prod_id
+    union all
+    select  c.fab_date,c.wo_id,c.cr_ope_id,c.EVT_CATE,count(c.pnl_id) qty,d.cr_ope_id scrp_m_ope_id,c.prod_id
+    from (
+    select fab_date,wo_id,cr_ope_id,EVT_CATE,pnl_id,prod_id from sor.wpp_m2sht_his
+    where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+    and wo_id in (#{wo})
+    and evt_cate in ('SCRP')
+    ) c left join (
+    select  a.fab_date,a.wo_id,a.pnl_id,cr_ope_id,EVT_CATE,b.time,a.prod_id from (
+    select fab_date,wo_id,pnl_id,cr_ope_id,EVT_CATE,time,prod_id
+    from sor.wpp_m2sht_his a
+    where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+    and evt_cate='LFRW'
+    and wo_id in (#{wo})
+    ) a left join (
+    select fab_date,wo_id,pnl_id,max(time) time,prod_id
+    from sor.wpp_m2sht_his a
+    where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+    and  evt_cate='LFRW'
+    and wo_id in (#{wo})
+    group by fab_date,wo_id, pnl_id,prod_id
+    ) b on  a.wo_id=b.wo_id and a.pnl_id=b.pnl_id and a.time=b.time and a.fab_date=b.fab_date
+    ) d on c.wo_id=d.wo_id and c.pnl_id=d.pnl_id and d.time is not null and c.fab_date=d.fab_date
+    group by c.fab_date,c.wo_id,c.cr_ope_id,c.EVT_CATE,d.cr_ope_id,c.prod_id
+    ) a left join (
+    select substr(prod_id,4) newPord,prod_model_id from dm.m_prod_d
+    ) b on a.prod_id=b.newPord
+  </select>
 </mapper>

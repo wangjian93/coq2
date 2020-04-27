@@ -11,7 +11,7 @@ import javax.persistence.Entity;
  * @author wj
  * @version 1.0
  */
-@Entity
+@Entity(name = "coq_cost_salary_detail")
 @Setter
 @Getter
 public class SalaryCostDetail extends AutoIncreaseEntityModel {
@@ -29,7 +29,7 @@ public class SalaryCostDetail extends AutoIncreaseEntityModel {
     /**
      * 工作天数
      */
-    private int workDays;
+    private Double workDays;
 
     /**
      * 人数
@@ -39,7 +39,7 @@ public class SalaryCostDetail extends AutoIncreaseEntityModel {
     /**
      * Delay的天数
      */
-    private int delayDays;
+    private Double delayDays;
 
     /**
      * 预防费用

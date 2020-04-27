@@ -11,7 +11,7 @@ import javax.persistence.Entity;
  * @author wj
  * @version 1.0
  */
-@Entity
+@Entity(name = "coq_cost_salary_role_work_days")
 @Setter
 @Getter
 public class RoleWorkDays extends AutoIncreaseEntityModel {
@@ -24,5 +24,5 @@ public class RoleWorkDays extends AutoIncreaseEntityModel {
     /**
      * 工作天数
      */
-    private int workDays;
+    private Double workDays;
 }

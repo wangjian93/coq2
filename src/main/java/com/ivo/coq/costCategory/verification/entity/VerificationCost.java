@@ -12,8 +12,7 @@ import javax.persistence.Table;
  * @author wj
  * @version 1.0
  */
-@Entity
-@Table(name = "coq_cost_verification")
+@Entity(name = "coq_cost_verification")
 @Setter
 @Getter
 public class VerificationCost extends AutoIncreaseEntityModel {

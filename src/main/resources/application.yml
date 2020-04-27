@@ -28,8 +28,6 @@ spring:
         username: ivokm
         password: ivokm2
 
-      aop-patterns: com.ivo.coq.*
-
   jpa:
     show-sql: true
     hibernate:

@@ -17,4 +17,18 @@ public interface ProductionCostDetailService {
      * @return List<ProductionCostDetail>
      */
     List<ProductionCostDetail> getProductionCostDetail(String project);
+
+    List<ProductionCostDetail> getProductionCostDetail(String project, String stage, Integer time);
+
+    /**
+     * 同步创建生产费用详细
+     * @param project 机种
+     */
+    void syncProductionCostDetail(String project);
+
+    /**
+     * 计算生产费用详细
+     * @param project 机种
+     */
+    void computeProductionCostDetail(String project);
 }

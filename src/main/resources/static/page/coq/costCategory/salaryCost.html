@@ -66,6 +66,26 @@
             <div class="layui-card">
                 <div class="layui-card-header">
                     <i class="layui-icon layui-icon-table"></i>
+                    <span>人员薪资费用明细</span>
+                </div>
+                <div class="layui-card-body">
+                    <table id="tableSalaryCostDetail" lay-filter="tableSalaryCostDetail"></table>
+                </div>
+            </div>
+
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="layui-icon layui-icon-table"></i>
+                    <span>RD标准工时费用</span>
+                </div>
+                <div class="layui-card-body">
+                    <table id="tableNormalHoursDetail" lay-filter="tableNormalHoursDetail"></table>
+                </div>
+            </div>
+
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="layui-icon layui-icon-table"></i>
                     <span>项目成员</span>
                 </div>
                 <div class="layui-card-body">
@@ -133,6 +153,35 @@
             size: 'sm'
         });
 
+        table.render({
+            elem: '#tableSalaryCostDetail',
+            url: '',
+            cols: [[
+                {type: 'numbers'},
+                {field:'role', title: '角色', align: 'center'},
+                {field:'workDays', title: '工作天数', align: 'center'},
+                {field:'personNumber', title: '人数', align: 'center'},
+                {field:'delayDays', title: 'Delay的天数', align: 'center'},
+                {field:'preventionAmount', title: '预防费用', align: 'center'},
+                {field:'inLossAmount', title: '内损费用', align: 'center'}
+            ]],
+            size: 'sm'
+        });
+
+        table.render({
+            elem: '#tableNormalHoursDetail',
+            url: '',
+            cols: [[
+                {type: 'numbers'},
+                {field:'role', title: '角色', align: 'center'},
+                {field:'workDays', title: '工作天数', align: 'center'},
+                {field:'delayDays', title: 'Delay的天数', align: 'center'},
+                {field:'preventionAmount', title: '预防费用', align: 'center'},
+                {field:'inLossAmount', title: '内损费用', align: 'center'}
+            ]],
+            size: 'sm'
+        });
+
         /* 表格搜索 */
         form.on('submit(projectSearch)', function (data) {
             if(!data.field.project) {
@@ -141,8 +190,13 @@
             }
             var URL_SalaryCost = '/coq/category/salaryCost/'  + data.field.project;
             var URL_ProjectMember = '/coq/project/member/' + data.field.project;
+            var URL_SalaryCostDetail = '/coq/category/salaryCost/salaryCostDetail/' + data.field.project;
+            var URL_NormalHoursDetail = '/coq/category/salaryCost/normalHoursDetail/' + data.field.project;
+
             table.reload('tableSalaryCost', {url: URL_SalaryCost});
             table.reload('tableProjectMember', {url: URL_ProjectMember});
+            table.reload('tableSalaryCostDetail', {url: URL_SalaryCostDetail});
+            table.reload('tableNormalHoursDetail', {url: URL_NormalHoursDetail});
             return false;
         });
 

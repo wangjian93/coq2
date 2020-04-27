@@ -34,4 +34,10 @@ public interface ProductionCostService {
      * @param project 机种
      */
     void createProductionCost(String project);
+
+    /**
+     * 计算机种的生产费用
+     * @param project 机种
+     */
+    void computeProductionCost(String project);
  }

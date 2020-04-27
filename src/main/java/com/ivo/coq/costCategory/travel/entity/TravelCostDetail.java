@@ -13,7 +13,7 @@ import java.util.Date;
  * @author wj
  * @version 1.0
  */
-@Entity
+@Entity(name = "coq_cost_travel_detail")
 @Setter
 @Getter
 public class TravelCostDetail extends AutoIncreaseEntityModel {

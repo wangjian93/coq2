@@ -13,7 +13,7 @@ import javax.persistence.Table;
  * @version 1.0
  */
 @Entity
-@Table
+@Table(name = "coq_cost_Direct_Material_Shipment_detail")
 @Setter
 @Getter
 public class ShipmentCostDetail extends AutoIncreaseEntityModel {

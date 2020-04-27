@@ -66,10 +66,30 @@
             <div class="layui-card">
                 <div class="layui-card-header">
                     <i class="layui-icon layui-icon-table"></i>
-                    <span>重工报废费用详情</span>
+                    <span>Array重工报废费用明细</span>
                 </div>
                 <div class="layui-card-body">
-                    <table id="tableReworkScrapCostDetail" lay-filter="tableReworkScrapCostDetail"></table>
+                    <table id="tableReworkScrapCostArray" lay-filter="tableReworkScrapCostArray"></table>
+                </div>
+            </div>
+
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="layui-icon layui-icon-table"></i>
+                    <span>Cell重工报废费用明细</span>
+                </div>
+                <div class="layui-card-body">
+                    <table id="tableReworkScrapCostCell" lay-filter="tableReworkScrapCostCell"></table>
+                </div>
+            </div>
+
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="layui-icon layui-icon-table"></i>
+                    <span>Lcm重工报废费用明细</span>
+                </div>
+                <div class="layui-card-body">
+                    <table id="tableReworkScrapCostLcm" lay-filter="tableReworkScrapCostLcm"></table>
                 </div>
             </div>
         </div>
@@ -119,26 +139,68 @@
         });
 
         table.render({
-            elem: '#tableReworkScrapCostDetail',
+            elem: '#tableReworkScrapCostArray',
             url: '',
             cols: [[
                 {type: 'numbers'},
                 {field:'stage', title: '阶段', align: 'center'},
                 {field: 'time', title: '次数', align: 'center'},
-                {field:'plant', title: '厂别', align: 'center'},
-                {field:'station', title: '站点', align: 'center'},
-                {field:'reworkScrapType', title: '类型', align: 'center'},
-                {field:'quantity', title: '数量', align: 'center'},
-                {field:'perAmount', title: '单片费用', align: 'center'},
-                {title: '费用', align: 'center',
-                    templet: function(d) {
-                        return cellConvert(d.amount);
-                    }
-                }
+                {field: 'station', title: '匹配的站点', align: 'center'},
+                {field: 'stationAmount', title: '站点费用', align: 'center'},
+                {field: 'amount', title: '重工/报废费用', align: 'center'},
+                {field:'fabDate', title: 'FAB_DATE', align: 'center'},
+                {field:'prodId', title: 'PROD_ID', align: 'center'},
+                {field:'routeId', title: 'ROUTE_ID', align: 'center'},
+                {field:'evtCate', title: 'EVT_CATE', align: 'center'},
+                {field:'prodModel', title: 'PROD_MODEL_ID', align: 'center'},
+                {field:'opeId', title: 'OPE_ID', align: 'center'},
+                {field:'qty', title: 'QTY', align: 'center'}
             ]],
-            done: function () {
-                tableX.merges('tableReworkScrapCostDetail', [1]);
-            },
+            size: 'sm'
+        });
+
+        table.render({
+            elem: '#tableReworkScrapCostCell',
+            url: '',
+            cols: [[
+                {type: 'numbers'},
+                {field:'stage', title: '阶段', align: 'center'},
+                {field: 'time', title: '次数', align: 'center'},
+                {field: 'station', title: '匹配的站点', align: 'center'},
+                {field: 'stationAmount', title: '站点费用', align: 'center'},
+                {field: 'amount', title: '重工/报废费用', align: 'center'},
+                {field: 'fabDate', title: 'FAB_DATE', align: 'center'},
+                {field: 'prodId', title: 'PROD_ID', align: 'center'},
+                {field: 'aryProdId', title: 'ARY_PROD_ID', align: 'center'},
+                {field: 'productType', title: 'PRODUCT_TYP', align: 'center'},
+                {field: 'nxOpeId', title: 'NX_OPE_ID', align: 'center'},
+                {field: 'evtCate', title: 'EVT_CATE', align: 'center'},
+                {field: 'qty', title: 'QTY', align: 'center'},
+                {field: 'qty0800', title: 'QTY_0800', align: 'center'},
+                {field: 'ProdModelId', title: 'PROD_MODEL_ID', align: 'center'}
+            ]],
+            size: 'sm'
+        });
+
+        table.render({
+            elem: '#tableReworkScrapCostLcm',
+            url: '',
+            cols: [[
+                {type: 'numbers'},
+                {field:'stage', title: '阶段', align: 'center'},
+                {field: 'time', title: '次数', align: 'center'},
+                {field: 'station', title: '匹配的站点', align: 'center'},
+                {field: 'stationAmount', title: '站点费用', align: 'center'},
+                {field: 'amount', title: '重工/报废费用', align: 'center'},
+                {field: 'fabDate', title: 'FAB_DATE', align: 'center'},
+                {field: 'woId', title: 'WO_ID', align: 'center'},
+                {field: 'crOpeId', title: 'CR_OPE_ID', align: 'center'},
+                {field: 'evtCate', title: 'EVT_CATE', align: 'center'},
+                {field: 'qty', title: 'QTY', align: 'center'},
+                {field: 'scrpMOpeId', title: 'SCRP_M_OPE_ID', align: 'center'},
+                {field: 'prodId', title: 'PROD_ID', align: 'center'},
+                {field: 'prodModelId', title: 'PROD_MODEL_ID', align: 'center'}
+            ]],
             size: 'sm'
         });
 
@@ -149,9 +211,13 @@
                 return false;
             }
             var URL_ReworkScrapCost = '/coq/category/reworkScrapCost/'  + data.field.project;
-            var URL_ReworkScrapCostDetail = '/coq/category/reworkScrapCostDetail/' + data.field.project;
+            var URL_ReworkScrapCostArray = '/coq/category/reworkScrapCostDetail/' + data.field.project + "/Array";
+            var URL_ReworkScrapCostCell = '/coq/category/reworkScrapCostDetail/' + data.field.project + "/Cell";
+            var URL_ReworkScrapCostLcm = '/coq/category/reworkScrapCostDetail/' + data.field.project + "/Lcm";
             table.reload('tableReworkScrapCost', {url: URL_ReworkScrapCost});
-            table.reload('tableReworkScrapCostDetail', {url: URL_ReworkScrapCostDetail});
+            table.reload('tableReworkScrapCostArray', {url: URL_ReworkScrapCostArray});
+            table.reload('tableReworkScrapCostCell', {url: URL_ReworkScrapCostCell});
+            table.reload('tableReworkScrapCostLcm', {url: URL_ReworkScrapCostLcm});
             return false;
         });
 

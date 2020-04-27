@@ -17,4 +17,8 @@ public interface ProductionCostDetailRepository extends JpaRepository<Production
      * @return List<ProductionCostDetailRepository>
      */
     List<ProductionCostDetail> findByProjectOrderById(String project);
+
+
+
+    List<ProductionCostDetail> findByProjectAndStageAndTime(String project, String stage, Integer time);
 }
