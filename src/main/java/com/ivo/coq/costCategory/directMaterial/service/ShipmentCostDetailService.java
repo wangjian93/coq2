@@ -1,5 +1,6 @@
 package com.ivo.coq.costCategory.directMaterial.service;
 
+import com.ivo.coq.costCategory.directMaterial.entity.OutsourcingThinningCostDetail;
 import com.ivo.coq.costCategory.directMaterial.entity.ShipmentCostDetail;
 
 import java.util.List;
@@ -17,6 +18,8 @@ public interface ShipmentCostDetailService {
      * @return
      */
     List<ShipmentCostDetail> getShipmentCostDetail(String project);
+
+    List<ShipmentCostDetail> getShipmentCostDetail(String project, String stage, Integer time);
 
     /**
      * 创建出货费用

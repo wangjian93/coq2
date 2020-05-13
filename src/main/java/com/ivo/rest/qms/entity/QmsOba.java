@@ -29,15 +29,15 @@ public class QmsOba {
     /**
      * 数量
      */
-    private Double quantity;
+    private String quantity;
 
     /**
      * 价格
      */
-    private Double price;
+    private String price;
 
     /**
      * 费用
      */
-    private Double amount;
+    private String amount;
 }

@@ -25,8 +25,6 @@ public class VerificationCostServiceTest extends AbstractTest {
     @Autowired
     private VerificationCostPlantDetailService plantDetail;
 
-    private static final String PROJECT = "N1568V R0";
-
     /**
      * 创建机种的验证费用
      */

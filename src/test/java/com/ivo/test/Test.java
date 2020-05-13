@@ -18,6 +18,9 @@ import org.junit.runners.Suite;
         SalaryCostServiceTest.class,
         TravelCostServiceTest.class,
         VerificationCostServiceTest.class,
+        ProductionCostServiceTest.class,
+        ReworkScrapSyncJobServiceTest.class,
+        ReworkScrapCostServiceTest.class,
         CostServiceTest.class
 })
 public class Test {

@@ -76,4 +76,9 @@ public class Sample extends AutoIncreaseEntityModel {
     @OneToMany(mappedBy = "sample", cascade = CascadeType.ALL)
     @JsonIgnore
     List<EngineeringExperiment> engineeringExperimentList;
+
+    /**
+     * 出货数量
+     */
+    private Double shipment;
 }

@@ -1,5 +1,9 @@
 package com.ivo.rest.oracle;
 
+import com.ivo.coq.report.entity.InLossAmount;
+import com.ivo.coq.report.entity.InLossAmountDetailArrayCell;
+import com.ivo.coq.report.entity.InLossAmountDetailLcm;
+import com.ivo.coq.report.entity.TotalAmount;
 import com.ivo.rest.oracle.entity.OracleReworkScrapArray;
 import com.ivo.rest.oracle.entity.OracleReworkScrapCell;
 import com.ivo.rest.oracle.entity.OracleReworkScrapLcm;
@@ -72,5 +76,35 @@ public class OracleServiceImpl implements OracleService {
             list.addAll(lcm2);
         }
         return list;
+    }
+
+    @Override
+    public List<InLossAmount> getInLossAmountArrayCell() {
+        return oracleMapper.getInLossAmountArrayCell();
+    }
+
+    @Override
+    public List<InLossAmount> getInLossAmountArrayLcm() {
+        return oracleMapper.getInLossAmountArrayLcm();
+    }
+
+    @Override
+    public List<TotalAmount> getTotalAmount() {
+        return oracleMapper.getTotalAmount();
+    }
+
+    @Override
+    public List<InLossAmountDetailArrayCell> getInLossAmountDetailArrayCell() {
+        return oracleMapper.getInLossAmountDetailArrayCell();
+    }
+
+    @Override
+    public List<InLossAmountDetailLcm> getInLossAmountDetailLcm() {
+        return oracleMapper.getInLossAmountDetailLcm();
+    }
+
+    @Override
+    public Double getWoShippingQty(String wo) {
+        return oracleMapper.getWoShippingQty(wo);
     }
 }

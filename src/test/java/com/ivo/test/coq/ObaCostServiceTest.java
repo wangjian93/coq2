@@ -21,8 +21,6 @@ public class ObaCostServiceTest extends AbstractTest {
     @Autowired
     private ObaCostDetailService obaCostDetailService;
 
-    private static final String PROJECT = "N1568V R0";
-
     /**
      * 创建机种的OBA费用
      */

@@ -5,6 +5,7 @@ import com.ivo.coq.project.repository.SampleRepository;
 import com.ivo.coq.project.service.SampleService;
 import com.ivo.rest.plm.PlmService;
 import com.ivo.rest.plm.entity.PlmSample;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,15 +47,16 @@ public class SampleServiceImpl implements SampleService {
         for(PlmSample plmSample : plmSampleList) {
             Sample sample = new Sample();
             sample.setProject(project);
-            sample.setStage(plmSample.getStage().trim().toUpperCase());
+            sample.setStage(StringUtils.isEmpty(plmSample.getStage()) ? null : plmSample.getStage().trim().toUpperCase());
             sample.setTime(plmSample.getTime());
-            sample.setProcess(plmSample.getProcess().trim());
-            sample.setProcessTime(plmSample.getProcessTime().trim());
+            sample.setProcess(StringUtils.isEmpty(plmSample.getProcess()) ? null : plmSample.getProcess().trim());
+            sample.setProcessTime(StringUtils.isEmpty(plmSample.getProcessTime()) ? null : plmSample.getProcessTime().trim());
             sample.setInDate(plmSample.getInDate());
             sample.setOutDate(plmSample.getOutDate());
             sample.setInQuantity(plmSample.getInQuantity());
             sample.setOutQuantity(plmSample.getOutQuantity());
-            sample.setOrderNumber(plmSample.getOrderNumber().trim().toUpperCase());
+            sample.setOrderNumber(StringUtils.isEmpty(plmSample.getOrderNumber()) ? null : plmSample.getOrderNumber().trim().toUpperCase());
+            sample.setShipment(plmSample.getShipment());
             sampleList.add(sample);
         }
         repository.saveAll(sampleList);

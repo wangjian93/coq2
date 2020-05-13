@@ -26,8 +26,6 @@ public class SalaryCostServiceTest extends AbstractTest {
     @Autowired
     private SalaryCostNormalHoursDetailService salaryCostNormalHoursDetailService;
 
-    private static final String PROJECT = "N1568V R0";
-
     @Test
     public void a1_createSalaryCost() {
         salaryCostService.createSalaryCost(PROJECT);

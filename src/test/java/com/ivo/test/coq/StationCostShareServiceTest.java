@@ -19,9 +19,9 @@ public class StationCostShareServiceTest extends AbstractTest {
     @Autowired
     private StationCostShareService stationCostShareService;
 
-    private static String path = "/Users/wangjian/Downloads/N1568V站点.xlsx";
+    private static final String path = "/Users/wangjian/Downloads/N1568V站点.xlsx";
 
-//    @Test
+    @Test
     public void a1_importStationCostShare() throws IOException {
         File file = new File(path);
         InputStream inputStream = new FileInputStream(file);

@@ -29,7 +29,7 @@ public class QmsVerification {
     /**
      * QMS - 数量
      */
-    private Double verificationQuantity;
+    private String verificationQuantity;
 
     /**
      * QMS - 单位

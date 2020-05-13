@@ -21,8 +21,6 @@ public class JigCostServiceTest extends AbstractTest {
     @Autowired
     private JigCostDetailService jigCostDetailService;
 
-    private static final String PROJECT = "N1568V R0";
-
     @Test
     public void a1_createJigCost() {
         jigCostService.createJigCost(PROJECT);

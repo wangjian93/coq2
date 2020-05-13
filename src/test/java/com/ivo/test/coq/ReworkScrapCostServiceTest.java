@@ -21,8 +21,6 @@ public class ReworkScrapCostServiceTest extends AbstractTest {
     @Autowired
     private ReworkScrapCostDetailService detailService;
 
-    private static final String PROJECT = "N1568V R0";
-
     @Test
     public void a1_computeReworkScrapCostDetail() {
         detailService.computeReworkScrapCostDetail(PROJECT);

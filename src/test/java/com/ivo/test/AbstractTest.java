@@ -21,6 +21,8 @@ import javax.transaction.Transactional;
 @Rollback(false)
 public abstract class AbstractTest {
 
+    public static final String PROJECT = "A0906 R0";
+
     /**
      * 开始测试
      */

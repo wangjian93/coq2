@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>LCM1内损费用</title>
+    <title>LCM2内损费用</title>
     <link rel="stylesheet" href="../../../assets/libs/layui/css/layui.css"/>
     <link rel="stylesheet" href="../../../assets/module/admin.css?v=316" media="all"/>
     <!--[if lt IE 9]>
@@ -24,23 +24,16 @@
     <div class="layui-card">
         <div class="layui-card-header">
             <i class="layui-icon layui-icon-tabs"></i>
-            <span>CELL内损费用</span>
+            <span>LCM2内损费用</span>
         </div>
         <div class="layui-card-body">
             <!-- 表格工具栏 -->
             <form class="layui-form toolbar">
                 <div class="layui-form-item">
                     <div class="layui-inline">
-                        <label class="layui-form-label">起始日期:</label>
+                        <label class="layui-form-label">日期范围:</label>
                         <div class="layui-input-inline">
-                            <input type="text" class="layui-input" id="fromDate" name="fromDate">
-                        </div>
-                    </div>
-
-                    <div class="layui-inline">
-                        <label class="layui-form-label">结束日期:</label>
-                        <div class="layui-input-inline">
-                            <input type="text" class="layui-input" id="toDate" name="toDate">
+                            <input type="text" class="layui-input" id="month" name="month">
                         </div>
                     </div>
 
@@ -55,13 +48,18 @@
             <!-- 数据图表 -->
             <div class="layui-row">
                 <div class="layui-col-md12 layui-col-sm12 layui-col-xs12">
-                    <div id="myChart" style="height: 500px;"></div>
+                    <div id="chartInLossAmount" style="height: 500px;"></div>
                 </div>
 
                 <div class="layui-col-md12 layui-col-sm12 layui-col-xs12">
-                    <table id="inLoss" lay-filter="inLoss"></table>
+                    <table id="tableInLossAmount" lay-filter="tableInLossAmount"></table>
                 </div>
             </div>
+
+            <br/>
+            <br/>
+            <br/>
+            <br/>
         </div>
     </div>
 </div>
@@ -79,17 +77,16 @@
         var laydate = layui.laydate;
         var table = layui.table;
 
-
         // 日期选择器
         laydate.render({
-            elem: '#fromDate'
-        });
-        laydate.render({
-            elem: '#toDate'
+            elem: '#month'
+            ,type: 'month'
+            ,range: '~'
+            ,format: 'yyyy-MM'
         });
 
         // 渲染图表
-        var myChart = echarts.init(document.getElementById('myChart'));
+        var chartInLossAmount = echarts.init(document.getElementById('chartInLossAmount'));
         var option = {
             xAxis: {
                 data: []
@@ -111,65 +108,66 @@
             }]
         };
         // 处理点击事件并且跳转到相应的百度搜索页面
-        myChart.on('click', function (params) {
-            window.open('/page/coq/report/InLoss.html?fab=LCM2&date=' + encodeURIComponent(params.name));
+        chartInLossAmount.on('click', function (params) {
+            window.open('/page/coq/report/InLoss.html?plant=LCM2&fabDate=' + encodeURIComponent(params.name));
         });
-        myChart.setOption(option);
+        chartInLossAmount.setOption(option);
 
         // 渲染chart数据
-        var renderCharts = function (fromDate, toDate) {
+        var renderCharts = function (fromMonth, toMonth) {
             var index = layer.load(1);
             $.post('/coq/report/inLossAmount', {
-                fromDate: fromDate,
-                toDate: toDate,
+                fromMonth: fromMonth,
+                toMonth: toMonth,
                 FAB_ID: 'LCM2'
-            }, function(data) {
-                if(data.code === 0) {
+            }, function(d) {
+                if(d.code === 200) {
                     layer.close(index);
-
-                    console.log(data.data);
-
-                    var data = data.data;
+                    var data = d.data;
                     var xArray = new Array(data.length);
                     var series = new Array(data.length);
                     for(var i=0; i<data.length; i++) {
-                        xArray[i] = data[i].fabDate;
-                        series[i] = data[i].price;
+                        xArray[i] = data[i].FAB_DATE;
+                        series[i] = data[i].RATIO;
                     }
 
                     // 赋值
-                    myChart.clear();
+                    chartInLossAmount.clear();
                     option.xAxis.data = xArray;
                     option.series[0].data = series;
-                    myChart.setOption(option);
+                    chartInLossAmount.setOption(option);
 
                     /* 表格渲染 */
                     var cols = new Array(data.length+1);
-                    cols[0] = {field: 'date', title: '日期', align: 'center'};
-                    var data_ = [{"date":"费用"}];
+                    cols[0] = {field: 'date', title: '日期', align: 'center', fixed: 'left'};
+                    var data_ = [{"date":"成本率"}];
                     for(var i=0; i<data.length; i++) {
-                        cols[i+1] = {field: data[i].fabDate, title: data[i].fabDate, align: 'center'};
-                        data_[0][data[i].fabDate]  = data[i].price;
+                        cols[i+1] = {field: data[i].FAB_DATE, title: data[i].FAB_DATE, align: 'center'};
+                        data_[0][data[i].FAB_DATE]  = data[i].RATIO;
                     }
                     console.log(data_);
                     console.log(cols);
                     table.render({
-                        elem: '#inLoss',
+                        elem: '#tableInLossAmount',
                         data: data_,
                         cols: [cols],
-                        size: 'sm'
+                        size: 'sm',
+                        cellMinWidth: 80
                     });
                 } else {
                     layer.close(index);
-                    notice.msg(data.msg, {icon: 2});
+                    notice.msg(d.msg, {icon: 2});
                 }
             });
         };
 
         /* 搜索按钮监听 */
         form.on('submit(search)', function (d) {
-            if(d.field.fromDate || d.field.toDate) {
-                renderCharts(d.field.fromDate, d.field.toDate);
+            if(d.field.month) {
+                var months = d.field.month.split("~");
+                var fromMonth = months[0].trim();
+                var toMonth = months[1].trim();
+                renderCharts(fromMonth, toMonth);
             } else {
                 notice.msg('请选择起始和结束日期', {icon: 5});
             }

@@ -17,8 +17,6 @@ public class ReworkScrapSyncJobServiceTest extends AbstractTest {
     @Autowired
     private ReworkScrapSyncJobService reworkScrapSyncJobService;
 
-    private static final String PROJECT = "N1568V R0";
-
     @Test
     public void a1_generateJob() {
         reworkScrapSyncJobService.generateJob(PROJECT);

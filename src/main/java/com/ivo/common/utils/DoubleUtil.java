@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 public class DoubleUtil {
 
     // 保留小数
-    private static final int SCALE = 2;
+    private static final int SCALE = 4;
     // 舍入模式，四舍五入
     private static final int ROUND = BigDecimal.ROUND_HALF_UP;
 

@@ -1,5 +1,6 @@
 package com.ivo.coq.costCategory.directMaterial.repository;
 
+import com.ivo.coq.costCategory.directMaterial.entity.OutsourcingThinningCostDetail;
 import com.ivo.coq.costCategory.directMaterial.entity.ShipmentCostDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,4 +13,8 @@ import java.util.List;
 public interface ShipmentCostDetailRepository extends JpaRepository<ShipmentCostDetail, Long> {
 
     List<ShipmentCostDetail> findByProject(String project);
+
+    List<ShipmentCostDetail> findByProjectAndStageAndTimeOrderById(String project, String stage, Integer time);
+
+
 }

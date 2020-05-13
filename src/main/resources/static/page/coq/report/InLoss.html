@@ -24,7 +24,7 @@
     <div class="layui-card">
         <div class="layui-card-header">
             <i class="layui-icon layui-icon-tabs"></i>
-            <span>内损费用</span>
+            <span id="title"></span>内损费用</span>
         </div>
         <div class="layui-card-body">
             <table id="inLoss" lay-filter="inLoss"></table>
@@ -47,43 +47,66 @@
             var vars = query.split("&");
             for (var i=0;i<vars.length;i++) {
                 var pair = vars[i].split("=");
-                if(pair[0] == variable){return pair[1];}
+                if(pair[0] === variable){return pair[1];}
             }
             return(false);
         };
 
-        $.post('/coq/report/inLossAmountDetail', {
-            FAB_DATE: getQueryVariable("date"),
-            FAB_ID: getQueryVariable("fab")
-        }, function(data) {
-            if(data.code === 0) {
-                console.log(data);
-                /* 表格渲染 */
-                table.render({
-                    elem: '#inLoss',
-                    data: data.data,
-                    cols: [[
-                        {type: 'numbers'},
-                        {field: 'fabDate', title: 'FAB_DATE', align: 'center'},
-                        {field: 'fabId', title: 'FAB_ID', align: 'center'},
-                        {field: 'pfcd', title: 'PFCD', align: 'center'},
-                        {field: 'prod_ID', title: 'PROD_ID', align: 'center'},
-                        {field: 'mtrl_ID', title: 'MTRL_ID', align: 'center'},
-                        {field: 'prod_SIZE_ID', title: 'PROD_SIZE_ID', align: 'center'},
-                        {field: 'prod_MODEL_ID', title: 'PROD_MODEL_ID', align: 'center'},
-                        {field: 'scrap_SHT', title: 'SCRAP_SHT', align: 'center'},
-                        {field: 'scrap_PNL', title: 'SCRAP_PNL', align: 'center'},
-                        {field: 'cut', title: 'CUT', align: 'center'},
-                        {field: 'ver_ID', title: 'VER_ID', align: 'center'},
-                        {field: 'fab_SCRAP_TYPE', title: 'FAB_SCRAP_TYPE', align: 'center'},
-                        {field: 'price', title: 'PRICE', align: 'center'}
-                    ]],
-                    limit: 40,
-                    page: true,
-                    size: 'sm'
-                });
-            }
-        });
+        var FAB_ID = getQueryVariable("plant");
+        var FAB_DATE = getQueryVariable("fabDate");
+        $("#title").html(FAB_DATE + "  " + FAB_ID);
+        if(FAB_ID && FAB_DATE) {
+            $.post('/coq/report/inLossAmountDetail', {
+                FAB_ID: FAB_ID,
+                FAB_DATE: FAB_DATE
+            }, function(data) {
+                if(data.code === 200) {
+                    var cols = [];
+                    if(getQueryVariable("plant") === 'LCM1' || getQueryVariable("plant") === 'LCM2') {
+                        cols = [
+                            {type: 'numbers'},
+                            {field: 'fabDate', title: 'FAB_DATE', align: 'center'},
+                            {field: 'zYear', title: 'ZYEAR', align: 'center'},
+                            {field: 'zMonth', title: 'ZMONTH', align: 'center'},
+                            {field: 'prodId', title: 'PROD_ID', align: 'center'},
+                            {field: 'verId', title: 'VERID', align: 'center'},
+                            {field: 'woId', title: 'WO_ID', align: 'center'},
+                            {field: 'plant', title: 'PLANT', align: 'center'},
+                            {field: 'prodModelId', title: 'PROD_MODEL_ID', align: 'center'},
+                            {field: 'prodSizeId', title: 'PROD_SIZE_ID', align: 'center'},
+                            {field: 'amount', title: 'AMOUNT', align: 'center', sort: true}
+                        ];
+                    } else {
+                        cols = [
+                            {type: 'numbers'},
+                            {field: 'fabDate', title: 'FAB_DATE', align: 'center'},
+                            {field: 'fabId', title: 'FAB_ID', align: 'center'},
+                            {field: 'pfcd', title: 'PFCD', align: 'center'},
+                            {field: 'prodId', title: 'PROD_ID', align: 'center'},
+                            {field: 'mtrlId', title: 'MTRL_ID', align: 'center'},
+                            {field: 'prodSizeId', title: 'PROD_SIZE_ID', align: 'center'},
+                            {field: 'prodModelId', title: 'PROD_MODEL_ID', align: 'center'},
+                            {field: 'scrapSht', title: 'SCRAP_SHT', align: 'center'},
+                            {field: 'scrapPnl', title: 'SCRAP_PNL', align: 'center'},
+                            {field: 'cut', title: 'CUT', align: 'center'},
+                            {field: 'verId', title: 'VER_ID', align: 'center'},
+                            {field: 'fabScrapType', title: 'FAB_SCRAP_TYPE', align: 'center'},
+                            {field: 'price', title: 'PRICE', align: 'center', sort: true}
+                        ];
+                    }
+
+                    /* 表格渲染 */
+                    table.render({
+                        elem: '#inLoss',
+                        data: data.data,
+                        cols: [cols],
+                        limit: 40,
+                        page: true,
+                        size: 'sm'
+                    });
+                }
+            });
+        }
     });
 </script>
 </body>

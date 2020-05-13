@@ -18,7 +18,6 @@ public interface SampleService {
      */
     List<Sample> getSamples(String project);
 
-
     /**
      * 从PLM同步机种的实验管理信息
      * @param project 机种

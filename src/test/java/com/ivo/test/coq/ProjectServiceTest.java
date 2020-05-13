@@ -29,9 +29,6 @@ public class ProjectServiceTest extends AbstractTest {
     @Autowired
     private EngineeringExperimentService engineeringExperimentService;
 
-
-    private static final String PROJECT = "N1568V R0";
-
     /**
      * 获取实验信息
      */

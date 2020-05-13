@@ -1,5 +1,9 @@
 package com.ivo.rest.oracle.mapper;
 
+import com.ivo.coq.report.entity.InLossAmount;
+import com.ivo.coq.report.entity.InLossAmountDetailArrayCell;
+import com.ivo.coq.report.entity.InLossAmountDetailLcm;
+import com.ivo.coq.report.entity.TotalAmount;
 import com.ivo.rest.oracle.entity.OracleReworkScrapArray;
 import com.ivo.rest.oracle.entity.OracleReworkScrapCell;
 import com.ivo.rest.oracle.entity.OracleReworkScrapLcm;
@@ -77,4 +81,41 @@ public interface OracleMapper {
      */
     List<OracleReworkScrapLcm> getOracleReworkScrapLcm2(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
                                                          @Param("wo") String wo);
+
+    /**
+     * 获取ARRAY/CELL的内损成本
+     * @return List<InLossAmount>
+     */
+    List<InLossAmount> getInLossAmountArrayCell();
+
+    /**
+     * 获取LCM的内损成本
+     * @return List<InLossAmount>
+     */
+    List<InLossAmount> getInLossAmountArrayLcm();
+
+    /**
+     * 获取Array/cell/lcm的总制造成本
+     * @return List<TotalAmount>
+     */
+    List<TotalAmount> getTotalAmount();
+
+    /**
+     * 获取ARRAY/CELL的内损成本明细
+     * @return List<InLossAmountDetailArrayCell>
+     */
+    List<InLossAmountDetailArrayCell> getInLossAmountDetailArrayCell();
+
+    /**
+     * 获取LCM的内损成本明细
+     * @return List<InLossAmountDetailLcm>
+     */
+    List<InLossAmountDetailLcm> getInLossAmountDetailLcm();
+
+    /**
+     * 获取工单的Shipping数量
+     * @return Double
+     */
+    Double getWoShippingQty(String wo);
+
 }

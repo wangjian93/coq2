@@ -155,7 +155,7 @@
                 },
                 {title: '出货费用', align: 'center',
                     templet: function(d) {
-                        return cellConvert(d.shipmentAmount);
+                        return "- " + cellConvert(d.shipmentAmount);
                     }
                 },
                 {title: '直接材料费用', align: 'center',

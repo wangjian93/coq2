@@ -34,10 +34,6 @@ public class DataPrepare extends AbstractTest {
     @Autowired
     private RdNormalHoursRepository rdNormalHoursRepository;
 
-
-
-    private static final String PROJECT = "N1568V R0";
-
     /**
      * 添加机种
      */

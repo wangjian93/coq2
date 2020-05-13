@@ -12,6 +12,5 @@ import java.util.List;
  */
 public interface InLossAmountRepository extends JpaRepository<InLossAmount, Long> {
 
-    List<InLossAmount> findByFabIdAndFabDateBetween(String FAB_ID, Date fromDate, Date toDate);
-
+    List<InLossAmount> findByPlantAndFabDateBetween(String plant, Date fromDate, Date toDate);
 }

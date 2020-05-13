@@ -15,7 +15,8 @@
       s.SCHEDULE_OUT as outDate,
       s.QUANTITY_IN as inQuantity,
       s.QUANTITY_OUT as outQuantity,
-      s.ORDER_NUMBER as orderNumber
+      s.ORDER_NUMBER as orderNumber,
+      s.SHIPMENT as shipment
     from im_sample s
     LEFT JOIN sch_milestone_schema m on m.id=s.MILESTONE_FK
     LEFT JOIN im_project p on p.ID = s.PROJECT_FK

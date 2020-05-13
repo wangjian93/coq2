@@ -63,9 +63,21 @@ public class ObaCostDetailServiceImpl implements ObaCostDetailService {
             obaCostDetail.setPeNumber(qmsOba.getPeNumber().trim());
             obaCostDetail.setHappenTime(qmsOba.getHappenTime());
             obaCostDetail.setObaType(qmsOba.getObaType().trim());
-            obaCostDetail.setQuantity(qmsOba.getQuantity());
-            obaCostDetail.setPrice(qmsOba.getPrice());
-            obaCostDetail.setAmount(qmsOba.getAmount());
+            try{
+                obaCostDetail.setQuantity(Double.valueOf(qmsOba.getQuantity()));
+            } catch (NumberFormatException e) {
+                log.warn("QMS机种的OBA明细数字格式不准确");
+            }
+            try{
+                obaCostDetail.setPrice(Double.valueOf(qmsOba.getPrice()));
+            } catch (NumberFormatException e) {
+                log.warn("QMS机种的OBA明细数字格式不准确");
+            }
+            try{
+                obaCostDetail.setAmount(Double.valueOf(qmsOba.getAmount()));
+            } catch (NumberFormatException e) {
+                log.warn("QMS机种的OBA明细数字格式不准确");
+            }
             obaCostDetailList.add(obaCostDetail);
         }
 
@@ -92,23 +104,28 @@ public class ObaCostDetailServiceImpl implements ObaCostDetailService {
                 if(!happenTime.before(nprb_date[0]) && happenTime.before(nprb_date[1])) {
                     stage = StageEnum.NPRB.getStage();
                 }
-            } else if(design_date[0]!=null && design_date[1]!=null) {
+            }
+            if(design_date[0]!=null && design_date[1]!=null) {
                 if(!happenTime.before(design_date[0]) && happenTime.before(design_date[1])) {
                     stage = StageEnum.Design.getStage();
                 }
-            } else if(evt_date[0]!=null && evt_date[1]!=null) {
+            }
+            if(evt_date[0]!=null && evt_date[1]!=null) {
                 if(!happenTime.before(evt_date[0]) && happenTime.before(evt_date[1])) {
                     stage = StageEnum.DVT.getStage();
                 }
-            } else if(dvt_date[0]!=null && dvt_date[1]!=null) {
+            }
+            if(dvt_date[0]!=null && dvt_date[1]!=null) {
                 if(!happenTime.before(dvt_date[0]) && happenTime.before(dvt_date[1])) {
                     stage = StageEnum.EVT.getStage();
                 }
-            } else if(pvt_date[0]!=null && pvt_date[1]!=null) {
+            }
+            if(pvt_date[0]!=null && pvt_date[1]!=null) {
                 if(!happenTime.before(pvt_date[0]) && happenTime.before(pvt_date[1])) {
                     stage = StageEnum.PVT.getStage();
                 }
-            } else if(mp_date[0]!=null && mp_date[1]!=null) {
+            }
+            if(mp_date[0]!=null && mp_date[1]!=null) {
                 if(!happenTime.before(mp_date[0]) && happenTime.before(mp_date[1])) {
                     stage = StageEnum.MP.getStage();
                 }

@@ -21,8 +21,6 @@ public class ProductionCostServiceTest extends AbstractTest {
     @Autowired
     private ProductionCostService productionCostService;
 
-    private static final String PROJECT = "N1568V R0";
-
     @Test
     public void a1_syncProductionCostDetail() {
         productionCostDetailService.syncProductionCostDetail(PROJECT);

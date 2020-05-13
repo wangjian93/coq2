@@ -21,8 +21,6 @@ public class TravelCostServiceTest extends AbstractTest {
     @Autowired
     private TravelCostDetailService travelCostDetailService;
 
-    private static final String PROJECT = "N1568V R0";
-
     /**
      * 创建机种的差旅交际费用
      */

@@ -39,7 +39,7 @@ public class ShipmentCostDetail extends AutoIncreaseEntityModel {
     private Double quantity;
 
     /**
-     * 出货产品单价：LCM工单金额/工单数量
+     * 出货产品单价：LCM工单金额/工单Shipping数量
      */
     private Double perAmount;
 

@@ -61,4 +61,9 @@ public class PlmSample {
      * 实验申请单
      */
     private String  orderNumber;
+
+    /**
+     * 出货数量
+     */
+    private Double shipment;
 }

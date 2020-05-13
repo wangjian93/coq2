@@ -3,8 +3,10 @@ package com.ivo.coq.costCategory.directMaterial.service.impl;
 import com.ivo.common.utils.DoubleUtil;
 import com.ivo.coq.costCategory.directMaterial.entity.MaterialCostDetail;
 import com.ivo.coq.costCategory.directMaterial.entity.OutsourcingThinningCostDetail;
+import com.ivo.coq.costCategory.directMaterial.entity.ShipmentCostDetail;
 import com.ivo.coq.costCategory.directMaterial.service.MaterialCostDetailService;
 import com.ivo.coq.costCategory.directMaterial.service.OutsourcingThinningCostDetailService;
+import com.ivo.coq.costCategory.directMaterial.service.ShipmentCostDetailService;
 import com.ivo.coq.project.entity.Stage;
 import com.ivo.coq.project.service.ProjectService;
 import com.ivo.coq.costCategory.directMaterial.entity.DirectMaterialCost;
@@ -33,14 +35,18 @@ public class DirectMaterialCostServiceImpl implements DirectMaterialCostService 
 
     private OutsourcingThinningCostDetailService outsourcingThinningCostDetailService;
 
+    private ShipmentCostDetailService shipmentCostDetailService;
+
     @Autowired
     public DirectMaterialCostServiceImpl(DirectMaterialCostRepository repository, ProjectService projectService,
                                          MaterialCostDetailService materialCostDetailService,
-                                         OutsourcingThinningCostDetailService outsourcingThinningCostDetailService) {
+                                         OutsourcingThinningCostDetailService outsourcingThinningCostDetailService,
+                                         ShipmentCostDetailService shipmentCostDetailService) {
         this.repository = repository;
         this.projectService = projectService;
         this.materialCostDetailService = materialCostDetailService;
         this.outsourcingThinningCostDetailService = outsourcingThinningCostDetailService;
+        this.shipmentCostDetailService = shipmentCostDetailService;
     }
 
     @Override
@@ -115,9 +121,22 @@ public class DirectMaterialCostServiceImpl implements DirectMaterialCostService 
                     directMaterialCost.setOutsourcingThinningAmount(d);
                 }
             }
+            // 出货费用
+            if(null == directMaterialCost.getShipmentAmount() || -1 != directMaterialCost.getShipmentAmount()) {
+                List<ShipmentCostDetail> shipmentCostDetailList = shipmentCostDetailService.getShipmentCostDetail(
+                        directMaterialCost.getProject(), directMaterialCost.getStage(), directMaterialCost.getTime());
+                if(shipmentCostDetailList != null && shipmentCostDetailList.size() > 0) {
+                    Double d = directMaterialCost.getShipmentAmount();
+                    for(ShipmentCostDetail shipmentCostDetail : shipmentCostDetailList) {
+                        d = DoubleUtil.sum(d , shipmentCostDetail.getAmount());
+                    }
+                    directMaterialCost.setShipmentAmount(d);
+                }
+            }
             // 直接材料成本
             if(null == directMaterialCost.getAmount() || -1 != directMaterialCost.getAmount()) {
                 Double amount = DoubleUtil.sum(directMaterialCost.getDirectAmount(), directMaterialCost.getOutsourcingThinningAmount());
+                amount = DoubleUtil.subtract(amount, directMaterialCost.getShipmentAmount());
                 directMaterialCost.setAmount(amount);
             }
         }

@@ -25,8 +25,6 @@ public class CostServiceTest extends AbstractTest {
     @Autowired
     private CostSubjectService costSubjectService;
 
-    private static final String PROJECT = "N1568V R0";
-
     /**
      * 创建Cost
      */

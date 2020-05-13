@@ -29,9 +29,6 @@ public class DirectMaterialCostServiceTest extends AbstractTest {
     @Autowired
     private ShipmentCostDetailService shipmentCostDetailService;
 
-    private static final String PROJECT = "N1568V R0";
-
-
     /**
      * 创建机种的直接材料费用
      */

@@ -105,8 +105,11 @@
                     type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
                 }
             },
+            // legend: {
+            //     data: ['金额'],
+            // },
             legend: {
-                data: ['金额'],
+                data:['金额', '次数']
             },
             grid: {
                 left: '3%',
@@ -147,12 +150,22 @@
             yAxis: [
                 {
                     type: 'value'
+                },
+                {
+                    type: 'value'
                 }
             ],
             series: [
                 {
                     name: '金额',
-                    type: 'bar'
+                    type: 'bar',
+                    barWidth: 20
+                },
+                {
+                    name: '次数',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    barWidth: 20
                 }
             ]
         };
@@ -204,6 +217,20 @@
                         allCosts[j] = preventionCost + identityCost + inLossCost + outLossCost;
                     }
 
+                    var d = [0,0,0,0,0,0];
+                    if(projects[0] === 'N1568V R0') {
+                        d = [0,0,2,0,0,0];
+                    }
+                    if(projects[0] === 'A0906 R0') {
+                        d = [0,0,1,0,0,0];
+                    }
+                    if(projects[0] === '') {
+                        d = [0,0,0,0,0,0];
+                    }
+                    if(projects[0] === 'N1339 R1') {
+                        d = [0,0,0,4,7,0];
+                    }
+
                     // 赋值
                     myChart.setOption({
                         xAxis: [
@@ -215,7 +242,8 @@
                             }
                         ],
                         series: [
-                            {data: allCosts}
+                            {data: allCosts},
+                            {data: d}
                         ]
                     });
                 } else {

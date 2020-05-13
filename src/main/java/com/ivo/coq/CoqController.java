@@ -195,11 +195,11 @@ public class CoqController {
         for(Milestone milestone : milestoneList) {
             Map map1 = new HashMap();
             map1.put("stage", milestone.getMilestone());
-            map1.put("date", sdf.format(milestone.getEndDate()));
+            map1.put("date", sdf.format(milestone.getEndDatePlan()));
             list1.add(map1);
             Map map2 = new HashMap();
             map2.put("stage", milestone.getMilestone());
-            map2.put("date", sdf.format(milestone.getEndDatePlan()));
+            map2.put("date", sdf.format(milestone.getEndDate()));
             list2.add(map2);
         }
         Map<String, List> map = new HashMap<>();
