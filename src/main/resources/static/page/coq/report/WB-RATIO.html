@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>LCM1内损费用</title>
+    <title>量产品-外部失败成本率</title>
     <link rel="stylesheet" href="../../../assets/libs/layui/css/layui.css"/>
     <link rel="stylesheet" href="../../../assets/module/admin.css?v=316" media="all"/>
     <!--[if lt IE 9]>
@@ -24,7 +24,7 @@
     <div class="layui-card">
         <div class="layui-card-header">
             <i class="layui-icon layui-icon-tabs"></i>
-            <span>LCM1内损费用</span>
+            <span>量产品-外部失败成本率</span>
         </div>
         <div class="layui-card-body">
             <!-- 表格工具栏 -->
@@ -88,7 +88,15 @@
         // 渲染图表
         var chartInLossAmount = echarts.init(document.getElementById('chartInLossAmount'));
         var option = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['WB_CELL', 'WB_LCM']
+            },
             xAxis: {
+                type: 'category',
+                boundaryGap: false,
                 data: []
             },
             yAxis: {
@@ -99,74 +107,90 @@
                     formatter: '{value} %'
                 }
             },
-            series: [{
-                data: [],
-                type: 'line',
-                label: {
-                    show: true,
-                    position: 'top',
+            series: [
+                {
+                    name: 'WB_CELL',
+                    type: 'line',
                     label: {
                         show: true,
                         position: 'top',
-                        formatter: function(param) {
-                            return param.data + " %";
-                        }
-                    }
+                        formatter: '{c}%'
+                    },
+                    data: []
+                },{
+                    name: 'WB_LCM',
+                    type: 'line',
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: '{c}%'
+                    },
+                    data: []
                 }
-            }]
+            ]
         };
-        // 处理点击事件并且跳转到相应的百度搜索页面
-        chartInLossAmount.on('click', function (params) {
-            window.open('/page/coq/report/InLoss.html?plant=LCM1&fabDate=' + encodeURIComponent(params.name));
-        });
         chartInLossAmount.setOption(option);
+
+
+        var generateSeries = function(wbRatio) {
+            var series = new Array(wbRatio.length);
+            for(var i=0; i<wbRatio.length; i++) {
+                series[i] = (wbRatio[i].ratio*100 ).toFixed(3);
+            }
+            return series;
+        };
+
+        var generateXArray = function(wbRatioLcm, wbRatioCell) {
+            var data = wbRatioLcm;
+            if(data.length < wbRatioLcm.length) {
+                data = wbRatioLcm;
+            }
+            if(data.length < wbRatioCell.length) {
+                data = wbRatioCell;
+            }
+            var xArray = new Array(data.length);
+            for(var i=0; i<data.length; i++) {
+                xArray[i] = data[i].mon;
+            }
+            return xArray;
+        };
 
         // 渲染chart数据
         var renderCharts = function (fromMonth, toMonth) {
-            var index = layer.load(1);
-            $.post('/coq/report/inLossAmount', {
-                fromMonth: fromMonth,
-                toMonth: toMonth,
-                FAB_ID: 'LCM1'
-            }, function(d) {
-                if(d.code === 200) {
-                    layer.close(index);
-                    var data = d.data;
-                    var xArray = new Array(data.length);
-                    var series = new Array(data.length);
-                    for(var i=0; i<data.length; i++) {
-                        xArray[i] = data[i].FAB_DATE;
-                        series[i] = data[i].RATIO;
-                    }
+            var wbRatioLcm = getWbRatio(fromMonth, toMonth, 'WB_LCM');
+            var wbRatioCell =  getWbRatio(fromMonth, toMonth, 'WB_CEL');
 
-                    // 赋值
-                    chartInLossAmount.clear();
-                    option.xAxis.data = xArray;
-                    option.series[0].data = series;
-                    chartInLossAmount.setOption(option);
+            // 更新chart图
+            chartInLossAmount.clear();
+            option.xAxis.data = generateXArray(wbRatioLcm, wbRatioCell);
+            option.series[0].data = generateSeries(wbRatioLcm);
+            option.series[1].data = generateSeries(wbRatioCell);
+            chartInLossAmount.setOption(option);
+        };
 
-                    /* 表格渲染 */
-                    var cols = new Array(data.length+1);
-                    cols[0] = {field: 'date', title: '日期', align: 'center', fixed: 'left'};
-                    var data_ = [{"date":"成本率"}];
-                    for(var i=0; i<data.length; i++) {
-                        cols[i+1] = {field: data[i].FAB_DATE, title: data[i].FAB_DATE, align: 'center'};
-                        data_[0][data[i].FAB_DATE]  = data[i].RATIO;
+        /**
+         * 获取cell/lcm外部失败成本率数据
+         */
+        var getWbRatio = function(fromMonth, toMonth, plant) {
+            var d = [];
+            $.ajax({
+                type : "post",
+                url: '/coq/report/getWbRatio',
+                async : false,
+                data: {
+                    fromMonth: fromMonth,
+                    toMonth: toMonth,
+                    FAB_ID: plant
+                },
+                success : function(data){
+                    if(data.code === 200) {
+                        d =  data.data;
+                    } else {
+                        notice.msg(data.msg, {icon: 2});
                     }
-                    console.log(data_);
-                    console.log(cols);
-                    table.render({
-                        elem: '#tableInLossAmount',
-                        data: data_,
-                        cols: [cols],
-                        size: 'sm',
-                        cellMinWidth: 80
-                    });
-                } else {
-                    layer.close(index);
-                    notice.msg(d.msg, {icon: 2});
                 }
             });
+            return d;
         };
 
         /* 搜索按钮监听 */

@@ -107,6 +107,10 @@ public class ReworkScrapCostDetailServiceImpl implements ReworkScrapCostDetailSe
     @Override
     public void computeReworkScrapCostDetail(String project) {
         log.info("计算Array、cell、lcm三厂的重工报废费用明细 " + project);
+//        reworkScrapCostArrayRepository.deleteAll(getReworkScrapCostArray(project));
+//        reworkScrapCostCellRepository.deleteAll(getReworkScrapCostCell(project));
+//        reworkScrapCostLcmRepository.deleteAll(getReworkScrapCostLcm(project));
+
         // 1.array
         List<ReworkScrapCostArray> arrayList = getReworkScrapCostArray(project);
         for(ReworkScrapCostArray array : arrayList) {

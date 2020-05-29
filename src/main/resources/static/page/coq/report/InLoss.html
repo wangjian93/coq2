@@ -27,6 +27,9 @@
             <span id="title"></span>内损费用</span>
         </div>
         <div class="layui-card-body">
+            <div class="layui-row">
+                <span class="layui-badge layui-badge-green pull-right">单位：RMB</span>
+            </div>
             <table id="inLoss" lay-filter="inLoss"></table>
         </div>
     </div>
@@ -66,8 +69,8 @@
                         cols = [
                             {type: 'numbers'},
                             {field: 'fabDate', title: 'FAB_DATE', align: 'center'},
-                            {field: 'zYear', title: 'ZYEAR', align: 'center'},
-                            {field: 'zMonth', title: 'ZMONTH', align: 'center'},
+                            // {field: 'zYear', title: 'ZYEAR', align: 'center'},
+                            // {field: 'zMonth', title: 'ZMONTH', align: 'center'},
                             {field: 'prodId', title: 'PROD_ID', align: 'center'},
                             {field: 'verId', title: 'VERID', align: 'center'},
                             {field: 'woId', title: 'WO_ID', align: 'center'},

@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>VIP - COQ COST</title>
+    <title>VIP COQ RATIO</title>
     <link rel="stylesheet" href="../../../assets/libs/layui/css/layui.css"/>
     <link rel="stylesheet" href="../../../assets/module/admin.css?v=316" media="all"/>
     <!--[if lt IE 9]>
@@ -24,7 +24,7 @@
     <div class="layui-card">
         <div class="layui-card-header">
             <i class="layui-icon layui-icon-tabs"></i>
-            <span>VIP - COQ COST报表</span>
+            <span>VIP COQ RATIO</span>
         </div>
         <div class="layui-card-body">
             <!-- 表格工具栏 -->
@@ -44,25 +44,39 @@
                         </div>
                     </div>
 
-                    <div class="layui-inline">
+                    <div class="layui-inline layui-form-item">
                         <label class="layui-form-label">机&emsp;种:</label>
                         <div class="layui-input-inline">
-                            <select name="project" id="project" lay-filter="project"></select>
+                            <div id="project"></div>
                         </div>
                     </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">日期范围:</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="month" name="month">
+                        </div>
+                    </div>
+
                     <div class="layui-inline">&emsp;
-                        <button class="layui-btn icon-btn" lay-filter="projectSearch" id="projectSearch" lay-submit>
+                        <button class="layui-btn icon-btn" lay-filter="search" id="search" lay-submit>
                             <i class="layui-icon">&#xe615;</i>搜索
                         </button>
                     </div>
                 </div>
             </form>
 
-            <!-- 数据表格 -->
+            <!-- 数据图表 -->
             <div class="layui-row">
-                <span class="layui-badge layui-badge-green pull-right">单位：RMB</span>
+                <div class="layui-col-md12 layui-col-sm12 layui-col-xs12">
+                    <div id="chartInLossAmount" style="height: 500px;"></div>
+                </div>
             </div>
-            <table id="tableCostSubject" lay-filter="tableCostSubject" class="layui-table"></table>
+
+            <br/>
+            <br/>
+            <br/>
+            <br/>
         </div>
     </div>
 </div>
@@ -71,94 +85,53 @@
 <!-- js部分 -->
 <script type="text/javascript" src="../../../assets/libs/layui/layui.js"></script>
 <script type="text/javascript" src="../../../assets/js/common.js?v=316"></script>
+<script type="text/javascript" src="../../../assets/libs/echarts/echarts.min.js"></script>
 <script>
-    layui.use(['table', 'notice', 'form', 'layer', 'notice'], function () {
-        var table = layui.table;
+    layui.use(['form', 'notice', 'xmSelect', 'laydate', 'table'], function () {
         var form = layui.form;
         var $ = layui.$;
-        var layer = layui.layer;
         var notice = layui.notice;
+        var laydate = layui.laydate;
+        var table = layui.table;
 
-        /* 表格单元格中数据转化 ('-1'转为'-'，'null'转为'') */
-        var cellConvert = function(d) {
-            if(d < 0) {
-                return '-';
-            } else if(d == null) {
-                return '';
-            } else {
-                return numFormat(d);
-            }
-        };
-
-        /* 数字转千分位，加',' */
-        var numFormat = function(num) {
-            return (num.toString().indexOf ('.') !== -1) ?
-                num.toLocaleString() : num.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
-        };
-
-        // 渲染表格
-        table.render({
-            elem: '#tableCostSubject',
-            data: [
-                {"costType": "预防成本", "DESIGN": null, "EVT": null, "DVT": null, "NPRB": null, "PVT": null},
-                {"costType": "鉴定成本", "DESIGN": null, "EVT": null, "DVT": null, "NPRB": null, "PVT": null},
-                {"costType": "内损成本", "DESIGN": null, "EVT": null, "DVT": null, "NPRB": null, "PVT": null},
-                {"costType": "外损成本", "DESIGN": null, "EVT": null, "DVT": null, "NPRB": null, "PVT": null}
-            ],
-            cols: [[
-                {field: 'costType', title: '二级科目', align: 'center', rowspan: 2},
-                {title: '阶段', align: 'center', colspan: 6}
-            ],[
-                {field: 'NPRB', title: 'NPRB', align: 'center',
-                    templet: function(d) {
-                        return cellConvert(d.NPRB);
-                    }
-                },
-                {field: 'DESIGN', title: 'Design', align: 'center',
-                    templet: function(d) {
-                        return cellConvert(d.DESIGN);
-                    }
-                },
-                {field: 'EVT', title: 'EVT', align: 'center',
-                    templet: function(d) {
-                        return cellConvert(d.EVT);
-                    }
-                },
-                {field: 'DVT', title: 'DVT', align: 'center',
-                    templet: function(d) {
-                        return cellConvert(d.DVT);
-                    }
-                },
-                {field: 'PVT', title: 'PVT', align: 'center',
-                    templet: function(d) {
-                        return cellConvert(d.PVT);
-                    }
-                },
-                {field: 'MP', title: 'MP', align: 'center',
-                    templet: function(d) {
-                        return cellConvert(d.MP);
-                    }
-                }
-            ]]
+        // 日期选择器
+        laydate.render({
+            elem: '#month'
+            ,type: 'month'
+            ,range: '~'
+            ,format: 'yyyy-MM'
         });
 
-        /* 表格搜索 */
-        form.on('submit(projectSearch)', function (data) {
-            if(!data.field.project) {
-                notice.msg('请选择机种', {icon: 5});
-                return false;
-            }
-            var URL_CostSubjectConvert = '/coq/report/costSubject/' + data.field.project;
-            var index = layer.load(1);
-            $.get(URL_CostSubjectConvert, function(data){
-                if(data.code === 0) {
-                    layer.close(index);
-                    table.reload('tableCostSubject', {data: data.data});
-                } else {
-                    layer.close(index);
-                    notice.msg(data.msg, {icon: 2});
+        // 渲染图表
+        var myChart = echarts.init(document.getElementById('chartInLossAmount'));
+        var option = {
+            xAxis: {
+                data: []
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    show: true,
+                    interval: 'auto',
+                    formatter: '{value} %'
                 }
-            });
+            },
+            series: [{
+                data: [],
+                type: 'line',
+                label: {
+                    show: true,
+                    position: 'top',
+                    formatter: function(param) {
+                        return param.data + " %";
+                    }
+                }
+            }]
+        };
+        myChart.setOption(option);
+
+        /* 搜索按钮监听 */
+        form.on('submit(search)', function (d) {
             return false;
         });
 
@@ -210,15 +183,20 @@
             $.get(url, function(data) {
                 if(data.code === 0) {
                     var projects = [];
-                    $('#project').empty();
                     $.each(data.data, function (index, item) {
-                        if(projects.indexOf(item.project) === -1) {
-                            $('#project').append(new Option(item.project, item.project));
-                            projects.push(item.project);
-                        }
+                        projects.push({name: item.project, value: item.project});
                     });
-                    form.render('select');
-                    $("button[lay-filter=projectSearch]").click();
+                    xmSelect.render(
+                        {
+                            el: '#project',
+                            filterable: true,
+                            toolbar:{
+                                show: true
+                            },
+                            autoRow: true,
+                            data: projects
+                        }
+                    );
                 } else {
                     notice.msg(data.msg, {icon: 2});
                 }
@@ -232,9 +210,6 @@
         });
         form.on('select(size)', function() {
             projectSelectRender();
-        });
-        form.on('select(project)', function() {
-            $("button[lay-filter=projectSearch]").click();
         });
     });
 </script>

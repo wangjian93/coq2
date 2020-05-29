@@ -1,5 +1,6 @@
 package com.ivo.test.rest;
 
+import com.ivo.coq.report.service.WbRatioService;
 import com.ivo.rest.RestService;
 import com.ivo.test.AbstractTest;
 import org.junit.Test;
@@ -19,6 +20,9 @@ public class RestServiceTest extends AbstractTest {
     @Autowired
     private RestService restService;
 
+    @Autowired
+    private WbRatioService wbRatioService;
+
     @Test
     public void test() throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -27,5 +31,10 @@ public class RestServiceTest extends AbstractTest {
         String employee = "C1703015";
         List list = restService.getTravelDetailsFromBe(fromDate, toDate, employee);
         list.size();
+    }
+
+    @Test
+    public void test2() {
+        wbRatioService.syncWbRatio();
     }
 }

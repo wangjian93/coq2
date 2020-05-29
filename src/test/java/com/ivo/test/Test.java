@@ -10,18 +10,19 @@ import org.junit.runners.Suite;
  * @version 1.0
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({DataPrepare.class,
-        ProjectServiceTest.class,
-        DirectMaterialCostServiceTest.class,
-        JigCostServiceTest.class,
-        ObaCostServiceTest.class,
-        SalaryCostServiceTest.class,
-        TravelCostServiceTest.class,
-        VerificationCostServiceTest.class,
+@Suite.SuiteClasses({
+//        DataPrepare.class,
+//        ProjectServiceTest.class,
+//        DirectMaterialCostServiceTest.class,
+//        JigCostServiceTest.class,
+//        ObaCostServiceTest.class,
+//        SalaryCostServiceTest.class,
+//        TravelCostServiceTest.class,
+//        VerificationCostServiceTest.class,
         ProductionCostServiceTest.class,
         ReworkScrapSyncJobServiceTest.class,
         ReworkScrapCostServiceTest.class,
-        CostServiceTest.class
+//        CostServiceTest.class
 })
 public class Test {
 }

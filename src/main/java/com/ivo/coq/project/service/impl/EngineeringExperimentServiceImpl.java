@@ -57,7 +57,7 @@ public class EngineeringExperimentServiceImpl implements EngineeringExperimentSe
 
     @Override
     public List<EngineeringExperiment> getEngineeringExperiments(String project) {
-        return repository.findByProject(project);
+        return repository.findByProjectOrderBySample_Id(project);
     }
 
     @Override

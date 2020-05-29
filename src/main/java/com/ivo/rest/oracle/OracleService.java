@@ -1,9 +1,6 @@
 package com.ivo.rest.oracle;
 
-import com.ivo.coq.report.entity.InLossAmount;
-import com.ivo.coq.report.entity.InLossAmountDetailArrayCell;
-import com.ivo.coq.report.entity.InLossAmountDetailLcm;
-import com.ivo.coq.report.entity.TotalAmount;
+import com.ivo.coq.report.entity.*;
 import com.ivo.rest.oracle.entity.OracleReworkScrapArray;
 import com.ivo.rest.oracle.entity.OracleReworkScrapCell;
 import com.ivo.rest.oracle.entity.OracleReworkScrapLcm;
@@ -104,4 +101,10 @@ public interface OracleService {
      * @return Double
      */
     Double getWoShippingQty(String wo);
+
+    /**
+     * 获取外部失败成本率数据
+     * @return
+     */
+    List<WbRatio> getWbRatio();
 }

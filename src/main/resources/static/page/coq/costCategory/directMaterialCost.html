@@ -200,22 +200,22 @@
                         return options.innerHTML;
                     }
                 },
-                {title: '料号价格', align: 'center',
-                    templet: function(data) {
-                        var div = document.createElement("div");
-                        div.className = 'plan';
-                        for(var i=0; i<data.materialAmountList.length; i++) {
-                            var childDiv = document.createElement("div");
-                            childDiv.innerText = data.materialAmountList[i].materialPrice;
-                            childDiv.className = 'plan_child div_border';
-                            div.append(childDiv);
-                        }
-
-                        var options = document.createElement("div");
-                        options.append(div);
-                        return options.innerHTML;
-                    }
-                },
+                // {title: '料号价格', align: 'center',
+                //     templet: function(data) {
+                //         var div = document.createElement("div");
+                //         div.className = 'plan';
+                //         for(var i=0; i<data.materialAmountList.length; i++) {
+                //             var childDiv = document.createElement("div");
+                //             childDiv.innerText = data.materialAmountList[i].materialPrice;
+                //             childDiv.className = 'plan_child div_border';
+                //             div.append(childDiv);
+                //         }
+                //
+                //         var options = document.createElement("div");
+                //         options.append(div);
+                //         return options.innerHTML;
+                //     }
+                // },
                 {title: '数量', align: 'center',
                     templet: function(data) {
                         var div = document.createElement("div");

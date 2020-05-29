@@ -68,56 +68,61 @@
         <div class="layui-side-scroll">
             <ul class="layui-nav layui-nav-tree arrow2" lay-filter="admin-side-nav" lay-shrink="all">
                 <li class="layui-nav-item">
-                    <a lay-href="page/coq/Cost.html"><i class="layui-icon layui-icon-unlink"></i>&emsp;<cite>机种成本</cite></a>
-                </li>
-                <li class="layui-nav-item">
-                    <a lay-href="page/coq/Schedule.html"><i class="layui-icon layui-icon-unlink"></i>&emsp;<cite>机种进度</cite></a>
-                </li>
-                <li class="layui-nav-item">
-                    <a lay-href="page/coq/EngineeringExperiment.html"><i class="layui-icon layui-icon-unlink"></i>&emsp;<cite>工程实验信息</cite></a>
-                </li>
-                <li class="layui-nav-item">
-                    <a lay-href="page/coq/verificationMachine.html"><i class="layui-icon layui-icon-unlink"></i>&emsp;<cite>实验机台管理</cite></a>
-                </li>
-                <li class="layui-nav-item">
-                    <a lay-href="page/coq/verificationSubject.html"><i class="layui-icon layui-icon-unlink"></i>&emsp;<cite>验证项目管理</cite></a>
-                </li>
-                <li class="layui-nav-item">
-                    <a lay-href="page/coq/station.html"><i class="layui-icon layui-icon-unlink"></i>&emsp;<cite>IE站点费用管理</cite></a>
-                </li>
-
-                <li class="layui-nav-item">
-                    <a><i class="layui-icon layui-icon-app"></i>&emsp;<cite>成本分类</cite></a>
+                    <a><i class="layui-icon layui-icon-app"></i>&emsp;<cite>VIP</cite></a>
                     <dl class="layui-nav-child">
-                        <dd><a lay-href="page/coq/costCategory/directMaterialCost.html">直接材料费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/jigCost.html">治工具费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/verificationCost.html">验证费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/productionCost.html">生产费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/reworkScrapCost.html">重工/报废费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/salaryCost.html">人员薪资费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/obaCost.html">OBA费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/rmaCost.html">RBA费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/travelCost.html">差旅费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/systemMaintenanceCost.html">系统维护折旧费用</a></dd>
-                        <dd><a lay-href="page/coq/costCategory/compensation.html">赔偿费用</a></dd>
+                        <dd><a lay-href="page/coq/report/VIP-COQ-COST.html">VIP-COQ COST</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a><i class="layui-icon layui-icon-app"></i>&emsp;<cite>新产品</cite></a>
+                    <dl class="layui-nav-child">
+                        <dd><a lay-href="page/coq/report/NEW-TOTAL-COST.html">新产品-TOTAL COST</a></dd>
+                        <dd><a lay-href="page/coq/report/NEW-TOTAL-RATIO.html">新产品 - Total失败Ratio</a></dd>
+                        <dd><a lay-href="page/coq/report/NEW-SIZE-PROJECT.html">新产品-尺寸 机种</a></dd>
+                        <dd><a lay-href="page/coq/report/NEW-POLIT-RUN.html">新产品-Polit Run COST</a></dd>
+                        <dd><a lay-href="page/coq/report/NEW-POLIT-RUN-RATIO.html">新产品-Polit Run RATIO</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a><i class="layui-icon layui-icon-app"></i>&emsp;<cite>量产品</cite></a>
+                    <dl class="layui-nav-child">
+                        <dd><a lay-href="page/coq/report/InLossAmountRatio.html">量产品-内部失败成本率</a></dd>
+                        <dd><a lay-href="page/coq/report/WB-RATIO.html">量产品-外部失败成本率</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item">
                     <a><i class="layui-icon layui-icon-app"></i>&emsp;<cite>报表</cite></a>
                     <dl class="layui-nav-child">
-                        <dd><a lay-href="page/coq/report/VIP-COQ-COST.html">VIP-COQ COST</a></dd>
-                        <dd><a lay-href="page/coq/report/NEW-TOTAL-COST.html">新产品-TOTAL COST</a></dd>
-                        <dd><a lay-href="page/coq/report/NEW-TOTAL-RATIO.html">新产品-TOTAL RATIO</a></dd>
-                        <dd><a lay-href="page/coq/report/NEW-SIZE-PROJECT.html">新产品-尺寸 机种</a></dd>
-                        <dd><a lay-href="page/coq/report/NEW-POLIT-RUN.html">新产品-Polit Run</a></dd>
-                        <dd><a lay-href="page/coq/report/NEW-POLIT-RUN-RATIO.html">新产品-Polit Run RATIO</a></dd>
+                        <dd><a lay-href="page/coq/Cost.html"><cite>机种成本</cite></a></dd>
+
+                        <dd><a lay-href="page/coq/Schedule.html"><cite>机种进度</cite></a></dd>
+
+                        <dd><a lay-href="page/coq/costCategory/directMaterialCost.html">直接材料费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/jigCost.html">治工具费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/verificationCost.html">验证费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/travelCost.html">差旅/交际费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/productionCost.html">生产费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/reworkScrapCost.html">重工/报废费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/salaryCost.html">人员薪资费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/obaCost.html">OBA费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/rmaCost.html">RMA费用</a></dd>
                         <dd><a lay-href="page/coq/report/ARRAY.html">Array内损费用</a></dd>
                         <dd><a lay-href="page/coq/report/CELL.html">Cell内损费用</a></dd>
                         <dd><a lay-href="page/coq/report/LCM1.html">LCM1内损费用</a></dd>
                         <dd><a lay-href="page/coq/report/LCM2.html">LCM2内损费用</a></dd>
-                        <dd><a lay-href="page/coq/report/InLossAmountRatio.html">量产品-内部失败成本率</a></dd>
-<!--                        <dd><a lay-href="page/coq/report/POLIT-RUN-TIME.html">量产品-外部失败成本率</a></dd>-->
-                        <dd><a lay-href="page/coq/report/POLIT-RUN-TIME.html">VIP-COQ Ratio</a></dd>
+
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a><i class="layui-icon layui-icon-app"></i>&emsp;<cite>成本分类</cite></a>
+                    <dl class="layui-nav-child">
+                        <dd><a lay-href="page/coq/EngineeringExperiment.html"><cite>工程实验信息</cite></a></dd>
+                        <dd><a lay-href="page/coq/verificationMachine.html"><cite>实验机台管理</cite></a></dd>
+                        <dd><a lay-href="page/coq/verificationSubject.html"><cite>验证项目管理</cite></a></dd>
+                        <dd><a lay-href="page/coq/station.html"><cite>IE站点费用管理</cite></a></dd>
+                        <dd><a lay-href="page/coq/costCategory/systemMaintenanceCost.html">系统维护折旧费用</a></dd>
+                        <dd><a lay-href="page/coq/costCategory/compensation.html">赔偿费用</a></dd>
+                        <dd><a lay-href="page/coq/report/VIP-COQ-Ratio.html">VIP-COQ Ratio</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item">

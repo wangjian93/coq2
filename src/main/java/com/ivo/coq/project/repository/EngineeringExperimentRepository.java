@@ -12,5 +12,5 @@ import java.util.List;
  */
 public interface EngineeringExperimentRepository extends JpaRepository<EngineeringExperiment, Long> {
 
-    List<EngineeringExperiment> findByProject(String project);
+    List<EngineeringExperiment> findByProjectOrderBySample_Id(String project);
 }

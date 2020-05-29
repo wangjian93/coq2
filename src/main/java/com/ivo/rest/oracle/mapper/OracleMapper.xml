@@ -436,4 +436,15 @@
     select sum( case when bwart = '101' then menge else 0-menge end  ) as menge
     from exf.SAP_AUFM where bwart in ('101','102') and aufnr = #{wo}
   </select>
+
+
+  <select id="getWbRatio" resultType="com.ivo.coq.report.entity.WbRatio">
+    SELECT A.FAB_ID as fabId, PRICE, AMOUNT, to_char(A."DATE",'yyyy-mm') MON, PRICE/AMOUNT ratio
+    FROM (
+           SELECT FAB_ID,SUM(PRICE)PRICE ,"DATE" FROM DM.MSC_LOCATION_COST  WHERE FAB_ID in ('WB_CEL','WB_LCM') AND LOCATION='SUM'
+           GROUP BY "DATE",FAB_ID
+    )A
+    LEFT JOIN DM.MSC_AMT_F B
+    ON A.FAB_ID=B.FAB_ID AND A."DATE"=B.FAB_DATE
+  </select>
 </mapper>

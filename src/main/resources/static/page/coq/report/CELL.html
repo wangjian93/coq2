@@ -95,7 +95,8 @@
                 type: 'value',
                 axisLabel: {
                     show: true,
-                    interval: 'auto'
+                    interval: 'auto',
+                    formatter: '{value} %'
                 }
             },
             series: [{
@@ -103,7 +104,10 @@
                 type: 'line',
                 label: {
                     show: true,
-                    position: 'top'
+                    position: 'top',
+                    formatter: function(param) {
+                        return param.data + " %";
+                    }
                 }
             }]
         };

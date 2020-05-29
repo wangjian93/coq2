@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>新产品 - TOTAL COST</title>
+    <title>新产品-Polit Run COST</title>
     <link rel="stylesheet" href="../../../assets/libs/layui/css/layui.css"/>
     <link rel="stylesheet" href="../../../assets/module/admin.css?v=316" media="all"/>
     <!--[if lt IE 9]>
@@ -24,7 +24,7 @@
     <div class="layui-card">
         <div class="layui-card-header">
             <i class="layui-icon layui-icon-tabs"></i>
-            <span>新产品 - TOTAL COST报表</span>
+            <span>新产品-Polit Run COST</span>
         </div>
         <div class="layui-card-body">
             <!-- 工具栏 -->
@@ -152,24 +152,73 @@
                     type: 'value'
                 },
                 {
-                    type: 'value'
+                    type: 'value',
+                    minInterval: 1,
+                    splitLine:{
+                        show:false    //去掉网格线
+                    }
                 }
             ],
             series: [
                 {
                     name: '金额',
                     type: 'bar',
-                    barWidth: 20
+                    barWidth: 20,
+                    itemStyle: {
+                        normal: {
+                            color: 'blue'
+                        }
+                    }
                 },
                 {
                     name: '次数',
                     type: 'line',
                     yAxisIndex: 1,
-                    barWidth: 20
+                    barWidth: 20,
+                    itemStyle: {
+                        normal: {
+                            color: 'black'
+                        }
+                    }
                 }
             ]
         };
         myChart.setOption(option);
+
+        var politRun = {
+            "N1568V R0": {
+                NPRB: 0,
+                DESIGN: 0,
+                EVT: 3,
+                DVT: 0,
+                PVT: 0,
+                MP: 0
+            },
+            "N1568V R1": {
+                NPRB: 0,
+                DESIGN: 0,
+                EVT: 0,
+                DVT: 1,
+                PVT: 0,
+                MP: 0
+            },
+            "A0906 R0": {
+                NPRB: 0,
+                DESIGN: 0,
+                EVT: 1,
+                DVT: 0,
+                PVT: 0,
+                MP: 0
+            },
+            "A0906 R1": {
+                NPRB: 0,
+                DESIGN: 0,
+                EVT: 1,
+                DVT: 0,
+                PVT: 0,
+                MP: 0
+            }
+        };
 
         // 渲染chart数据
         var renderCharts = function (projects, stage) {
@@ -215,20 +264,15 @@
                             outLossCost = 0;
                         }
                         allCosts[j] = preventionCost + identityCost + inLossCost + outLossCost;
+                        allCosts[j] = allCosts[j].toFixed(2);
                     }
 
-                    var d = [0,0,0,0,0,0];
-                    if(projects[0] === 'N1568V R0') {
-                        d = [0,0,2,0,0,0];
-                    }
-                    if(projects[0] === 'A0906 R0') {
-                        d = [0,0,1,0,0,0];
-                    }
-                    if(projects[0] === '') {
-                        d = [0,0,0,0,0,0];
-                    }
-                    if(projects[0] === 'N1339 R1') {
-                        d = [0,0,0,4,7,0];
+                    var d = [];
+                    for(var i=0; i<projects.length; i++) {
+                        for(var j=0; j<stage.length; j++) {
+                            var x = xMap[stage[j] + '-' + projects[i]];
+                            d[x] = politRun[projects[i]][stage[j]];
+                        }
                     }
 
                     // 赋值
