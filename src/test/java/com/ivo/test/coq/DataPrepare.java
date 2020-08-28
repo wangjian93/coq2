@@ -70,6 +70,7 @@ public class DataPrepare extends AbstractTest {
      */
     @Test
     public void addRoleWorkDays() {
+        if(roleWorkDaysRepository.findAll().size()>0) return;
         String[] role_6 = new String[] {"PM", "PJM", "LCD", "RD"};
         String[] role_3 = new String[] {"EE RD", "ME RD", "RD-Packing", "NPE-Cell", "NPE-Array", "NPE-Lcm"};
         String[] role_5 = new String[] {"LCM TEC"};
@@ -100,6 +101,7 @@ public class DataPrepare extends AbstractTest {
      */
     @Test
     public void addRdNormalHours() {
+        if(rdNormalHoursRepository.findAll().size()>0) return;
         String[] role = new String[] {"PM", "RD-Array", "RD-Cell", "RD-EE", "RD-ME", "RD-Packing", "NPE-Array",
         "NPE-Cell", "NPE-LCM", "LCM TEC", "OTM", "DQA"};
         double[] days = new double[] {1, 49, 5, 33, 7, 2.5, 17, 8.5, 14, 14, 1, 10};

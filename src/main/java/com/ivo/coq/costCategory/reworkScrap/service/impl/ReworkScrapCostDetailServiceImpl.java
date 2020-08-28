@@ -119,14 +119,20 @@ public class ReworkScrapCostDetailServiceImpl implements ReworkScrapCostDetailSe
             String opeId = array.getOpeId();
             if(StringUtils.isEmpty(opeId)) continue;
             String station = stationCostShareService.matchStation(project_, factory, opeId);
-            if(StringUtils.isEmpty(station)) continue;
-            array.setStation(station);
-            if(StringUtils.equalsIgnoreCase(array.getEvtCate(), "Rework")) {
-                array.setStationAmount(stationCostShareService.getReworkAmount(project_, factory, station));
+            if(StringUtils.isEmpty(station)) {
+                array.setStation(null);
+                array.setStationAmount(null);
+                array.setAmount(null);
             } else {
-                array.setStationAmount(stationCostShareService.getScrapAmount(project_, factory, station));
+                array.setStation(station);
+                if(StringUtils.equalsIgnoreCase(array.getEvtCate(), "Rework")) {
+                    array.setStationAmount(stationCostShareService.getReworkAmount(project_, factory, station));
+                } else {
+                    array.setStationAmount(stationCostShareService.getScrapAmount(project_, factory, station));
+                }
+                array.setAmount(DoubleUtil.multiply(array.getQty(), array.getStationAmount()));
             }
-            array.setAmount(DoubleUtil.multiply(array.getQty(), array.getStationAmount()));
+
         }
         reworkScrapCostArrayRepository.saveAll(arrayList);
 
@@ -138,14 +144,19 @@ public class ReworkScrapCostDetailServiceImpl implements ReworkScrapCostDetailSe
             String opeId = cell.getNxOpeId();
             if(StringUtils.isEmpty(opeId)) continue;
             String station = stationCostShareService.matchStation(project_, factory, opeId);
-            if(StringUtils.isEmpty(station)) continue;
-            cell.setStation(station);
-            if(StringUtils.equalsIgnoreCase(cell.getEvtCate(), "Rework")) {
-                cell.setStationAmount(stationCostShareService.getReworkAmount(project_, factory, station));
-            } else {
-                cell.setStationAmount(stationCostShareService.getScrapAmount(project_, factory, station));
+            if(StringUtils.isEmpty(station)) {
+                cell.setStation(null);
+                cell.setStationAmount(null);
+                cell.setAmount(null);
+            } else{
+                cell.setStation(station);
+                if(StringUtils.equalsIgnoreCase(cell.getEvtCate(), "Rework")) {
+                    cell.setStationAmount(stationCostShareService.getReworkAmount(project_, factory, station));
+                } else {
+                    cell.setStationAmount(stationCostShareService.getScrapAmount(project_, factory, station));
+                }
+                cell.setAmount(DoubleUtil.multiply(cell.getQty(), cell.getStationAmount()));
             }
-            cell.setAmount(DoubleUtil.multiply(cell.getQty(), cell.getStationAmount()));
         }
         reworkScrapCostCellRepository.saveAll(cellList);
 
@@ -161,14 +172,19 @@ public class ReworkScrapCostDetailServiceImpl implements ReworkScrapCostDetailSe
             }
             if(StringUtils.isEmpty(opeId)) continue;
             String station = stationCostShareService.matchStation(project_, factory, opeId);
-            if(StringUtils.isEmpty(station)) continue;
-            lcm.setStation(station);
-            if(StringUtils.equalsIgnoreCase(lcm.getEvtCate(), "Rework")) {
-                lcm.setStationAmount(stationCostShareService.getReworkAmount(project_, factory, station));
+            if(StringUtils.isEmpty(station)) {
+                lcm.setStation(null);
+                lcm.setStationAmount(null);
+                lcm.setAmount(null);
             } else {
-                lcm.setStationAmount(stationCostShareService.getScrapAmount(project_, factory, station));
+                lcm.setStation(station);
+                if(StringUtils.equalsIgnoreCase(lcm.getEvtCate(), "Rework")) {
+                    lcm.setStationAmount(stationCostShareService.getReworkAmount(project_, factory, station));
+                } else {
+                    lcm.setStationAmount(stationCostShareService.getScrapAmount(project_, factory, station));
+                }
+                lcm.setAmount(DoubleUtil.multiply(lcm.getQty(), lcm.getStationAmount()));
             }
-            lcm.setAmount(DoubleUtil.multiply(lcm.getQty(), lcm.getStationAmount()));
         }
         reworkScrapCostLcmRepository.saveAll(lcmList);
     }

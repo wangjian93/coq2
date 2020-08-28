@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wj
@@ -60,5 +61,11 @@ public class EifServiceImpl implements EifService {
     public String getPrByOee(String oee) {
         log.info("数据接口：OEE获取到对应的PR " + oee);
         return eifMapper.getPrByOee(oee);
+    }
+
+    @Override
+    public List<Map> getShipment(String project) {
+        log.info("数据接口：获取机种的样品申请单的出货信息" + project);
+        return eifMapper.getShipment(project);
     }
 }

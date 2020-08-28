@@ -145,16 +145,19 @@ public class MaterialCostDetailServiceImpl implements MaterialCostDetailService 
             Double amount = null;
             if(StringUtils.equalsIgnoreCase(PlantEnum.Lcm.getPlant(), plant)) {
                 List<MaterialLcmWoAmount> woAmountList = materialCostDetail.getWoAmountList();
+                if (woAmountList == null) continue;
                 for(MaterialLcmWoAmount woAmount : woAmountList) {
                     amount = DoubleUtil.sum(amount, woAmount.getWoAmount());
                 }
             } else if(StringUtils.equalsIgnoreCase(PlantEnum.Array.getPlant(), plant)) {
                 List<MaterialArrayProductAmount> productAmountList = materialCostDetail.getProductAmountList();
+                if(productAmountList == null) continue;
                 for(MaterialArrayProductAmount productAmount : productAmountList) {
                     amount = DoubleUtil.sum(amount, productAmount.getAmount());
                 }
             } else if(StringUtils.equalsIgnoreCase(PlantEnum.Cell.getPlant(), plant)) {
                 List<MaterialCellMaterialAmount> materialAmountList = materialCostDetail.getMaterialAmountList();
+                if (materialAmountList == null) continue;
                 for(MaterialCellMaterialAmount materialAmount : materialAmountList) {
                     amount = DoubleUtil.sum(amount, materialAmount.getAmount());
                 }

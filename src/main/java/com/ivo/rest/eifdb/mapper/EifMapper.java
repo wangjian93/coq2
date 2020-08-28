@@ -5,6 +5,7 @@ import com.ivo.rest.eifdb.entity.EifEngineeringExperimentProduct;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wj
@@ -54,5 +55,12 @@ public interface EifMapper {
      * @return PR单号
      */
     String getPrByOee(String oee);
+
+    /**
+     * 从样品申请单获取出货信息
+     * @param project 机种
+     * @return List<Map>
+     */
+    List<Map> getShipment(String project);
 }
 

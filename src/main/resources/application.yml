@@ -1,9 +1,11 @@
+server:
+  port: 8080
 spring:
   datasource:
     druid:
       # 主数据源  Mysql
       primary:
-        url: jdbc:mysql://localhost:3306/coq4?useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+        url: jdbc:mysql://localhost:3306/coq?useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
         username: root
         password: root
       # ORACLE数据源
@@ -14,8 +16,8 @@ spring:
       # SQL SERVER数据源
       third:
         url: jdbc:jtds:sqlserver://10.20.2.81/EIFDB
-        username: ERP_COQ
-        password: EIM_ERP_COQ@202004
+        username: IVOTHS #ERP_COQ
+        password: (2017Ths_01 #EIM_ERP_COQ@202004
         validation-query: SELECT 1
       # MYSQL数据源  PLM
       fourth:

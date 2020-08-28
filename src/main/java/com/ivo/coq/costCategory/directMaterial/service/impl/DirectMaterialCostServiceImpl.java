@@ -96,6 +96,7 @@ public class DirectMaterialCostServiceImpl implements DirectMaterialCostService 
         for(DirectMaterialCost directMaterialCost : directMaterialCostList) {
             // 厂内直材
             if(null == directMaterialCost.getDirectAmount() || -1 != directMaterialCost.getDirectAmount()) {
+                directMaterialCost.setDirectAmount(null);
                 List<MaterialCostDetail> materialCostDetailList = materialCostDetailService.getMaterialCostDetails(
                         directMaterialCost.getProject(), directMaterialCost.getStage(), directMaterialCost.getTime()
                 );
@@ -109,6 +110,7 @@ public class DirectMaterialCostServiceImpl implements DirectMaterialCostService 
             }
             // 外包薄化
             if(null == directMaterialCost.getOutsourcingThinningAmount() || -1 != directMaterialCost.getOutsourcingThinningAmount()) {
+                directMaterialCost.setOutsourcingThinningAmount(null);
                 List<OutsourcingThinningCostDetail> outsourcingThinningCostDetailList =
                         outsourcingThinningCostDetailService.getOutsourcingThinningCostDetails(
                                 directMaterialCost.getProject(), directMaterialCost.getStage(), directMaterialCost.getTime()
@@ -123,6 +125,7 @@ public class DirectMaterialCostServiceImpl implements DirectMaterialCostService 
             }
             // 出货费用
             if(null == directMaterialCost.getShipmentAmount() || -1 != directMaterialCost.getShipmentAmount()) {
+                directMaterialCost.setShipmentAmount(null);
                 List<ShipmentCostDetail> shipmentCostDetailList = shipmentCostDetailService.getShipmentCostDetail(
                         directMaterialCost.getProject(), directMaterialCost.getStage(), directMaterialCost.getTime());
                 if(shipmentCostDetailList != null && shipmentCostDetailList.size() > 0) {

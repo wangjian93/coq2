@@ -85,6 +85,9 @@ public class VerificationCostPlantDetailServiceImpl implements VerificationCostP
             plantDetail.setVerificationType(qmsVerification.getVerificationType());
             plantDetail.setVerificationSubject(qmsVerification.getVerificationSubject());
             plantDetail.setVerificationCondition(qmsVerification.getVerificationCondition());
+            if(plantDetail.getVerificationCondition().length() > 500) {
+                plantDetail.setVerificationCondition(plantDetail.getVerificationCondition().substring(0, 500));
+            }
             try {
                 plantDetail.setVerificationQuantity(Double.valueOf(qmsVerification.getVerificationQuantity()));
             } catch (NumberFormatException e) {

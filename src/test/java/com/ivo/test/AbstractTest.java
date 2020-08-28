@@ -2,9 +2,7 @@ package com.ivo.test;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -21,7 +19,7 @@ import javax.transaction.Transactional;
 @Rollback(false)
 public abstract class AbstractTest {
 
-    public static final String PROJECT = "A0906 R1";
+    public static final String PROJECT = "N1568V R1";
 
     /**
      * 开始测试

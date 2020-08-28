@@ -4,6 +4,7 @@ import com.ivo.rest.eifdb.entity.EifEngineeringExperimentMaterial;
 import com.ivo.rest.eifdb.entity.EifEngineeringExperimentProduct;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * EIF数据服务接口
@@ -53,4 +54,11 @@ public interface EifService {
      * @return PR单号
      */
     String getPrByOee(String oee);
+
+    /**
+     * 从样品申请单获取出货信息
+     * @param project 机种
+     * @return List<Map>
+     */
+    List<Map> getShipment(String project);
 }

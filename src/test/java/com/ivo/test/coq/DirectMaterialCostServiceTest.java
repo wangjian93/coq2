@@ -29,62 +29,62 @@ public class DirectMaterialCostServiceTest extends AbstractTest {
     @Autowired
     private ShipmentCostDetailService shipmentCostDetailService;
 
-    /**
-     * 创建机种的直接材料费用
-     */
-    @Test
-    public void a1_createDirectMaterialCost() {
-        directMaterialCostService.createDirectMaterialCost(PROJECT);
-    }
-
-    /**
-     * 创建直材费用
-     */
-    @Test
-    public void b1_createMaterialCostDetail() {
-        materialCostDetailService.createMaterialCostDetail(PROJECT);
-    }
-
-    /**
-     * 同步Array厂的材料单片费用
-     */
-    @Test
-    public void b2_syncArrayProductAmount() {
-        materialCostDetailService.syncArrayProductAmount(PROJECT);
-    }
-
-    /**
-     * 同步LCM厂的工单费用
-     */
-    @Test
-    public void b3_syncLcmWoAmount() {
-        materialCostDetailService.syncLcmWoAmount(PROJECT);
-    }
-
-    /**
-     * 同步CELL厂的料号单价
-     */
-    @Test
-    public void b4_syncCellMaterialAmount() {
-        materialCostDetailService.syncCellMaterialAmount(PROJECT);
-    }
-
-    /**
-     * 计算厂内直材费用
-     */
-    @Test
-    public void b5_computeMaterialCostDetail() {
-        materialCostDetailService.computeMaterialCostDetail(PROJECT);
-    }
-
-
-    /**
-     * 同步获取机种外包薄化费用
-     */
-    @Test
-    public void c1_syncOutsourcingThinningCostDetail() {
-        outsourcingThinningCostDetailService.syncOutsourcingThinningCostDetail(PROJECT);
-    }
+//    /**
+//     * 创建机种的直接材料费用
+//     */
+//    @Test
+//    public void a1_createDirectMaterialCost() {
+//        directMaterialCostService.createDirectMaterialCost(PROJECT);
+//    }
+//
+//    /**
+//     * 创建直材费用
+//     */
+//    @Test
+//    public void b1_createMaterialCostDetail() {
+//        materialCostDetailService.createMaterialCostDetail(PROJECT);
+//    }
+//
+//    /**
+//     * 同步Array厂的材料单片费用
+//     */
+//    @Test
+//    public void b2_syncArrayProductAmount() {
+//        materialCostDetailService.syncArrayProductAmount(PROJECT);
+//    }
+//
+//    /**
+//     * 同步LCM厂的工单费用
+//     */
+//    @Test
+//    public void b3_syncLcmWoAmount() {
+//        materialCostDetailService.syncLcmWoAmount(PROJECT);
+//    }
+//
+//    /**
+//     * 同步CELL厂的料号单价
+//     */
+//    @Test
+//    public void b4_syncCellMaterialAmount() {
+//        materialCostDetailService.syncCellMaterialAmount(PROJECT);
+//    }
+//
+//    /**
+//     * 计算厂内直材费用
+//     */
+//    @Test
+//    public void b5_computeMaterialCostDetail() {
+//        materialCostDetailService.computeMaterialCostDetail(PROJECT);
+//    }
+//
+//
+//    /**
+//     * 同步获取机种外包薄化费用
+//     */
+//    @Test
+//    public void c1_syncOutsourcingThinningCostDetail() {
+//        outsourcingThinningCostDetailService.syncOutsourcingThinningCostDetail(PROJECT);
+//    }
 
     /**
      * 创建出货费用

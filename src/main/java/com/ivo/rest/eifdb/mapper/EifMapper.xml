@@ -39,7 +39,7 @@
   <!-- 获取EE单（CELL）中的料号 -->
   <select id="getEifEngineeringExperimentMaterial" parameterType="java.lang.String" resultType="com.ivo.rest.eifdb.entity.EifEngineeringExperimentMaterial">
     SELECT
-      m.MaterialGroup_FK as materialGroup, m.Material_FK as material, m.SignalQuality as expQty
+      m.MaterialGroup_FK as materialGroup, m.Material_FK as material, m.ActualQuality as expQty
     FROM PP_D_EngineeringExperimentMaterial m
            LEFT JOIN PP_D_EngineeringExperimentProduct p on p.EngineeringExperimentProduct_ID = m.EngineeringExperimentProduct_FK
            LEFT JOIN PP_M_EngineeringExperiment e on e.EngineeringExperiment_ID = p.EngineeringExperiment_FK
@@ -58,6 +58,17 @@
   <!-- 根据OEE获取到对应的PR -->
   <select id="getPrByOee" parameterType="java.lang.String" resultType="java.lang.String">
     SELECT o.PRTrackingNumber FROM PP_M_OutsourceEngineeringExperiment o WHERE o.TrackingNumber=#{oee}
+  </select>
+
+  <!-- 从样品申请单获取出货信息 -->
+  <select id="getShipment" parameterType="java.lang.String" resultType="java.util.HashMap">
+    select m.TrackingNumber, d.Material_FK,d.Qty,d.RequestDate
+    from SD_D_SampleItem d
+           LEFT JOIN SD_M_SampleRequisition m on m.SampleRequisition_ID = d.SampleRequisition_FK
+    where  m.model_id = #{project}
+      and m.OrderTask_FK='980'
+      and d.ValidFlag=1
+    order by d.RequestDate
   </select>
 
 </mapper>
