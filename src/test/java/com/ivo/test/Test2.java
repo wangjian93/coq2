@@ -26,7 +26,6 @@ import com.ivo.coq.costCategory.verification.service.VerificationCostPlantDetail
 import com.ivo.coq.costCategory.verification.service.VerificationCostService;
 import com.ivo.coq.project.entity.Project;
 import com.ivo.coq.project.service.*;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -117,36 +116,36 @@ public class Test2 extends AbstractTest {
     public void test() {
         List<Project> projectList = projectService.getProjects();
         for(Project project : projectList) {
-            if(StringUtils.containsAny(project.getProject(), "N1568V R0", "N1568V R1", "A0906 R0", "A0906 R1")) continue;
             System.out.println("计算机种" + project.getProject());
+            if(project.getId()<=103) continue;
             run(project.getProject());
         }
     }
 
     public void run(String PROJECT) {
-//        projectServiceTest(PROJECT);
-        directMaterialCostServiceTest(PROJECT);
+////        projectServiceTest(PROJECT);
+//        directMaterialCostServiceTest(PROJECT);
 //        JigCostServiceTest(PROJECT);
 //        ObaCostServiceTest(PROJECT);
 //        SalaryCostServiceTest(PROJECT);
-//        TravelCostServiceTest(PROJECT);
+////        TravelCostServiceTest(PROJECT);
 //        VerificationCostServiceTest(PROJECT);
 //        ProductionCostServiceTest(PROJECT);
-//        ReworkScrapSyncJobServiceTest(PROJECT);
-//        ReworkScrapCostServiceTest(PROJECT);
-        CostServiceTest(PROJECT);
+        ReworkScrapSyncJobServiceTest(PROJECT);
+        ReworkScrapCostServiceTest(PROJECT);
+//        CostServiceTest(PROJECT);
     }
 
     public void projectServiceTest(String PROJECT) {
-//        sampleService.syncSamples(PROJECT);
-//        milestoneService.syncMilestone(PROJECT);
-//        memberService.syncMember(PROJECT);
-//        stageService.generateStage(PROJECT);
-//        engineeringExperimentService.generateEngineeringExperiment(PROJECT);
-//        engineeringExperimentService.syncEngineeringExperimentPlant(PROJECT);
-//        engineeringExperimentService.syncEngineeringExperimentProduct(PROJECT);
+        sampleService.syncSamples(PROJECT);
+        milestoneService.syncMilestone(PROJECT);
+        memberService.syncMember(PROJECT);
+        stageService.generateStage(PROJECT);
+        engineeringExperimentService.generateEngineeringExperiment(PROJECT);
+        engineeringExperimentService.syncEngineeringExperimentPlant(PROJECT);
+        engineeringExperimentService.syncEngineeringExperimentProduct(PROJECT);
         engineeringExperimentService.syncEngineeringExperimentMaterial(PROJECT);
-//        engineeringExperimentService.syncEngineeringExperimentWo(PROJECT);
+        engineeringExperimentService.syncEngineeringExperimentWo(PROJECT);
     }
 
     public void directMaterialCostServiceTest(String PROJECT) {

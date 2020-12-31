@@ -181,10 +181,14 @@ public class StationCostShareServiceImpl implements StationCostShareService {
         // 匹配不到站点时，匹配前三码，还没有然后再前两码
         StationCostShare stationObj = stationCostShareRepository.findFirstByProjectAndFactoryAndStationLike(project, factory, station+"%");
         if(stationObj == null) {
-            station = station.substring(0, 3);
+            if(station.length()>3) {
+                station = station.substring(0, 3);
+            }
             stationObj = stationCostShareRepository.findFirstByProjectAndFactoryAndStationLike(project, factory, station+"%");
             if(stationObj == null) {
-                station = station.substring(0, 2);
+                if(station.length()>2) {
+                    station = station.substring(0, 2);
+                }
                 stationObj = stationCostShareRepository.findFirstByProjectAndFactoryAndStationLike(project, factory, station+"%");
                 if(stationObj == null) return null;
             }

@@ -33,7 +33,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">日期范围:</label>
                         <div class="layui-input-inline">
-                            <input type="text" class="layui-input" id="month" name="month">
+                            <input type="text" class="layui-input" id="month" name="month" value="2019-09 ~ 2020-09">
                         </div>
                     </div>
 
@@ -224,6 +224,67 @@
             var inLossAmountLcm1 =  getInLossAmount(fromMonth, toMonth, 'LCM1');
             var inLossAmountLcm2 =  getInLossAmount(fromMonth, toMonth, 'LCM2');
 
+
+            // var inLossAmountArray = [
+            //     {"PLANT":"ARY","FAB_DATE":"2019-09","RATIO":0.089},
+            //     {"PLANT":"ARY","FAB_DATE":"2019-10","RATIO":0.023},
+            //     {"PLANT":"ARY","FAB_DATE":"2019-11","RATIO":0.069},
+            //     {"PLANT":"ARY","FAB_DATE":"2019-12","RATIO":0.049},
+            //     {"PLANT":"ARY","FAB_DATE":"2020-01","RATIO":0.042},
+            //     {"PLANT":"ARY","FAB_DATE":"2020-02","RATIO":0.038},
+            //     {"PLANT":"ARY","FAB_DATE":"2020-03","RATIO":0.029},
+            //     {"PLANT":"ARY","FAB_DATE":"2020-04","RATIO":0.024},
+            //     {"PLANT":"ARY","FAB_DATE":"2020-05","RATIO":0.032},
+            //     {"PLANT":"ARY","FAB_DATE":"2020-06","RATIO":0.036},
+            //     {"PLANT":"ARY","FAB_DATE":"2020-07","RATIO":0.025},
+            //     {"PLANT":"ARY","FAB_DATE":"2020-08","RATIO":0.036},
+            //     {"PLANT":"ARY","FAB_DATE":"2020-09","RATIO":0.015}
+            // ];
+            // var inLossAmountCell = [
+            //     {"PLANT":"CEL","FAB_DATE":"2019-09","RATIO":0.250},
+            //     {"PLANT":"CEL","FAB_DATE":"2019-10","RATIO":0.222},
+            //     {"PLANT":"CEL","FAB_DATE":"2019-11","RATIO":0.244},
+            //     {"PLANT":"CEL","FAB_DATE":"2019-12","RATIO":0.181},
+            //     {"PLANT":"CEL","FAB_DATE":"2020-01","RATIO":0.167},
+            //     {"PLANT":"CEL","FAB_DATE":"2020-02","RATIO":0.203},
+            //     {"PLANT":"CEL","FAB_DATE":"2020-03","RATIO":0.204},
+            //     {"PLANT":"CEL","FAB_DATE":"2020-04","RATIO":0.181},
+            //     {"PLANT":"CEL","FAB_DATE":"2020-05","RATIO":0.259},
+            //     {"PLANT":"CEL","FAB_DATE":"2020-06","RATIO":0.225},
+            //     {"PLANT":"CEL","FAB_DATE":"2020-07","RATIO":0.211},
+            //     {"PLANT":"CEL","FAB_DATE":"2020-08","RATIO":0.134},
+            //     {"PLANT":"CEL","FAB_DATE":"2020-09","RATIO":0.132}
+            // ];
+            // var inLossAmountLcm1 = [
+            //     {"PLANT":"LCM1","FAB_DATE":"2019-09","RATIO":0.328},
+            //     {"PLANT":"LCM1","FAB_DATE":"2019-10","RATIO":0.307},
+            //     {"PLANT":"LCM1","FAB_DATE":"2019-11","RATIO":0.322},
+            //     {"PLANT":"LCM1","FAB_DATE":"2019-12","RATIO":0.350},
+            //     {"PLANT":"LCM1","FAB_DATE":"2020-01","RATIO":0.323},
+            //     {"PLANT":"LCM1","FAB_DATE":"2020-02","RATIO":0.357},
+            //     {"PLANT":"LCM1","FAB_DATE":"2020-03","RATIO":0.371},
+            //     {"PLANT":"LCM1","FAB_DATE":"2020-04","RATIO":0.284},
+            //     {"PLANT":"LCM1","FAB_DATE":"2020-05","RATIO":0.438},
+            //     {"PLANT":"LCM1","FAB_DATE":"2020-06","RATIO":0.355},
+            //     {"PLANT":"LCM1","FAB_DATE":"2020-07","RATIO":0.296},
+            //     {"PLANT":"LCM1","FAB_DATE":"2020-08","RATIO":0.275},
+            //     {"PLANT":"LCM1","FAB_DATE":"2020-09","RATIO":0.294}
+            // ];
+            // var inLossAmountLcm2 = [
+            //     {"PLANT":"LCM2","FAB_DATE":"2019-09","RATIO":0.324},
+            //     {"PLANT":"LCM2","FAB_DATE":"2019-10","RATIO":0.352},
+            //     {"PLANT":"LCM2","FAB_DATE":"2019-11","RATIO":0.473},
+            //     {"PLANT":"LCM2","FAB_DATE":"2019-12","RATIO":0.377},
+            //     {"PLANT":"LCM2","FAB_DATE":"2020-01","RATIO":0.435},
+            //     {"PLANT":"LCM2","FAB_DATE":"2020-02","RATIO":0.431},
+            //     {"PLANT":"LCM2","FAB_DATE":"2020-03","RATIO":0.422},
+            //     {"PLANT":"LCM2","FAB_DATE":"2020-04","RATIO":0.459},
+            //     {"PLANT":"LCM2","FAB_DATE":"2020-05","RATIO":0.353},
+            //     {"PLANT":"LCM2","FAB_DATE":"2020-06","RATIO":0.262},
+            //     {"PLANT":"LCM2","FAB_DATE":"2020-07","RATIO":0.395},
+            //     {"PLANT":"LCM2","FAB_DATE":"2020-08","RATIO":0.387},
+            //     {"PLANT":"LCM2","FAB_DATE":"2020-09","RATIO":0.259}
+            // ];
             // 更新chart图
             chartInLossAmount.clear();
             option.xAxis.data = generateXArray(inLossAmountArray, inLossAmountCell, inLossAmountLcm1, inLossAmountLcm2);

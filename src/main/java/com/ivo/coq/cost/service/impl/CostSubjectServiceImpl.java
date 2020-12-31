@@ -226,7 +226,9 @@ public class CostSubjectServiceImpl implements CostSubjectService {
                 if(1 == directMaterialCost.getTime()) {
                     preventionCost = DoubleUtil.sum(preventionCost, directMaterialCost.getAmount());
                 } else {
-                    inLossCost = DoubleUtil.sum(inLossCost, directMaterialCost.getAmount());
+                    if(directMaterialCost.getAmount()!=null && directMaterialCost.getAmount()>0) {
+                        inLossCost = DoubleUtil.sum(inLossCost, directMaterialCost.getAmount());
+                    }
                 }
             }
         }
