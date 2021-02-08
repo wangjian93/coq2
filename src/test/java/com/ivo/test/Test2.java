@@ -114,26 +114,30 @@ public class Test2 extends AbstractTest {
 
     @Test
     public void test() {
-        List<Project> projectList = projectService.getProjects();
-        for(Project project : projectList) {
-            System.out.println("计算机种" + project.getProject());
-            if(project.getId()<=103) continue;
-            run(project.getProject());
+//        List<Project> projectList = projectService.getProjects();
+//        for(Project project : projectList) {
+//            System.out.println("计算机种" + project.getProject());
+//            if(project.getId()<=103) continue;
+//            run(project.getProject());
+//        }
+        String[] projects = new String[] {"A0906 R0", "N1568V R0"};
+        for(String project : projects) {
+            run(project);
         }
     }
 
     public void run(String PROJECT) {
 ////        projectServiceTest(PROJECT);
-//        directMaterialCostServiceTest(PROJECT);
-//        JigCostServiceTest(PROJECT);
+        directMaterialCostServiceTest(PROJECT);
+        JigCostServiceTest(PROJECT);
 //        ObaCostServiceTest(PROJECT);
 //        SalaryCostServiceTest(PROJECT);
 ////        TravelCostServiceTest(PROJECT);
-//        VerificationCostServiceTest(PROJECT);
+        VerificationCostServiceTest(PROJECT);
 //        ProductionCostServiceTest(PROJECT);
-        ReworkScrapSyncJobServiceTest(PROJECT);
-        ReworkScrapCostServiceTest(PROJECT);
-//        CostServiceTest(PROJECT);
+//        ReworkScrapSyncJobServiceTest(PROJECT);
+//        ReworkScrapCostServiceTest(PROJECT);
+        CostServiceTest(PROJECT);
     }
 
     public void projectServiceTest(String PROJECT) {

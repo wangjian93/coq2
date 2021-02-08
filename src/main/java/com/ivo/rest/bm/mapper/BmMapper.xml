@@ -57,7 +57,7 @@
   </select>
 
   <!-- 获取机种的BM验证费用 -->
-  <select id="获取机种的BM验证费用" resultType="com.ivo.rest.bm.entity.BmModel">
+  <select id="getBmVerification" resultType="com.ivo.rest.bm.entity.BmModel">
     select a.TrackingNumber as pr,
            a.DateOfCreate as prDrafterDate,
            a.Owner_FK as prDrafter,

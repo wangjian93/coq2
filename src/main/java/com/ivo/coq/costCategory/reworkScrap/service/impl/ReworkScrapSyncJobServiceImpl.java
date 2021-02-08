@@ -69,24 +69,28 @@ public class ReworkScrapSyncJobServiceImpl implements ReworkScrapSyncJobService 
             Sample sample = engineeringExperiment.getSample();
             if(StringUtils.equalsAnyIgnoreCase(engineeringExperiment.getPlant(), PlantEnum.Array.getPlant(), PlantEnum.Cell.getPlant())) {
                 List<EngineeringExperimentProduct> productList = engineeringExperiment.getProductList();
-                for(EngineeringExperimentProduct product : productList) {
-                    ReworkScrapSyncJob reworkScrapSyncJob = new ReworkScrapSyncJob(sample);
-                    reworkScrapSyncJob.setPlant(engineeringExperiment.getPlant());
-                    reworkScrapSyncJob.setProduct(product.getProduct());
-                    reworkScrapSyncJob.setTft(product.getTft());
-                    reworkScrapSyncJob.setCf(product.getCf());
-                    reworkScrapSyncJob.setStatus(ReworkScrapSyncJob.STATUS_WAIT);
-                    jobList.add(reworkScrapSyncJob);
+                if(productList != null && productList.size()>0) {
+                    for(EngineeringExperimentProduct product : productList) {
+                        ReworkScrapSyncJob reworkScrapSyncJob = new ReworkScrapSyncJob(sample);
+                        reworkScrapSyncJob.setPlant(engineeringExperiment.getPlant());
+                        reworkScrapSyncJob.setProduct(product.getProduct());
+                        reworkScrapSyncJob.setTft(product.getTft());
+                        reworkScrapSyncJob.setCf(product.getCf());
+                        reworkScrapSyncJob.setStatus(ReworkScrapSyncJob.STATUS_WAIT);
+                        jobList.add(reworkScrapSyncJob);
+                    }
                 }
             }
             if(StringUtils.equalsIgnoreCase(engineeringExperiment.getPlant(), PlantEnum.Lcm.getPlant())) {
                 List<EngineeringExperimentWo> woList = engineeringExperiment.getWoList();
-                for(EngineeringExperimentWo wo : woList) {
-                    ReworkScrapSyncJob reworkScrapSyncJob = new ReworkScrapSyncJob(sample);
-                    reworkScrapSyncJob.setPlant(engineeringExperiment.getPlant());
-                    reworkScrapSyncJob.setWo(wo.getWo());
-                    reworkScrapSyncJob.setStatus(ReworkScrapSyncJob.STATUS_WAIT);
-                    jobList.add(reworkScrapSyncJob);
+                if(woList != null && woList.size()>0) {
+                    for(EngineeringExperimentWo wo : woList) {
+                        ReworkScrapSyncJob reworkScrapSyncJob = new ReworkScrapSyncJob(sample);
+                        reworkScrapSyncJob.setPlant(engineeringExperiment.getPlant());
+                        reworkScrapSyncJob.setWo(wo.getWo());
+                        reworkScrapSyncJob.setStatus(ReworkScrapSyncJob.STATUS_WAIT);
+                        jobList.add(reworkScrapSyncJob);
+                    }
                 }
             }
         }

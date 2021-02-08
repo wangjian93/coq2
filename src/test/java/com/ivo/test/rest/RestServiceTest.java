@@ -2,6 +2,8 @@ package com.ivo.test.rest;
 
 import com.ivo.coq.report.service.WbRatioService;
 import com.ivo.rest.RestService;
+import com.ivo.rest.eifdb.EifService;
+import com.ivo.rest.oracle.OracleService;
 import com.ivo.test.AbstractTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wj
@@ -23,6 +26,12 @@ public class RestServiceTest extends AbstractTest {
     @Autowired
     private WbRatioService wbRatioService;
 
+    @Autowired
+    private OracleService oracleService;
+
+    @Autowired
+    private EifService eifService;
+
     @Test
     public void test() throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -35,6 +44,7 @@ public class RestServiceTest extends AbstractTest {
 
     @Test
     public void test2() {
-        wbRatioService.syncWbRatio();
+        List<Map> shipmentMapList = eifService.getShipment("A0906");
+        shipmentMapList.size();
     }
 }

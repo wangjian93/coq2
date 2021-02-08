@@ -99,7 +99,7 @@ public class ShipmentCostDetailServiceImpl implements ShipmentCostDetailService 
                 }
             }
 
-            if(shipmentQty == null) continue;
+            if(shipmentQty == null) shipmentQty=0D;
             ShipmentCostDetail shipmentCostDetail = new ShipmentCostDetail(sample.getProject(), sample.getStage(), sample.getTime());
             shipmentCostDetail.setQuantity(shipmentQty);
 

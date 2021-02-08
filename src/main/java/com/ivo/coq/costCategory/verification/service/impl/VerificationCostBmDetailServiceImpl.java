@@ -66,7 +66,7 @@ public class VerificationCostBmDetailServiceImpl implements VerificationCostBmDe
             Date fromDate = dates[0];
             Date toDate = dates[1];
             if (fromDate == null || toDate == null) continue;
-            List<BmModel> bmModelList = bmService.getBmJig(project, fromDate, toDate);
+            List<BmModel> bmModelList = bmService.getBmVerification(project, fromDate, toDate);
             if (bmModelList == null) continue;
             List<VerificationCostBmDetail> verificationCostBmDetailList = new ArrayList<>();
             for (BmModel b : bmModelList) {
