@@ -33,6 +33,11 @@ public class EngineeringExperimentWo extends AutoIncreaseEntityModel {
      */
     private String wo;
 
+    /**
+     * 工单对应的product
+     */
+    private String product;
+
     @ManyToOne
     @JoinColumn(name = "engineeringExperiment_id")
     @JsonIgnore

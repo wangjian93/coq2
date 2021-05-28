@@ -2,10 +2,10 @@ package com.ivo.test.coq;
 
 import com.ivo.coq.costCategory.salary.entity.BaseSalary;
 import com.ivo.coq.costCategory.salary.entity.RdNormalHours;
-import com.ivo.coq.costCategory.salary.entity.RoleWorkDays;
+import com.ivo.coq.costCategory.salary.entity.DesignWorkDay;
 import com.ivo.coq.costCategory.salary.repository.BaseSalaryRepository;
 import com.ivo.coq.costCategory.salary.repository.RdNormalHoursRepository;
-import com.ivo.coq.costCategory.salary.repository.RoleWorkDaysRepository;
+import com.ivo.coq.costCategory.salary.repository.DesignWorkDayRepository;
 import com.ivo.coq.project.entity.Project;
 import com.ivo.coq.project.repository.ProjectRepository;
 import com.ivo.test.AbstractTest;
@@ -29,7 +29,7 @@ public class DataPrepare extends AbstractTest {
     private BaseSalaryRepository baseSalaryRepository;
 
     @Autowired
-    private RoleWorkDaysRepository roleWorkDaysRepository;
+    private DesignWorkDayRepository designWorkDayRepository;
 
     @Autowired
     private RdNormalHoursRepository rdNormalHoursRepository;
@@ -70,30 +70,30 @@ public class DataPrepare extends AbstractTest {
      */
     @Test
     public void addRoleWorkDays() {
-        if(roleWorkDaysRepository.findAll().size()>0) return;
+        if(designWorkDayRepository.findAll().size()>0) return;
         String[] role_6 = new String[] {"PM", "PJM", "LCD", "RD"};
         String[] role_3 = new String[] {"EE RD", "ME RD", "RD-Packing", "NPE-Cell", "NPE-Array", "NPE-Lcm"};
         String[] role_5 = new String[] {"LCM TEC"};
-        List<RoleWorkDays> list = new ArrayList<>();
+        List<DesignWorkDay> list = new ArrayList<>();
         for(String role : role_6) {
-            RoleWorkDays roleWorkDays = new RoleWorkDays();
-            roleWorkDays.setRole(role);
-            roleWorkDays.setWorkDays(6D);
-            list.add(roleWorkDays);
+            DesignWorkDay designWorkDay = new DesignWorkDay();
+            designWorkDay.setRole(role);
+            designWorkDay.setWorkDays(6D);
+            list.add(designWorkDay);
         }
         for(String role : role_3) {
-            RoleWorkDays roleWorkDays = new RoleWorkDays();
-            roleWorkDays.setRole(role);
-            roleWorkDays.setWorkDays(3D);
-            list.add(roleWorkDays);
+            DesignWorkDay designWorkDay = new DesignWorkDay();
+            designWorkDay.setRole(role);
+            designWorkDay.setWorkDays(3D);
+            list.add(designWorkDay);
         }
         for(String role : role_5) {
-            RoleWorkDays roleWorkDays = new RoleWorkDays();
-            roleWorkDays.setRole(role);
-            roleWorkDays.setWorkDays(5D);
-            list.add(roleWorkDays);
+            DesignWorkDay designWorkDay = new DesignWorkDay();
+            designWorkDay.setRole(role);
+            designWorkDay.setWorkDays(5D);
+            list.add(designWorkDay);
         }
-        roleWorkDaysRepository.saveAll(list);
+        designWorkDayRepository.saveAll(list);
     }
 
     /**

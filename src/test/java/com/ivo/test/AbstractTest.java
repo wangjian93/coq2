@@ -19,7 +19,7 @@ import javax.transaction.Transactional;
 @Rollback(false)
 public abstract class AbstractTest {
 
-    public static final String PROJECT = "N1568V R1";
+    public static final String PROJECT = "N1568V R0";
 
     /**
      * 开始测试

@@ -45,18 +45,21 @@
             elem: '#tableVerificationSubject',
             url: '/coq/verificationSubjects',
             method: 'get',
-            toolbar: true,
+            width: 900,
             cols: [[
                 {type: 'numbers', title: '#'},
-                {field: 'subjectName', sort: true, title: '项目名称'},
-                {field: 'humitureType', sort: true, title: '温湿度类'},
-                {field: 'machineName', sort: true, title: '机台名称'},
-                {field: 'verificationTime', sort: true, title: '实验时间（小时）'},
-                {field: 'unit', sort: true, title: '单位'},
-                {field: 'productType', sort: true, title: '产品类型'},
-                {field: 'verificationType', sort: true, title: '验证类型'},
-                {field: 'verificationCondition', sort: true, title: '实验条件'},
-                {field: 'electricityBillPer', sort: true, title: '单片电费'}
+                {field: 'subjectName', title: '验证项目', width: 150},
+                {field: 'machineName', title: '机台', width: 150},
+                {field: 'verificationTime', title: '实验时间/h', width: 100},
+                {field: 'verificationCondition', title: '实验条件', width: 300},
+                {field: 'electricityBillPer', title: '单片电费'},
+                {field: 'humitureType', title: '温湿', width: 50, templet: function(d) {
+                    if(d.humitureType === 'Humiture') {
+                        return '是';
+                    } else {
+                        return '否';
+                    }
+                }}
             ]],
             size: 'sm',
             even: true

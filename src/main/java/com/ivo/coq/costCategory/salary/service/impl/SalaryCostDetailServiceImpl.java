@@ -3,10 +3,10 @@ package com.ivo.coq.costCategory.salary.service.impl;
 import com.ivo.common.enums.StageEnum;
 import com.ivo.common.utils.DoubleUtil;
 import com.ivo.coq.costCategory.salary.entity.BaseSalary;
-import com.ivo.coq.costCategory.salary.entity.RoleWorkDays;
+import com.ivo.coq.costCategory.salary.entity.RoleWorkDay;
 import com.ivo.coq.costCategory.salary.entity.SalaryCostDetail;
 import com.ivo.coq.costCategory.salary.repository.BaseSalaryRepository;
-import com.ivo.coq.costCategory.salary.repository.RoleWorkDaysRepository;
+import com.ivo.coq.costCategory.salary.repository.RoleWorkDayRepository;
 import com.ivo.coq.costCategory.salary.repository.SalaryCostDetailRepository;
 import com.ivo.coq.costCategory.salary.service.SalaryCostDetailService;
 import com.ivo.coq.project.entity.Member;
@@ -29,7 +29,7 @@ public class SalaryCostDetailServiceImpl implements SalaryCostDetailService {
 
     private SalaryCostDetailRepository repository;
 
-    private RoleWorkDaysRepository roleWorkDaysRepository;
+    private RoleWorkDayRepository roleWorkDaysRepository;
 
     private MemberService memberService;
 
@@ -38,7 +38,7 @@ public class SalaryCostDetailServiceImpl implements SalaryCostDetailService {
     private MilestoneService milestoneService;
 
     @Autowired
-    public SalaryCostDetailServiceImpl(SalaryCostDetailRepository repository, RoleWorkDaysRepository roleWorkDaysRepository,
+    public SalaryCostDetailServiceImpl(SalaryCostDetailRepository repository, RoleWorkDayRepository roleWorkDaysRepository,
                                        MemberService memberService, BaseSalaryRepository baseSalaryRepository,
                                        MilestoneService milestoneService) {
         this.repository = repository;
@@ -61,15 +61,15 @@ public class SalaryCostDetailServiceImpl implements SalaryCostDetailService {
         // Delay天数
         Double delayDays = (double) milestoneService.getDelayDays(project, StageEnum.NPRB.getStage());
         repository.deleteAll(getSalaryCostDetail(project));
-        List<RoleWorkDays> roleWorkDaysList = roleWorkDaysRepository.findAll();
+        List<RoleWorkDay> roleWorkDaysList = roleWorkDaysRepository.findAll();
         List<SalaryCostDetail> salaryCostDetailList = new ArrayList<>();
-        for(RoleWorkDays roleWorkDays : roleWorkDaysList) {
-            List<Member> memberList = memberService.getMembers(project, roleWorkDays.getRole());
+        for(RoleWorkDay roleWorkDay : roleWorkDaysList) {
+            List<Member> memberList = memberService.getMembers(project, roleWorkDay.getRole());
             if(memberList.size() == 0) continue;
             SalaryCostDetail salaryCostDetail = new SalaryCostDetail(project);
             salaryCostDetail.setPersonNumber(memberList.size());
-            salaryCostDetail.setRole(roleWorkDays.getRole());
-            salaryCostDetail.setWorkDays(roleWorkDays.getWorkDays());
+            salaryCostDetail.setRole(roleWorkDay.getRole());
+            salaryCostDetail.setWorkDays(roleWorkDay.getWorkDays());
             salaryCostDetail.setDelayDays(delayDays);
 
             // 预防部分:（基本薪资/21.75）* 工作日 * 人数

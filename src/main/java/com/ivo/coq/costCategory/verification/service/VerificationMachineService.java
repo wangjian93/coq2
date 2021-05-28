@@ -29,4 +29,10 @@ public interface VerificationMachineService {
      * @return  非温湿度类机台
      */
     List<VerificationMachine> getNoHumitureVerificationMachines();
+
+    /**
+     * 获取机台
+     * @return
+     */
+    List<VerificationMachine> getVerificationMachines();
 }

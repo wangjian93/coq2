@@ -2,6 +2,8 @@ package com.ivo.coq;
 
 import com.ivo.common.result.PageResult;
 import com.ivo.common.utils.ResultUtil;
+import com.ivo.coq.project.entity.EngineeringExperiment;
+import com.ivo.coq.project.entity.Sample;
 import com.ivo.coq.project.service.EngineeringExperimentService;
 import com.ivo.coq.project.service.MemberService;
 import com.ivo.coq.project.service.SampleService;
@@ -10,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author wj
@@ -38,7 +43,22 @@ public class ProjectController {
 
     @GetMapping("/engineeringExperiment/{project}")
     public PageResult getEngineeringExperiment(@PathVariable("project") String project) {
-        return ResultUtil.successPage(engineeringExperimentService.getEngineeringExperiments(project));
+        List<Sample> sampleList = sampleService.getSamples(project);
+        List<EngineeringExperiment> engineeringExperimentList = new ArrayList<>();
+        for(Sample sample : sampleList) {
+            List list = sample.getEngineeringExperimentList();
+            if(list == null || list.size()==0) {
+                EngineeringExperiment engineeringExperiment = new EngineeringExperiment();
+                engineeringExperiment.setProject(sample.getProject());
+                engineeringExperiment.setSample(sample);
+                engineeringExperiment.setProductList(new ArrayList<>());
+                engineeringExperiment.setMaterialList(new ArrayList<>());
+                engineeringExperiment.setWoList(new ArrayList<>());
+                list.add(engineeringExperiment);
+            }
+            engineeringExperimentList.addAll(list);
+        }
+        return ResultUtil.successPage(engineeringExperimentList);
     }
 
     /**

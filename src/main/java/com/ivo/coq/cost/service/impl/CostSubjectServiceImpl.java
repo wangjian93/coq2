@@ -171,7 +171,7 @@ public class CostSubjectServiceImpl implements CostSubjectService {
     /**
      * 计算Design阶段的预防/内损/鉴定
      * 1.预防：人员工资 + 治工具
-     * 2.内损：人员工资 + 系统维护折旧费用
+     * 2.内损：人员工资 + 系统维护折旧费用 + 治工具
      * 3.鉴定：系统维护折旧费用
      * @param costSubject CostSubject
      */
@@ -182,13 +182,26 @@ public class CostSubjectServiceImpl implements CostSubjectService {
                 .getSystemMaintenanceCost(costSubject.getProject(), costSubject.getStage(), null);
 
         // 预防
-        Double preventionCost = DoubleUtil.sum(salaryCost == null ? null : salaryCost.getPreventionAmount(),
-                jigCost == null ? null : jigCost.getAmount());
+        Double preventionCost = null;
         // 鉴定
-        Double identityCost = systemMaintenanceCost == null ? null : systemMaintenanceCost.getIdentityAmount();
+        Double identityCost = null;
         // 内损
-        Double inLossCost = DoubleUtil.sum(salaryCost == null ? null : salaryCost.getInLossAmount(),
-                systemMaintenanceCost == null ? null : systemMaintenanceCost.getInLossAmount());
+        Double inLossCost = null;
+
+        if(salaryCost != null) {
+            preventionCost = DoubleUtil.sum(preventionCost, salaryCost.getPreventionAmount());
+            inLossCost = DoubleUtil.sum(inLossCost, salaryCost.getInLossAmount());
+        }
+
+        if(jigCost != null) {
+            preventionCost = DoubleUtil.sum(preventionCost, jigCost.getPreventionCost());
+            inLossCost = DoubleUtil.sum(inLossCost, jigCost.getInLossCost());
+        }
+
+        if(systemMaintenanceCost != null) {
+            identityCost = systemMaintenanceCost.getIdentityAmount();
+            inLossCost = DoubleUtil.sum(inLossCost, systemMaintenanceCost.getInLossAmount());
+        }
 
         costSubject.setPreventionCost(preventionCost);
         costSubject.setInLossCost(inLossCost);
@@ -236,11 +249,8 @@ public class CostSubjectServiceImpl implements CostSubjectService {
         // 治工具：阶段1为预防，其他为内损
         if(jigCostList != null) {
             for(JigCost jigCost : jigCostList) {
-                if(1 == jigCost.getTime()) {
-                    preventionCost = DoubleUtil.sum(preventionCost, jigCost.getAmount());
-                } else {
-                    inLossCost = DoubleUtil.sum(inLossCost, jigCost.getAmount());
-                }
+                preventionCost = DoubleUtil.sum(preventionCost, jigCost.getPreventionCost());
+                inLossCost = DoubleUtil.sum(inLossCost, jigCost.getInLossCost());
             }
         }
 

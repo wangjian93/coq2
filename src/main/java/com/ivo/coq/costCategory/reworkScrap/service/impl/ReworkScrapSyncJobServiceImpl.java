@@ -88,6 +88,7 @@ public class ReworkScrapSyncJobServiceImpl implements ReworkScrapSyncJobService 
                         ReworkScrapSyncJob reworkScrapSyncJob = new ReworkScrapSyncJob(sample);
                         reworkScrapSyncJob.setPlant(engineeringExperiment.getPlant());
                         reworkScrapSyncJob.setWo(wo.getWo());
+                        reworkScrapSyncJob.setWo_product(wo.getProduct());
                         reworkScrapSyncJob.setStatus(ReworkScrapSyncJob.STATUS_WAIT);
                         jobList.add(reworkScrapSyncJob);
                     }
@@ -123,6 +124,7 @@ public class ReworkScrapSyncJobServiceImpl implements ReworkScrapSyncJobService 
                             reworkScrapCostArray.setQty(array.getQty());
                             reworkScrapCostArray.setProdModel(array.getPROD_MODEL_ID());
                             reworkScrapCostArray.setOpeId(array.getOPE_ID());
+                            reworkScrapCostArray.setInDate(job.getInDate());
                             reworkScrapCostArrayList.add(reworkScrapCostArray);
                         }
                         reworkScrapCostDetailService.saveArray(reworkScrapCostArrayList);
@@ -152,6 +154,7 @@ public class ReworkScrapSyncJobServiceImpl implements ReworkScrapSyncJobService 
                             reworkScrapCostCell.setQty(cell.getQTY());
                             reworkScrapCostCell.setQty0800(cell.getQTY_0800());
                             reworkScrapCostCell.setProdModelId(cell.getPROD_MODEL_ID());
+                            reworkScrapCostCell.setInDate(job.getInDate());
                             reworkScrapArrayList.add(reworkScrapCostCell);
                         }
                         reworkScrapCostDetailService.saveCell(reworkScrapArrayList);
@@ -174,12 +177,15 @@ public class ReworkScrapSyncJobServiceImpl implements ReworkScrapSyncJobService 
                             ReworkScrapCostLcm reworkScrapCostLcm = new ReworkScrapCostLcm(job);
                             reworkScrapCostLcm.setFabDate(lcm.getFAB_DATE());
                             reworkScrapCostLcm.setProdId(lcm.getPROD_ID());
-                            reworkScrapCostLcm.setWoId(lcm.getPROD_ID());
+                            reworkScrapCostLcm.setWoId(lcm.getWO_ID());
                             reworkScrapCostLcm.setCrOpeId(lcm.getCR_OPE_ID());
                             reworkScrapCostLcm.setEvtCate(lcm.getEVT_CATE());
                             reworkScrapCostLcm.setQty(lcm.getQTY());
                             reworkScrapCostLcm.setScrpMOpeId(lcm.getSCRP_M_OPE_ID());
                             reworkScrapCostLcm.setProdModelId(lcm.getPROD_MODEL_ID());
+                            reworkScrapCostLcm.setInDate(job.getInDate());
+                            reworkScrapCostLcm.setWo(job.getWo());
+                            reworkScrapCostLcm.setProductId(job.getWo_product());
                             reworkScrapCostLcmArrayList.add(reworkScrapCostLcm);
                         }
                         reworkScrapCostDetailService.saveLcm(reworkScrapCostLcmArrayList);

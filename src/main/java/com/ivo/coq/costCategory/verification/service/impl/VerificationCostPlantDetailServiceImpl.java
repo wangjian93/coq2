@@ -1,7 +1,9 @@
 package com.ivo.coq.costCategory.verification.service.impl;
 
+import com.ivo.common.enums.StageEnum;
 import com.ivo.common.utils.DoubleUtil;
 import com.ivo.coq.costCategory.verification.entity.VerificationCostPlantDetail;
+import com.ivo.coq.costCategory.verification.entity.VerificationInPlantBasic;
 import com.ivo.coq.costCategory.verification.entity.VerificationSubject;
 import com.ivo.coq.costCategory.verification.repository.VerificationCostPlantDetailRepository;
 import com.ivo.coq.costCategory.verification.service.VerificationCostPlantDetailService;
@@ -10,6 +12,7 @@ import com.ivo.coq.costCategory.verification.service.VerificationSubjectService;
 import com.ivo.rest.qms.QmsService;
 import com.ivo.rest.qms.entity.QmsVerification;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,17 +68,38 @@ public class VerificationCostPlantDetailServiceImpl implements VerificationCostP
             Integer time = null;
             if(qmsVerification.getVerificationStage() != null) {
                 String stage_ = qmsVerification.getVerificationStage().trim().toUpperCase();
-                String[] string_s = stage_.split("-");
-                if(string_s.length>0) {
-                    stage = string_s[0];
-                }
-                if(string_s.length>1) {
-                    time = Integer.parseInt(string_s[1]);
+                // 'EVT-1' | 'EVT1'
+                if(StringUtils.containsIgnoreCase(stage_, "-")) {
+                    String[] string_s = stage_.split("-");
+                    if(string_s.length>0) {
+                        stage = string_s[0];
+                    }
+                    if(string_s.length>1) {
+                        time = Integer.parseInt(string_s[1]);
+                    }
+                } else {
+                    try {
+                        stage = stage_.substring(0, stage_.length()-1);
+                        time = Integer.parseInt(stage_.substring(stage_.length()-1, stage_.length()));
+                    } catch (Exception e) {
+                        stage = stage_;
+                        time = null;
+                    }
                 }
             }
             // 如果time在QMS中没维护默认到1
             if(time == null) {
                 time = 1;
+            }
+            //处理QMS中阶段输入不准确
+            if(StringUtils.containsIgnoreCase(stage, StageEnum.EVT.getStage())) {
+                stage = StageEnum.EVT.getStage();
+            } else if(StringUtils.containsIgnoreCase(stage, StageEnum.DVT.getStage())) {
+                stage = StageEnum.DVT.getStage();
+            } else if(StringUtils.containsIgnoreCase(stage, StageEnum.PVT.getStage())) {
+                stage = StageEnum.PVT.getStage();
+            } else if(StringUtils.containsIgnoreCase(stage, StageEnum.MP.getStage())) {
+                stage = StageEnum.MP.getStage();
             }
 
             VerificationCostPlantDetail plantDetail = new VerificationCostPlantDetail();
@@ -104,9 +128,8 @@ public class VerificationCostPlantDetailServiceImpl implements VerificationCostP
     public void computeVerificationCostPlantDetail(String project) {
         log.info("计算机种的厂内验证费用 " + project);
         List<VerificationCostPlantDetail> verificationInPlantDetailList = getVerificationCostPlantDetail(project);
-        int year = 2019;
-        Double manPowerCostPer = verificationInPlantBasicService.getManPowerCostPer(year);
-        Double maintainCostPer =  verificationInPlantBasicService.getMaintainCostPer(year);
+        Double manPowerCostPer = verificationInPlantBasicService.getBasicData(VerificationInPlantBasic.MAN_POWE_Cost_Per);
+        Double maintainCostPer =  verificationInPlantBasicService.getBasicData(VerificationInPlantBasic.MAINTAIN_COST_Per);
         verificationInPlantDetailList.forEach(verificationInPlantDetail -> {
 
             // 计算单片人力费用

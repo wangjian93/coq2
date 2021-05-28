@@ -70,8 +70,11 @@ public class JigCostDetailServiceImpl implements JigCostDetailService {
             for(BmModel b : bmModelList) {
                 // 治工具费用先全部默认算到机种阶段的次数1中
                 Integer time = 1;
+                //默认全部算预防
+                String type = "预防";
                 if(StringUtils.equalsAnyIgnoreCase(stage, StageEnum.NPRB.getStage(), StageEnum.Design.getStage())) time = null;
                 JigCostDetail jigCostDetail = new JigCostDetail(project, stage, time);
+                jigCostDetail.setType(type);
                 jigCostDetail.setPr(b.getPr().trim());
                 jigCostDetail.setPrDrafter(b.getPrDrafter().trim());
                 jigCostDetail.setPrDrafterDate(b.getPrDrafterDate());

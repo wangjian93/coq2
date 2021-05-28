@@ -34,6 +34,16 @@ public class JigCost extends AutoIncreaseEntityModel {
     private Integer time;
 
     /**
+     * 预防部分费用
+     */
+    private Double preventionCost;
+
+    /**
+     * 内损部分费用
+     */
+    private Double inLossCost;
+
+    /**
      * 总费用
      */
     private Double amount;

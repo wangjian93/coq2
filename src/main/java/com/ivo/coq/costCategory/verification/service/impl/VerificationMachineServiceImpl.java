@@ -5,6 +5,7 @@ import com.ivo.coq.costCategory.verification.repository.VerificationMachineRepos
 import com.ivo.coq.costCategory.verification.service.VerificationMachineService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,5 +38,11 @@ public class VerificationMachineServiceImpl implements VerificationMachineServic
     @Override
     public List<VerificationMachine> getNoHumitureVerificationMachines() {
         return repository.findByHumitureType(VerificationMachine.Humiture_Type_No);
+    }
+
+    @Override
+    public List<VerificationMachine> getVerificationMachines() {
+        Sort sort = Sort.by(Sort.Direction.ASC, "humitureType");
+        return repository.findAll(sort);
     }
 }

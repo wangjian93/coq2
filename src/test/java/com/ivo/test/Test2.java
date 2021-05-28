@@ -117,26 +117,27 @@ public class Test2 extends AbstractTest {
 //        List<Project> projectList = projectService.getProjects();
 //        for(Project project : projectList) {
 //            System.out.println("计算机种" + project.getProject());
-//            if(project.getId()<=103) continue;
+////            if(project.getId()<=103) continue;
+//            if(project.equals("A0906 R0") || project.equals("N1568V R0")) continue;
 //            run(project.getProject());
 //        }
-        String[] projects = new String[] {"A0906 R0", "N1568V R0"};
+        String[] projects = new String[] {"N1568V R0","A0906 R0"};
         for(String project : projects) {
             run(project);
         }
     }
 
     public void run(String PROJECT) {
-////        projectServiceTest(PROJECT);
-        directMaterialCostServiceTest(PROJECT);
-        JigCostServiceTest(PROJECT);
+//        projectServiceTest(PROJECT);
+//        directMaterialCostServiceTest(PROJECT);
+//        JigCostServiceTest(PROJECT);
 //        ObaCostServiceTest(PROJECT);
 //        SalaryCostServiceTest(PROJECT);
-////        TravelCostServiceTest(PROJECT);
-        VerificationCostServiceTest(PROJECT);
-//        ProductionCostServiceTest(PROJECT);
+//        TravelCostServiceTest(PROJECT);
+//        VerificationCostServiceTest(PROJECT);
+        ProductionCostServiceTest(PROJECT);
 //        ReworkScrapSyncJobServiceTest(PROJECT);
-//        ReworkScrapCostServiceTest(PROJECT);
+        ReworkScrapCostServiceTest(PROJECT);
         CostServiceTest(PROJECT);
     }
 
@@ -199,6 +200,7 @@ public class Test2 extends AbstractTest {
     }
 
     public void ProductionCostServiceTest(String PROJECT) {
+        productionCostDetailService.syncProductionCostDetail(PROJECT);
         productionCostDetailService.computeProductionCostDetail(PROJECT);
         productionCostService.createProductionCost(PROJECT);
         productionCostService.computeProductionCost(PROJECT);

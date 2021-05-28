@@ -11,7 +11,7 @@ import java.util.List;
  * @author wj
  * @version 1.0
  */
-public interface StationCostShareRepository extends JpaRepository<StationCostShare, Long> {
+public interface StationCostShareRepository {
 
     List<StationCostShare> findByProject(String project);
 

@@ -71,4 +71,19 @@
     order by d.RequestDate
   </select>
 
+  <!-- 获取仓库报废金额 -->
+  <select id="getWhScrap" resultType="java.util.Map">
+    select
+      case
+        when costCenter_fk='M0002' then 'LCM1'
+        when costCenter_fk='B3002' then 'LCM2'
+        when costCenter_fk='B2200' then 'CELL'
+        when costCenter_fk='B2100' then 'ARRAY'
+        ELSE ''
+        END fab,
+      trackingNumber,scrapMoneyCny, dateOfOrder, userDepartment_fk, costCenter_fk
+    from MM_M_WhScrap
+    where userDepartment_fk in ('10000578','10000684')
+      and costCenter_fk in ('M0002','B3002','B2100','B2200')
+  </select>
 </mapper>

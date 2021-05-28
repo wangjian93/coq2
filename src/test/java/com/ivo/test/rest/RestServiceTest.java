@@ -44,7 +44,6 @@ public class RestServiceTest extends AbstractTest {
 
     @Test
     public void test2() {
-        List<Map> shipmentMapList = eifService.getShipment("A0906");
-        shipmentMapList.size();
+        System.out.println(oracleService.getWoAmount("IL1W212001"));
     }
 }

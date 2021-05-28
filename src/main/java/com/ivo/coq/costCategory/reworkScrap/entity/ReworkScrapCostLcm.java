@@ -1,5 +1,6 @@
 package com.ivo.coq.costCategory.reworkScrap.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ivo.common.model.AutoIncreaseEntityModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +33,12 @@ public class ReworkScrapCostLcm extends AutoIncreaseEntityModel {
     private Integer time;
 
     /**
+     * 投产日期
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date inDate;
+
+    /**
      * 执行的任务ID
      */
     private Long jobId;
@@ -50,6 +57,16 @@ public class ReworkScrapCostLcm extends AutoIncreaseEntityModel {
      * 重工/报废费用
      */
     private Double amount;
+
+    /**
+     * 工单
+     */
+    private String wo;
+
+    /**
+     * 工单对应的productId
+     */
+    private String productId;
 
 
     private Date fabDate;

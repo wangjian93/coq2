@@ -172,23 +172,22 @@ public class ExcelUtil {
      * @throws IOException 错误时抛出异常，由调用者处理
      */
     public static List<List<Object>> readExcelFirstSheet(File file) throws IOException {
-        try (
-                InputStream inputStream = new FileInputStream(file);
-        ) {
+        InputStream inputStream = new FileInputStream(file);
+        return readExcelFirstSheet(inputStream, file.getName());
+    }
 
-            if (file.getName().endsWith(XLS)) {
-                return readXlsFirstSheet(inputStream);
-            }
-
-            else if (file.getName().endsWith(XLSX)) {
-                return readXlsxFirstSheet(inputStream);
-            }
-
-            else {
-                throw new IOException("文件类型错误");
-            }
+    public static List<List<Object>> readExcelFirstSheet(InputStream inputStream, String fileName) throws IOException {
+        if (fileName.endsWith(XLS)) {
+            return readXlsFirstSheet(inputStream);
         }
 
+        else if (fileName.endsWith(XLSX)) {
+            return readXlsxFirstSheet(inputStream);
+        }
+
+        else {
+            throw new IOException("文件类型错误");
+        }
     }
 
     /**

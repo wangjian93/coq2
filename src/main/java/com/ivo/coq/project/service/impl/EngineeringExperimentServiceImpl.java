@@ -11,6 +11,7 @@ import com.ivo.coq.project.service.SampleService;
 import com.ivo.rest.eifdb.EifService;
 import com.ivo.rest.eifdb.entity.EifEngineeringExperimentMaterial;
 import com.ivo.rest.eifdb.entity.EifEngineeringExperimentProduct;
+import com.ivo.rest.oracle.OracleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,18 +40,21 @@ public class EngineeringExperimentServiceImpl implements EngineeringExperimentSe
 
     private SampleService sampleService;
 
+    private OracleService oracleService;
+
     @Autowired
     public EngineeringExperimentServiceImpl(EngineeringExperimentRepository repository,
                                             EngineeringExperimentProductRepository productRepository,
                                             EngineeringExperimentMaterialRepository materialRepository,
                                             EifService eifService, SampleService sampleService,
-                                            EngineeringExperimentWoRepository woRepository) {
+                                            EngineeringExperimentWoRepository woRepository,OracleService oracleService) {
         this.repository = repository;
         this.productRepository = productRepository;
         this.materialRepository = materialRepository;
         this.eifService = eifService;
         this.sampleService = sampleService;
         this.woRepository = woRepository;
+        this.oracleService = oracleService;
     }
 
 
@@ -170,9 +174,12 @@ public class EngineeringExperimentServiceImpl implements EngineeringExperimentSe
             List<String> wos = eifService.getEngineeringExperimentWo(engineeringExperiment.getEeOrder());
             if(wos == null || wos.size() == 0) continue;
             for(String woStr : wos) {
+                woStr = woStr.trim().toUpperCase();
                 EngineeringExperimentWo wo = new EngineeringExperimentWo(engineeringExperiment, project,
                         engineeringExperiment.getEeOrder());
-                wo.setWo(woStr.trim().toUpperCase());
+                wo.setWo(woStr);
+                String product = oracleService.getProductByWo(woStr);
+                wo.setProduct(product);
                 woList.add(wo);
             }
         }

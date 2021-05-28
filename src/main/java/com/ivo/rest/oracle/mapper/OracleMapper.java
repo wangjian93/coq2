@@ -4,9 +4,11 @@ import com.ivo.coq.report.entity.*;
 import com.ivo.rest.oracle.entity.OracleReworkScrapArray;
 import com.ivo.rest.oracle.entity.OracleReworkScrapCell;
 import com.ivo.rest.oracle.entity.OracleReworkScrapLcm;
+import com.ivo.station.entity.StationCycleTimeAryTemp;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wj
@@ -121,4 +123,74 @@ public interface OracleMapper {
      */
     List<WbRatio> getWbRatio();
 
+    /**
+     * 获取工单的product ID
+     * @param wo 工单
+     * @return
+     */
+    String getProductByWo(@Param("wo") String wo);
+
+
+    /**
+     * 获取模组工单超耗量
+     * @param fromDate
+     * @param toDate
+     * @return
+     */
+    List<Map> getLcmWoClose(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
+
+
+    /**
+     * 获取LCM1的重工报废数据
+     * @param fromDate 投产时间
+     * @param toDate 产出时间
+     * @return
+     */
+    List<OracleReworkScrapLcm> getReworkScrapLcm1(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
+
+    /**
+     * 获取LCM2的重工报废数据
+     * @param fromDate 投产时间
+     * @param toDate 产出时间
+     * @return
+     */
+    List<OracleReworkScrapLcm> getReworkScrapLcm2(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
+
+    /**
+     * 获取LCM入库的数量
+     * @param fromDate
+     * @param toDate
+     * @return
+     */
+    List<Map> getMard(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
+
+
+    /**
+     * 获取料号的价格
+     * @param matnr
+     * @return
+     */
+    List<Map> getMatnrPrice(String matnr);
+
+    /**
+     * 获取ARY Cycle time
+     * @param fromDate 开始日期
+     * @param toDate 结束日期
+     * @return
+     */
+    List<StationCycleTimeAryTemp> getStationCycleTimeAry(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
+
+    /**
+     * 获取Cell Cycle time
+     * @param fromDate 开始日期
+     * @param toDate 结束日期
+     * @return
+     */
+    List<Map> getStationCycleTimeCell(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
+
+    /**
+     * 获取总制造费用
+     * @return
+     */
+    List<Map> getTotalProductCost();
 }

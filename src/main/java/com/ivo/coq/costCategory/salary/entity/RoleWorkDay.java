@@ -7,14 +7,13 @@ import lombok.Setter;
 import javax.persistence.Entity;
 
 /**
- * 角色的工作日天数
  * @author wj
  * @version 1.0
  */
-@Entity(name = "coq_cost_salary_role_work_days")
+@Entity(name = "coq_role_work_day")
 @Setter
 @Getter
-public class RoleWorkDays extends AutoIncreaseEntityModel {
+public class RoleWorkDay extends AutoIncreaseEntityModel {
 
     /**
      * 角色
@@ -24,5 +23,5 @@ public class RoleWorkDays extends AutoIncreaseEntityModel {
     /**
      * 工作天数
      */
-    private Double workDays;
+    private double workDays;
 }

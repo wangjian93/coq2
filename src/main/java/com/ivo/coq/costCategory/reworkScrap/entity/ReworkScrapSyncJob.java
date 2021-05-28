@@ -78,6 +78,11 @@ public class ReworkScrapSyncJob extends AutoIncreaseEntityModel {
      */
     private String wo;
 
+    /**
+     * 工单对应的Product
+     */
+    private String wo_product;
+
     public ReworkScrapSyncJob() {}
     public ReworkScrapSyncJob(Sample sample) {
         this.project = sample.getProject();

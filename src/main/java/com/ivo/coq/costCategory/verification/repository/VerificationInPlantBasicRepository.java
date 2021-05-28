@@ -11,18 +11,7 @@ import java.util.List;
  */
 public interface VerificationInPlantBasicRepository extends JpaRepository<VerificationInPlantBasic, Long> {
 
-    /**
-     * 筛选年份
-     * @param year
-     * @return
-     */
-    List<VerificationInPlantBasic> findByYear(int year);
+    List<VerificationInPlantBasic> findByValidFlagIsTrue();
 
-    /**
-     * 筛选年份和基础数据名称
-     * @param year
-     * @param name
-     * @return
-     */
-    VerificationInPlantBasic findFirstByYearAndName(int year, String name);
+    VerificationInPlantBasic findFirstByNameAndValidFlagIsTrue(String name);
 }

@@ -8,6 +8,7 @@ import com.ivo.coq.costCategory.jig.entity.JigCost;
 import com.ivo.coq.costCategory.jig.repository.JigCostRepository;
 import com.ivo.coq.costCategory.jig.service.JigCostService;
 import com.ivo.coq.project.service.StageService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,8 @@ public class JigCostServiceImpl implements JigCostService {
             String stage = jigCost.getStage();
             // 治工具费用只有DESIGN/EVT/DVT/PVT阶段
             if(!stage.equals("DESIGN") && !stage.equals("EVT") && !stage.equals("DVT") && !stage.equals("PVT")) {
+                jigCost.setInLossCost(-1D);
+                jigCost.setPreventionCost(-1D);
                 jigCost.setAmount(-1D);
             }
             jigCostList.add(jigCost);
@@ -82,9 +85,18 @@ public class JigCostServiceImpl implements JigCostService {
             List<JigCostDetail> jigCostDetailList = jigCostDetailService.getJigCostDetail(jigCost.getProject(),
                     jigCost.getStage(), jigCost.getTime());
             Double amount = null;
+            Double preventionCost = null;
+            Double inLossCost = null;
             for(JigCostDetail jigCostDetail : jigCostDetailList) {
-                amount = DoubleUtil.sum(amount, jigCostDetail.getPoAmount());
+                if(StringUtils.equals(jigCostDetail.getType(), "预防")) {
+                    preventionCost = DoubleUtil.sum(preventionCost, jigCostDetail.getPoAmount());
+                } else {
+                    inLossCost = DoubleUtil.sum(inLossCost, jigCostDetail.getPoAmount());
+                }
             }
+            amount = DoubleUtil.sum(preventionCost, inLossCost);
+            jigCost.setPreventionCost(preventionCost);
+            jigCost.setInLossCost(inLossCost);
             jigCost.setAmount(amount);
         }
         repository.saveAll(jigCostList);

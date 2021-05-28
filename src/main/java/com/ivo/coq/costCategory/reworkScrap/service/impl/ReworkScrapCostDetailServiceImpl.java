@@ -1,6 +1,5 @@
 package com.ivo.coq.costCategory.reworkScrap.service.impl;
 
-import com.ivo.common.enums.PlantEnum;
 import com.ivo.common.utils.DoubleUtil;
 import com.ivo.coq.costCategory.reworkScrap.entity.ReworkScrapCostArray;
 import com.ivo.coq.costCategory.reworkScrap.entity.ReworkScrapCostCell;
@@ -9,12 +8,13 @@ import com.ivo.coq.costCategory.reworkScrap.repository.ReworkScrapCostArrayRepos
 import com.ivo.coq.costCategory.reworkScrap.repository.ReworkScrapCostCellRepository;
 import com.ivo.coq.costCategory.reworkScrap.repository.ReworkScrapCostLcmRepository;
 import com.ivo.coq.costCategory.reworkScrap.service.ReworkScrapCostDetailService;
-import com.ivo.coq.station.service.StationCostShareService;
+import com.ivo.station.service.StationCostService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -31,17 +31,17 @@ public class ReworkScrapCostDetailServiceImpl implements ReworkScrapCostDetailSe
 
     private ReworkScrapCostLcmRepository reworkScrapCostLcmRepository;
 
-    private StationCostShareService stationCostShareService;
+
+    @Resource
+    private StationCostService stationCostService;
 
     @Autowired
     public ReworkScrapCostDetailServiceImpl(ReworkScrapCostArrayRepository reworkScrapCostArrayRepository,
                                             ReworkScrapCostCellRepository reworkScrapCostCellRepository,
-                                            ReworkScrapCostLcmRepository reworkScrapCostLcmRepository,
-                                            StationCostShareService stationCostShareService) {
+                                            ReworkScrapCostLcmRepository reworkScrapCostLcmRepository) {
         this.reworkScrapCostArrayRepository = reworkScrapCostArrayRepository;
         this.reworkScrapCostCellRepository = reworkScrapCostCellRepository;
         this.reworkScrapCostLcmRepository = reworkScrapCostLcmRepository;
-        this.stationCostShareService = stationCostShareService;
     }
 
     @Override
@@ -114,48 +114,107 @@ public class ReworkScrapCostDetailServiceImpl implements ReworkScrapCostDetailSe
         // 1.array
         List<ReworkScrapCostArray> arrayList = getReworkScrapCostArray(project);
         for(ReworkScrapCostArray array : arrayList) {
-            String project_ = array.getProject().split(" ")[0];
-            String factory = PlantEnum.Array.getPlant();
             String opeId = array.getOpeId();
             if(StringUtils.isEmpty(opeId)) continue;
-            String station = stationCostShareService.matchStation(project_, factory, opeId);
-            if(StringUtils.isEmpty(station)) {
-                array.setStation(null);
-                array.setStationAmount(null);
-                array.setAmount(null);
-            } else {
-                array.setStation(station);
-                if(StringUtils.equalsIgnoreCase(array.getEvtCate(), "Rework")) {
-                    array.setStationAmount(stationCostShareService.getReworkAmount(project_, factory, station));
-                } else {
-                    array.setStationAmount(stationCostShareService.getScrapAmount(project_, factory, station));
-                }
-                array.setAmount(DoubleUtil.multiply(array.getQty(), array.getStationAmount()));
-            }
+            String station = opeId;
+            if(StringUtils.equalsIgnoreCase(array.getEvtCate(), "Rework")) {
+                double perReworkAmount = stationCostService.getPerReworkAmountAry(project, null, station);
 
+                // 匹配不到站点时，匹配前三码，还没有然后再前两码
+                if(perReworkAmount == 0) {
+                    station = station.substring(0, 3);
+                    perReworkAmount = stationCostService.getPerReworkAmountAry(project, null, station);
+                    if(perReworkAmount == 0) {
+                        station = station.substring(0, 2);
+                        perReworkAmount = stationCostService.getPerReworkAmountAry(project, null, station);
+                    }
+                }
+
+                if(perReworkAmount == 0) {
+                    array.setStation(null);
+                    array.setStationAmount(null);
+                    array.setAmount(null);
+                } else {
+                    array.setStation(station);
+                    array.setStationAmount(perReworkAmount);
+                    array.setAmount(DoubleUtil.multiply(array.getQty(), perReworkAmount));
+                }
+            } else {
+                double perScrapAmount = stationCostService.getPerScrapAmountAry(project, null, station);
+
+                // 匹配不到站点时，匹配前三码，还没有然后再前两码
+                if(perScrapAmount == 0) {
+                    station = station.substring(0, 3);
+                    perScrapAmount = stationCostService.getPerScrapAmountAry(project, null, station);
+                    if(perScrapAmount == 0) {
+                        station = station.substring(0, 2);
+                        perScrapAmount = stationCostService.getPerScrapAmountAry(project, null, station);
+                    }
+                }
+
+                if(perScrapAmount == 0) {
+                    array.setStation(null);
+                    array.setStationAmount(null);
+                    array.setAmount(null);
+                } else {
+                    array.setStation(station);
+                    array.setStationAmount(perScrapAmount);
+                    array.setAmount(DoubleUtil.multiply(array.getQty(), perScrapAmount));
+                }
+            }
         }
         reworkScrapCostArrayRepository.saveAll(arrayList);
 
         // 2.cell
         List<ReworkScrapCostCell> cellList = getReworkScrapCostCell(project);
         for(ReworkScrapCostCell cell : cellList) {
-            String project_ = cell.getProject().split(" ")[0];
-            String factory = PlantEnum.Cell.getPlant();
             String opeId = cell.getNxOpeId();
             if(StringUtils.isEmpty(opeId)) continue;
-            String station = stationCostShareService.matchStation(project_, factory, opeId);
-            if(StringUtils.isEmpty(station)) {
-                cell.setStation(null);
-                cell.setStationAmount(null);
-                cell.setAmount(null);
-            } else{
-                cell.setStation(station);
-                if(StringUtils.equalsIgnoreCase(cell.getEvtCate(), "Rework")) {
-                    cell.setStationAmount(stationCostShareService.getReworkAmount(project_, factory, station));
-                } else {
-                    cell.setStationAmount(stationCostShareService.getScrapAmount(project_, factory, station));
+            String station = opeId;
+            if(StringUtils.equalsIgnoreCase(cell.getEvtCate(), "Rework")) {
+                double perReworkAmount = stationCostService.getPerReworkAmountCell(project, null, station, "");
+
+                // 匹配不到站点时，匹配前三码，还没有然后再前两码
+                if(perReworkAmount == 0) {
+                    station = station.substring(0, 3);
+                    perReworkAmount = stationCostService.getPerReworkAmountCell(project, null, station, "");
+                    if(perReworkAmount == 0) {
+                        station = station.substring(0, 2);
+                        perReworkAmount = stationCostService.getPerReworkAmountCell(project, null, station, "");
+                    }
                 }
-                cell.setAmount(DoubleUtil.multiply(cell.getQty(), cell.getStationAmount()));
+
+                if(perReworkAmount == 0) {
+                    cell.setStation(null);
+                    cell.setStationAmount(null);
+                    cell.setAmount(null);
+                } else {
+                    cell.setStation(station);
+                    cell.setStationAmount(perReworkAmount);
+                    cell.setAmount(DoubleUtil.multiply(cell.getQty(), perReworkAmount));
+                }
+            } else {
+                double perScrapAmount = stationCostService.getPerScrapAmountCell(project, null, station, "");
+
+                // 匹配不到站点时，匹配前三码，还没有然后再前两码
+                if(perScrapAmount == 0) {
+                    station = station.substring(0, 3);
+                    perScrapAmount = stationCostService.getPerScrapAmountCell(project, null, station, "");
+                    if(perScrapAmount == 0) {
+                        station = station.substring(0, 2);
+                        perScrapAmount = stationCostService.getPerScrapAmountCell(project, null, station, "");
+                    }
+                }
+
+                if(perScrapAmount == 0) {
+                    cell.setStation(null);
+                    cell.setStationAmount(null);
+                    cell.setAmount(null);
+                } else {
+                    cell.setStation(station);
+                    cell.setStationAmount(perScrapAmount);
+                    cell.setAmount(DoubleUtil.multiply(cell.getQty(), perScrapAmount));
+                }
             }
         }
         reworkScrapCostCellRepository.saveAll(cellList);
@@ -163,27 +222,54 @@ public class ReworkScrapCostDetailServiceImpl implements ReworkScrapCostDetailSe
         // 3.lcm
         List<ReworkScrapCostLcm> lcmList = getReworkScrapCostLcm(project);
         for(ReworkScrapCostLcm lcm : lcmList) {
-            String project_ = lcm.getProject().split(" ")[0];
-            String factory = PlantEnum.Lcm.getPlant();
             String opeId = lcm.getCrOpeId();
-            // 如果站点时7900要往前推站点
-            if(StringUtils.equals(opeId, "7900")) {
-                opeId = lcm.getScrpMOpeId();
-            }
             if(StringUtils.isEmpty(opeId)) continue;
-            String station = stationCostShareService.matchStation(project_, factory, opeId);
-            if(StringUtils.isEmpty(station)) {
-                lcm.setStation(null);
-                lcm.setStationAmount(null);
-                lcm.setAmount(null);
-            } else {
-                lcm.setStation(station);
-                if(StringUtils.equalsIgnoreCase(lcm.getEvtCate(), "Rework")) {
-                    lcm.setStationAmount(stationCostShareService.getReworkAmount(project_, factory, station));
-                } else {
-                    lcm.setStationAmount(stationCostShareService.getScrapAmount(project_, factory, station));
+            String station = opeId;
+            String product = lcm.getProductId();
+            if(StringUtils.equalsIgnoreCase(lcm.getEvtCate(), "Rework")) {
+                double perReworkAmount = stationCostService.getPerReworkAmountLcm( product, null, station);
+
+                // 匹配不到站点时，匹配前三码，还没有然后再前两码
+                if(perReworkAmount == 0) {
+                    station = station.substring(0, 3);
+                    perReworkAmount = stationCostService.getPerReworkAmountLcm( product,null, station);
+                    if(perReworkAmount == 0) {
+                        station = station.substring(0, 2);
+                        perReworkAmount = stationCostService.getPerReworkAmountLcm( product,null, station);
+                    }
                 }
-                lcm.setAmount(DoubleUtil.multiply(lcm.getQty(), lcm.getStationAmount()));
+
+                if(perReworkAmount == 0) {
+                    lcm.setStation(null);
+                    lcm.setStationAmount(null);
+                    lcm.setAmount(null);
+                } else {
+                    lcm.setStation(station);
+                    lcm.setStationAmount(perReworkAmount);
+                    lcm.setAmount(DoubleUtil.multiply(lcm.getQty(), perReworkAmount));
+                }
+            } else {
+                double perScrapAmount = stationCostService.getPerScrapAmountLcm( product,null, station);
+
+                // 匹配不到站点时，匹配前三码，还没有然后再前两码
+                if(perScrapAmount == 0) {
+                    station = station.substring(0, 3);
+                    perScrapAmount = stationCostService.getPerScrapAmountLcm( product,null, station);
+                    if(perScrapAmount == 0) {
+                        station = station.substring(0, 2);
+                        perScrapAmount = stationCostService.getPerScrapAmountLcm( product,null, station);
+                    }
+                }
+
+                if(perScrapAmount == 0) {
+                    lcm.setStation(null);
+                    lcm.setStationAmount(null);
+                    lcm.setAmount(null);
+                } else {
+                    lcm.setStation(station);
+                    lcm.setStationAmount(perScrapAmount);
+                    lcm.setAmount(DoubleUtil.multiply(lcm.getQty(), perScrapAmount));
+                }
             }
         }
         reworkScrapCostLcmRepository.saveAll(lcmList);

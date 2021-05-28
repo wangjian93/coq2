@@ -8437,7 +8437,7 @@ window.tinymce.Resource.add("tinymce.plugins.emoticons", {
     category: "flags"
   },
   nepal: {
-    keywords: [ "np", "flag", "nation", "country", "banner" ],
+    keywords: [ "kpi", "flag", "nation", "country", "banner" ],
     "char": "\ud83c\uddf3\ud83c\uddf5",
     fitzpatrick_scale: false,
     category: "flags"

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>新产品开发失败成本Ratio</title>
+    <link rel="stylesheet" href="../assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="../assets/module/admin.css?v=316" media="all"/>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<!-- 加载动画 -->
+<div class="page-loading">
+    <div class="ball-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <a class="layui-btn layui-btn-sm" href="/page/Home.html">返回</a>
+        </div>
+        <div class="layui-card-body">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="layui-icon layui-icon-tabs"></i>
+                    <span>新产品开发失败成本Ratio</span>
+                </div>
+                <div class="layui-card-body">
+                    <!-- 表格工具栏 -->
+                    <form class="layui-form toolbar">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">日期范围:</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" id="month" name="month" value="2021-01 ~ 2021-12">
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">&emsp;
+                                <button class="layui-btn icon-btn" lay-filter="search" id="search" lay-submit>
+                                    <i class="layui-icon">&#xe615;</i>搜索
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- 数据图表 -->
+                    <div class="layui-row">
+                        <div class="layui-col-md12 layui-col-sm12 layui-col-xs12">
+                            <div id="chartRatio" style="height: 500px;"></div>
+                        </div>
+
+                        <div class="layui-col-md12 layui-col-sm12 layui-col-xs12">
+                            <table id="tableRatio" lay-filter="tableRatio"></table>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+<!-- js部分 -->
+<script type="text/javascript" src="../assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="../assets/js/common.js?v=316"></script>
+<script type="text/javascript" src="../../../assets/libs/echarts/echarts.min.js"></script>
+<script>
+    layui.use(['form', 'notice', 'xmSelect', 'laydate', 'table'], function () {
+        var form = layui.form;
+        var $ = layui.$;
+        var notice = layui.notice;
+        var laydate = layui.laydate;
+        var table = layui.table;
+
+        // 日期选择器
+        laydate.render({
+            elem: '#month'
+            ,type: 'month'
+            ,range: '~'
+            ,format: 'yyyy-MM'
+        });
+
+        // 渲染图表
+        var chartRatio = echarts.init(document.getElementById('chartRatio'));
+        var option = {
+            title: {
+                text: '新产品开发失败成本Ratio',
+                left:'center'
+            },
+            xAxis: {
+                data: []
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    show: true,
+                    interval: 'auto',
+                    formatter: '{value} %'
+                },
+                minInterval: 10,
+                interval: 1
+            },
+            series: [{
+                data: [],
+                type: 'line',
+                label: {
+                    show: true,
+                    position: 'top',
+                    formatter: function(param) {
+                        return param.data + " %";
+                    }
+                }
+            }]
+        };
+        // 处理点击事件并且跳转到相应的百度搜索页面
+        chartRatio.on('click', function (params) {
+            window.open('/page/newReport2.html');
+        });
+        chartRatio.setOption(option);
+
+        // 渲染chart数据
+        var renderCharts = function (fromMonth, toMonth) {
+            var data = [
+                {"month":"2020-04", "ratio": 0.03},
+                {"month":"2020-05", "ratio": 0.05},
+                {"month":"2020-06", "ratio": 0.02},
+                {"month":"2020-07", "ratio": 0.06},
+                {"month":"2020-08", "ratio": 0.08},
+                {"month":"2020-09", "ratio": 0.05},
+                {"month":"2020-10", "ratio": 0.04},
+                {"month":"2020-11", "ratio": 0.03},
+                {"month":"2020-12", "ratio": 0.08},
+                {"month":"2021-01", "ratio": 0.05},
+                {"month":"2021-02", "ratio": 0.03},
+                {"month":"2021-03", "ratio": 0.06}
+            ];
+            var xArray = new Array(data.length);
+            var series = new Array(data.length);
+            for(var i=0; i<data.length; i++) {
+                xArray[i] = data[i].month;
+                series[i] = data[i].ratio*100;
+            }
+
+            // 赋值
+            chartRatio.clear();
+            option.xAxis.data = xArray;
+            option.series[0].data = series;
+            chartRatio.setOption(option);
+        };
+
+        /* 搜索按钮监听 */
+        form.on('submit(search)', function (d) {
+            if(d.field.month) {
+                var months = d.field.month.split("~");
+                var fromMonth = months[0].trim();
+                var toMonth = months[1].trim();
+                renderCharts(fromMonth, toMonth);
+            } else {
+                notice.msg('请选择起始和结束日期', {icon: 5});
+            }
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

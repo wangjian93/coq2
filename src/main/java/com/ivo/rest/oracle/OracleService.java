@@ -4,9 +4,11 @@ import com.ivo.coq.report.entity.*;
 import com.ivo.rest.oracle.entity.OracleReworkScrapArray;
 import com.ivo.rest.oracle.entity.OracleReworkScrapCell;
 import com.ivo.rest.oracle.entity.OracleReworkScrapLcm;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wj
@@ -107,4 +109,11 @@ public interface OracleService {
      * @return
      */
     List<WbRatio> getWbRatio();
+
+    /**
+     * 获取工单的product ID
+     * @param wo 工单
+     * @return
+     */
+    String getProductByWo(@Param("wo") String wo);
 }

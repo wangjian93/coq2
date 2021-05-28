@@ -109,4 +109,10 @@ public class OracleServiceImpl implements OracleService {
     public List<WbRatio> getWbRatio() {
         return oracleMapper.getWbRatio();
     }
+
+
+    @Override
+    public String getProductByWo(String wo) {
+        return oracleMapper.getProductByWo(wo);
+    }
 }

@@ -25,29 +25,54 @@
     <div class="layui-card">
         <div class="layui-card-header">
             <i class="layui-icon layui-icon-tabs"></i>
-            <span>实验机台管理</span>
+            <span>基础数据</span>
         </div>
         <div class="layui-card-body">
-            <fieldset class="layui-elem-field">
-                <legend>厂内验证基础数据</legend>
-                <div class="layui-field-box">
+            <button class="layui-btn icon-btn layui-btn-sm" id="sbm"><i class="layui-icon">&#xe615;</i>提交</button>
+            <div class="layui-row layui-col-space30 ">
+                <div class="layui-col-md5">
                     <table class="layui-table" id="tableVerificationInPlantBasic" lay-filter="tableVerificationInPlantBasic"></table>
                 </div>
-            </fieldset>
+<!--                <div class="layui-col-md7">-->
+<!--                    <table class="layui-table" id="tableVerificationInPlantBasic2" lay-filter="tableVerificationInPlantBasic2"></table>-->
+<!--                </div>-->
+            </div>
+        </div>
+    </div>
 
-            <fieldset class="layui-elem-field">
-                <legend>温湿度类机台</legend>
-                <div class="layui-field-box">
-                    <table class="layui-table" id="tableHumitureVerificationMachine" lay-filter="tableHumitureVerificationMachine"></table>
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-tabs"></i>
+            <span>机台</span>
+        </div>
+        <div class="layui-card-body">
+            <div class="layui-form-item">
+                <div class="layui-inline">&emsp;
+                    <button class="layui-btn icon-btn layui-btn-sm" id="machine_export"><i class="layui-icon">&#xe615;</i>导出</button>
                 </div>
-            </fieldset>
+                <div class="layui-inline">&emsp;
+                    <button class="layui-btn icon-btn layui-btn-sm" id="machine_import"><i class="layui-icon">&#xe615;</i>导入</button>
+                </div>
+            </div>
+            <table class="layui-table" id="tableVerificationMachine" lay-filter="tableVerificationMachine"></table>
+        </div>
+    </div>
 
-            <fieldset class="layui-elem-field">
-                <legend>非温湿度类机台</legend>
-                <div class="layui-field-box">
-                    <table class="layui-table" id="tableNoHumitureVerificationMachine" lay-filter="tableNoHumitureVerificationMachine"></table>
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-tabs"></i>
+            <span>验证项目管理</span>
+        </div>
+        <div class="layui-card-body">
+            <div class="layui-form-item">
+                <div class="layui-inline">&emsp;
+                    <button class="layui-btn icon-btn layui-btn-sm" id="subject_export"><i class="layui-icon">&#xe615;</i>导出</button>
                 </div>
-            </fieldset>
+                <div class="layui-inline">&emsp;
+                    <button class="layui-btn icon-btn layui-btn-sm" id="subject_import"><i class="layui-icon">&#xe615;</i>导入</button>
+                </div>
+            </div>
+            <table class="layui-table" id="tableVerificationSubject" lay-filter="tableVerificationSubject"></table>
         </div>
     </div>
 </div>
@@ -58,63 +83,118 @@
 <script type="text/javascript" th:inline="none">
     layui.use(['table'], function(){
         var table = layui.table;
+        var $ = layui.$;
+
+        var basicTableRenderBasic = function() {
+            $.get('/coq/verificationInPlantBasic', {}, function(res) {
+                var data = res.data;
+                var table_data1 = [];
+                var table_data2 = [];
+                layui.each(data, function(index, item) {
+                    if(item.name === 'manPowerCostPer' || item.name==='maintainCostPer' || item.name==='humitureCostPer') {
+                        table_data2.push(item);
+                    } else {
+                        table_data1.push(item);
+                    }
+                });
+                table.reload('tableVerificationInPlantBasic', {data: table_data1});
+                // table.reload('tableVerificationInPlantBasic2', {data: table_data2});
+            })
+        };
 
         // 渲染表格
         table.render({
             elem: '#tableVerificationInPlantBasic',
-            url: '/coq/verificationInPlantBasic',
-            method: 'get',
-            toolbar: true,
+            data: [],
             cols: [[
-                {type: 'numbers', title: '#'},
-                {field: 'year', title: '年度'},
-                {field: 'name', title: 'name', hide: true},
-                {field: 'label', sort: true, title: '名称'},
-                {field: 'value', title: '值'},
+                {field: 'label', title: '名称', width: '40%'},
+                {field: 'value', title: '数量', width: '30%', edit: 'text'},
                 {field: 'unit', title: '单位'}
             ]],
             size: 'sm',
+            limit: 10000000,
             even: true
         });
 
+        // table.render({
+        //     elem: '#tableVerificationInPlantBasic2',
+        //     data: [],
+        //     cols: [[
+        //         {field: 'label', title: '项目', width: '30%'},
+        //         {field: 'value', title: '金额', width: '15%'},
+        //         {field: 'unit', title: '单位', width: '15%'},
+        //         {field: 'memo', title: '计算公式'}
+        //     ]],
+        //     size: 'sm',
+        //     even: true
+        // });
+        basicTableRenderBasic();
+
         table.render({
-            elem: '#tableHumitureVerificationMachine',
-            url: '/coq/humitureVerificationMachine',
+            elem: '#tableVerificationMachine',
+            url: '/coq/verificationMachine',
             method: 'get',
-            toolbar: true,
+            width: 1000,
             cols: [[
                 {type: 'numbers', title: '#'},
-                {field: 'machineName', sort: true, title: '验证机台'},
-                {field: 'humitureType', sort: true, title: '温湿度类'},
-                {field: 'power', sort: true, title: '功率'},
-                {field: 'powerStr', sort: true, title: '功率'},
-                {field: 'machineNumber', sort: true, title: '编号'},
-                {field: 'machineBrand', sort: true, title: '厂牌'},
-                {field: 'machineModel', sort: true, title: '型号'},
-                {field: 'machineSupplier', sort: true, title: '供应商'}
+                {field: 'machineNumber',  title: '仪器编号', width: 100},
+                {field: 'machineName', title: '仪器名称', width: 150},
+                {field: 'machineBrand', title: '厂牌', width: 150},
+                {field: 'powerStr',  title: '功率', width: 100},
+                {field: 'machineModel', title: '型号', width: 150},
+                {field: 'machineSupplier', title: '供应商', width: 150},
+                {field: 'power', title: '能耗'},
+                {field: 'humitureType', title: '温湿', width: 50, templet: function(d) {
+                        if(d.humitureType === 'Humiture') {
+                            return '是';
+                        } else {
+                            return '否';
+                        }
+                    }}
             ]],
             size: 'sm',
             even: true
         });
 
+        // 渲染表格
         table.render({
-            elem: '#tableNoHumitureVerificationMachine',
-            url: '/coq/noHumitureVerificationMachine',
+            elem: '#tableVerificationSubject',
+            url: '/coq/verificationSubjects',
             method: 'get',
-            toolbar: true,
+            width: 900,
             cols: [[
                 {type: 'numbers', title: '#'},
-                {field: 'machineName', sort: true, title: '验证机台'},
-                {field: 'humitureType', sort: true, title: '温湿度类'},
-                {field: 'power', sort: true, title: '功率'},
-                {field: 'powerStr', sort: true, title: '功率'},
-                {field: 'machineNumber', sort: true, title: '编号'},
-                {field: 'machineBrand', sort: true, title: '厂牌'},
-                {field: 'machineModel', sort: true, title: '型号'},
-                {field: 'machineSupplier', sort: true, title: '供应商'}
+                {field: 'subjectName', title: '验证项目', width: 150},
+                {field: 'machineName', title: '机台', width: 150},
+                {field: 'verificationTime', title: '实验时间/h', width: 100},
+                {field: 'verificationCondition', title: '实验条件', width: 300},
+                {field: 'electricityBillPer', title: '单片电费'},
+                {field: 'humitureType', title: '温湿', width: 50, templet: function(d) {
+                        if(d.humitureType === 'Humiture') {
+                            return '是';
+                        } else {
+                            return '否';
+                        }
+                    }}
             ]],
             size: 'sm',
             even: true
+        });
+
+
+        $("#sbm").click(function() {
+            var data = [];
+            layui.each(table.cache.tableVerificationInPlantBasic, function(index, item) {
+                data.push({"name":item.name, "label":item.label, "value":item.value, "unit":item.unit});
+            });
+            $.post('/coq/verificationInPlantBasic/save', { data: JSON.stringify(data)}, function(res) {
+                if(res.code === 200) {
+                    basicTableRenderBasic();
+                    layer.msg("保存成功");
+                } else {
+                    layer.msg(res.msg);
+                }
+            });
         });
     });
 

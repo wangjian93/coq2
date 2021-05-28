@@ -62,5 +62,11 @@ public interface EifMapper {
      * @return List<Map>
      */
     List<Map> getShipment(String project);
+
+    /**
+     * 获取仓库报废金额
+     * @return
+     */
+    List<Map> getWhScrap();
 }
 

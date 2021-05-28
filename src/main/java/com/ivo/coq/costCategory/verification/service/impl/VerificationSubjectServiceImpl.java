@@ -1,6 +1,7 @@
 package com.ivo.coq.costCategory.verification.service.impl;
 
 import com.ivo.common.utils.DoubleUtil;
+import com.ivo.coq.costCategory.verification.entity.VerificationInPlantBasic;
 import com.ivo.coq.costCategory.verification.entity.VerificationMachine;
 import com.ivo.coq.costCategory.verification.entity.VerificationSubject;
 import com.ivo.coq.costCategory.verification.repository.VerificationSubjectRepository;
@@ -59,17 +60,8 @@ public class VerificationSubjectServiceImpl implements VerificationSubjectServic
     @Override
     public void computeElectricityBillPer() {
         log.info("计算验证项目的单片电费");
-        int year = 2019;
-        // 1.温湿度类  温湿度类机台总能耗*24小时*365天/1000*电费/全年温湿度类实验数量
-        // 电费 = 电费价格 * 度数
-        // 1度电 = 1KW*H (千瓦时)
-        Double humitureTotalPower = verificationInPlantBasicService.getHumitureTotalPower(year);
-        Double electricityBillPrice = verificationInPlantBasicService.getElectricityBillPrice(year);
-        Double humitureVerificationQuantity = verificationInPlantBasicService.getHumitureVerificationQuantity(year);
-        Double humiture_costPer = DoubleUtil.divide(humitureTotalPower, 1000D);
-        humiture_costPer = DoubleUtil.multiply(humiture_costPer, 24D, 365D);
-        humiture_costPer = DoubleUtil.multiply(humiture_costPer, electricityBillPrice);
-        humiture_costPer = DoubleUtil.divide(humiture_costPer, humitureVerificationQuantity);
+        // 1.温湿度类
+        Double humiture_costPer = verificationInPlantBasicService.getBasicData(VerificationInPlantBasic.HUMITURE_COST_PER);
         List<VerificationSubject> humitureSubjectList = getHumitureVerificationSubjects();
         for(VerificationSubject humitureSubject : humitureSubjectList) {
             humitureSubject.setElectricityBillPer(humiture_costPer);
@@ -77,6 +69,7 @@ public class VerificationSubjectServiceImpl implements VerificationSubjectServic
         repository.saveAll(humitureSubjectList);
 
         // 2.非温湿度类  机台能耗/1000*项目的验证时间（小时）* 电费
+        Double electricityBillPrice = verificationInPlantBasicService.getBasicData(VerificationInPlantBasic.ELECTRICITY_BILL_PRICE);
         List<VerificationSubject> noHumitureSubjectList = getNoHumitureVerificationSubjects();
         for(VerificationSubject noHumitureSubject : noHumitureSubjectList) {
             Double verificationTime = noHumitureSubject.getVerificationTime();

@@ -32,11 +32,13 @@ public class BmServiceImpl implements BmService {
 
     @Override
     public List<BmModel> getBmJig(String project, Date fromDate, Date toDate) {
-        return bmMapper.getBmJig(project, fromDate, toDate);
+        project = project.replace(" ", "-");
+        return bmMapper.getBmJig("%"+project+"%", fromDate, toDate);
     }
 
     @Override
     public List<BmModel> getBmVerification(String project, Date fromDate, Date toDate) {
-        return bmMapper.getBmVerification(project, fromDate, toDate);
+        project = project.replace(" ", "-");
+        return bmMapper.getBmVerification("%"+project+"%", fromDate, toDate);
     }
 }

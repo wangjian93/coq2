@@ -19,7 +19,8 @@ public class ReworkScrapSyncJobServiceTest extends AbstractTest {
 
     @Test
     public void a1_generateJob() {
-        reworkScrapSyncJobService.generateJob(PROJECT);
+        reworkScrapSyncJobService.generateJob("N1568V R0");
+        reworkScrapSyncJobService.generateJob("A0906 R0");
     }
 
     @Test

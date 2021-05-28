@@ -1,9 +1,11 @@
 package com.ivo.coq.costCategory.verification.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ivo.common.model.EntityModel;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * 厂内验证的一些基础数据
@@ -41,11 +43,14 @@ public class VerificationInPlantBasic extends EntityModel {
     // 全年机台维护费用
     public static final String MAINTAIN_COST = "maintainCost";
 
-    // 单片人力费用
+    // 人力费用-单片
     public static final String MAN_POWE_Cost_Per = "manPowerCostPer";
 
-    // 单片维护费用
+    // 维护费用-单片
     public static final String MAINTAIN_COST_Per = "maintainCostPer";
+
+    // 温湿度机台能耗-单片
+    public static final String HUMITURE_COST_PER = "humitureCostPer";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,4 +82,16 @@ public class VerificationInPlantBasic extends EntityModel {
      * 单位
      */
     private String unit;
+
+    private boolean validFlag=true;
+
+    private String version;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date effectDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date expireDate;
+
+    private String memo;
 }

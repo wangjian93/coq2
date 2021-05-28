@@ -447,4 +447,233 @@
     LEFT JOIN DM.MSC_AMT_F B
     ON A.FAB_ID=B.FAB_ID AND A."DATE"=B.FAB_DATE
   </select>
+
+  <!-- 获取工单的product ID -->
+  <select id="getProductByWo" parameterType="java.lang.String" resultType="java.lang.String">
+    select STLBEZ from exf.sap_afko a where a.aufnr = #{wo}
+  </select>
+
+
+  <!-- 获取ARY的生产履历的重工报废数据 -->
+<!--  <select id="getAryReworkScrap">-->
+<!--    select a.*,b.prod_model_id from (-->
+<!--    select fab_date,prod_id,cr_route_id route_id,cr_ope_id ope_id ,EVT_CATE,count(*) qty-->
+<!--    from sor.wpp_asht_his a-->
+<!--    where-->
+<!--    fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')-->
+<!--    and ( (EVT_CATE IN ('LOGF', 'LFAB', 'LFRW', 'LFAT') and (cr_route_id like 'R%P' OR cr_route_id like 'B%')) or EVT_CATE ='SCRP')-->
+<!--    group by fab_date,prod_id,cr_route_id,cr_ope_id,EVT_CATE-->
+<!--    ) a left join (-->
+<!--    select substr(prod_id,4) newPord,prod_model_id from dm.m_prod_d-->
+<!--    ) b on a.prod_id=b.newPord-->
+<!--  </select>-->
+
+  <!-- LCM物料超耗数据 -->
+  <select id="getLcmWoClose" resultType="java.util.Map">
+    select WERKS, CLOSE_DATE, AUFNR, substr(AUFNR,3,2) as AUFNR_T,
+    mtrl_id||prod_ver_id as MTRL_ID,
+    substr(MTRL_ID,5,1)||substr(MTRL_ID,2,3)||substr(MTRL_ID,8,1) as PROJECT,
+    MATNR,
+    LQUAN1+LQUAN2+LQUAN3-IGMNG*BOM_QTY/BASE_QTY-TQUAN1-TQUAN2-TQUAN3-TQUAN4-TQUAN5-TQUAN6-TQUAN9-TQUAN10-TQUAN11-TQUAN12-TQUAN13-TQUAN16-TQUAN22-TQUAN26-TQUAN27-TQUAN28-TQUAN29-TQUAN30-TQUAN31-TQUAN32-TQUAN33-TQUAN34-TQUAN35-TQUAN36-TQUAN37-TQUAN38+RQUAN1
+    +TQUAN12+TQUAN13+TQUAN38+TQUAN26+TQUAN16+TQUAN27+TQUAN28+TQUAN29+TQUAN30+TQUAN31+TQUAN32+TQUAN33+TQUAN34+TQUAN35+TQUAN36+TQUAN37 as QTY
+    from (
+    SELECT A.* FROM (
+    SELECT * FROM SOR.WPP_WOCLOSE a
+    WHERE CLOSE_DATE>=to_date(#{fromDate},'YYYY-MM-DD') AND CLOSE_DATE&lt;=to_date(#{toDate},'YYYY-MM-DD')
+    and substr(aufnr,3,1) in ('1','8')
+    )A
+    LEFT JOIN (SELECT WORDER_ID,MTRL_ID,MTRL_CATE MTRL_NAME FROM SOR.WPP_MWOITEM)D ON A.AUFNR=D.WORDER_ID AND  A.MATNR=D.MTRL_ID
+    LEFT JOIN ( select * from sor.wmm_bom_master)F ON A.PROD_VER_ID=F.PROD_VER_ID AND A.MTRL_ID=F.MTRL_ID AND A.WERKS=F.FAB_ID
+    LEFT JOIN ( select * from sor.wmm_bom_item)E ON E.bom_master_key=F.bom_master_key and a.matnr=e.mtrl_id
+    ) t
+  </select>
+
+
+  <!-- 获取LCM1的重工报废数据 -->
+  <select id="getReworkScrapLcm1" resultType="com.ivo.rest.oracle.entity.OracleReworkScrapLcm">
+    select a.*,b.prod_model_id from (
+                                      select fab_date,wo_id,cr_ope_id,EVT_CATE,count(pnl_id)  qty  ,' ' scrp_m_ope_id,prod_id
+                                      from sor.wpp_nm1sht_his a
+                                      where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+                                        and evt_cate in ('LFRW')
+                                      group by fab_date,wo_id,cr_ope_id,EVT_CATE,prod_id
+                                      union all
+                                      select  c.fab_date,c.wo_id,c.cr_ope_id,c.EVT_CATE,count(c.pnl_id) qty,d.cr_ope_id scrp_m_ope_id,c.prod_id
+                                      from (
+                                             select fab_date,wo_id,cr_ope_id,EVT_CATE,pnl_id,prod_id from sor.wpp_nm1sht_his
+                                             where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+                                               and evt_cate in ('SCRP')
+                                           ) c left join (
+                                        select  a.fab_date,a.wo_id,a.pnl_id,cr_ope_id,EVT_CATE,b.time,a.prod_id from (
+                                                                                                                       select fab_date,wo_id,pnl_id,cr_ope_id,EVT_CATE,time,prod_id
+                                                                                                                       from sor.wpp_nm1sht_his a
+                                                                                                                       where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+                                                                                                                         and evt_cate='LFRW'
+                                                                                                                     ) a left join (
+                                          select fab_date,wo_id,pnl_id,max(time) time,prod_id
+                                          from sor.wpp_nm1sht_his a
+                                          where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+                                            and  evt_cate='LFRW'
+                                          group by fab_date,wo_id, pnl_id,prod_id
+                                        ) b on  a.wo_id=b.wo_id and a.pnl_id=b.pnl_id and a.time=b.time and a.fab_date=b.fab_date
+                                      ) d on c.wo_id=d.wo_id and c.pnl_id=d.pnl_id and d.time is not null and c.fab_date=d.fab_date
+                                      group by c.fab_date,c.wo_id,c.cr_ope_id,c.EVT_CATE,d.cr_ope_id,c.prod_id
+                                    ) a left join (
+      select substr(prod_id,4) newPord,prod_model_id from dm.m_prod_d
+    ) b on a.prod_id=b.newPord
+  </select>
+
+  <!-- 获取LCM2的重工报废数据 -->
+  <select id="getReworkScrapLcm2" resultType="com.ivo.rest.oracle.entity.OracleReworkScrapLcm">
+    select a.*,b.prod_model_id from (
+                                      select fab_date,wo_id,cr_ope_id,EVT_CATE,count(pnl_id)  qty  ,' ' scrp_m_ope_id,prod_id
+                                      from sor.wpp_m2sht_his a
+                                      where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+                                        and evt_cate in ('LFRW')
+                                      group by fab_date,wo_id,cr_ope_id,EVT_CATE,prod_id
+                                      union all
+                                      select  c.fab_date,c.wo_id,c.cr_ope_id,c.EVT_CATE,count(c.pnl_id) qty,d.cr_ope_id scrp_m_ope_id,c.prod_id
+                                      from (
+                                             select fab_date,wo_id,cr_ope_id,EVT_CATE,pnl_id,prod_id from sor.wpp_m2sht_his
+                                             where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+                                               and evt_cate in ('SCRP')
+                                           ) c left join (
+                                        select  a.fab_date,a.wo_id,a.pnl_id,cr_ope_id,EVT_CATE,b.time,a.prod_id from (
+                                                                                                                       select fab_date,wo_id,pnl_id,cr_ope_id,EVT_CATE,time,prod_id
+                                                                                                                       from sor.wpp_m2sht_his a
+                                                                                                                       where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+                                                                                                                         and evt_cate='LFRW'
+                                                                                                                     ) a left join (
+                                          select fab_date,wo_id,pnl_id,max(time) time,prod_id
+                                          from sor.wpp_m2sht_his a
+                                          where  fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+                                            and  evt_cate='LFRW'
+                                          group by fab_date,wo_id, pnl_id,prod_id
+                                        ) b on  a.wo_id=b.wo_id and a.pnl_id=b.pnl_id and a.time=b.time and a.fab_date=b.fab_date
+                                      ) d on c.wo_id=d.wo_id and c.pnl_id=d.pnl_id and d.time is not null and c.fab_date=d.fab_date
+                                      group by c.fab_date,c.wo_id,c.cr_ope_id,c.EVT_CATE,d.cr_ope_id,c.prod_id
+                                    ) a left join (
+      select substr(prod_id,4) newPord,prod_model_id from dm.m_prod_d
+    ) b on a.prod_id=b.newPord
+  </select>
+
+
+  <!-- 获取LCM入库的数量 -->
+  <select id="getMard" resultType="java.util.Map">
+    select MATNR, WERKS, LGORT, LABST, ERSDA
+    from exf.sap_mard
+    where
+        LGORT IN ('6010','2598')
+        AND MATNR NOT LIKE '14%'
+        AND ERSDA >= to_date(#{fromDate},'yyyy-mm-dd') AND ERSDA &lt;= to_date(#{toDate},'yyyy-mm-dd')
+  </select>
+
+
+  <!-- 获取料号的价格 -->
+  <select id="getMatnrPrice" parameterType="java.lang.String" resultType="java.util.Map">
+    select MATNR , BWKEY,
+           case vprsv when 'S' then stprs else verpr end as price
+    from  EXF.SZA_PSI_MBEW
+    where bwtar = ' '
+      and matnr = #{matnr}
+  </select>
+
+
+  <!-- 获取ARY Cycle time-->
+  <select id="getStationCycleTimeAry" resultType="com.ivo.station.entity.StationCycleTimeAryTemp">
+    SELECT
+      prod_model_id, pep_cnt, x.cr_ope_id, ope_name, substr(x.cr_eqptg_id,4,3) eqpt_id,
+      count(sht_id) sht_cnt,
+      SUM(S_CNT) S_CNT,SUM(B_CNT) B_CNT,SUM(R_CNT) R_CNT, SUM(PROC_CNT) PROC_CNT,
+      sum(CYCLE_TIME_NOWAIT_B)  CYCLE_TIME_NOWAIT_B,sum(CYCLE_TIME_NOWAIT_R)  CYCLE_TIME_NOWAIT_R,sum(CYCLE_TIME_NOWAIT_S)  CYCLE_TIME_NOWAIT_S, sum(CYCLE_TIME_NOWAIT_M)  CYCLE_TIME_NOWAIT_M
+    FROM (
+      select A.SHT_ID, A.CR_EQPTG_ID, A.CR_OPE_ID, A.PROD_KEY,
+      CASE WHEN CR_OPE_ID='1000' AND EVT_CATE in ('LOGF','LFAB')  THEN ACT_STB_TIME ELSE (CASE WHEN TO_CHAR(PV_LOGOF_TIME,'YYYY-MM-DD')&lt;>'1900-01-01'  THEN PV_LOGOF_TIME ELSE LOGON_TIME END ) END PV_LOGOF_TIME,
+      CASE WHEN SUBSTR(CR_ROUTE_ID,1,1) IN('S')  AND  A.slot_flg in('Y')  THEN 1 else 0 end S_CNT,
+      CASE when SUBSTR(CR_ROUTE_ID,1,1) IN('B') and A.REPROC_FLG='1' THEN 1 ELSE 0 END B_CNT,
+      CASE when SUBSTR(CR_ROUTE_ID,1,1) IN('R') and A.REPROC_FLG='1' THEN 1 ELSE 0 END R_CNT,
+      CASE when SUBSTR(CR_ROUTE_ID,1,1) IN('M') THEN 1  ELSE 0 END PROC_CNT,
+      CASE when SUBSTR(CR_ROUTE_ID,1,1) IN('B') and A.REPROC_FLG='1' then
+      (to_date(to_char(A.LOGOF_TIME,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss') -  to_date(to_char(A.LOGON_TIME,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss'))*24  else 0 end CYCLE_TIME_NOWAIT_B,
+      CASE  WHEN SUBSTR(CR_ROUTE_ID,1,1) IN('S')  AND  A.slot_flg in('Y') then
+      (to_date(to_char(A.LOGOF_TIME,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss') -  to_date(to_char(A.LOGON_TIME,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss'))*24 else 0 end CYCLE_TIME_NOWAIT_S,
+      CASE  WHEN SUBSTR(CR_ROUTE_ID,1,1) IN('R') and A.REPROC_FLG='1' THEN
+      (to_date(to_char(A.LOGOF_TIME,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss') -  to_date(to_char(A.LOGON_TIME,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss'))*24 else 0 end CYCLE_TIME_NOWAIT_R,
+      CASE  WHEN SUBSTR(CR_ROUTE_ID,1,1) IN('M') THEN
+      (to_date(to_char(A.LOGOF_TIME,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss') -  to_date(to_char(A.LOGON_TIME,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss'))*24  else 0 end CYCLE_TIME_NOWAIT_M
+      from  SOR.WPP_ASHT_HIS A
+      where
+      FAB_DATE>=TO_DATE(#{fromDate},'YYYY-MM-DD') AND FAB_DATE&lt;=TO_DATE(#{toDate},'YYYY-MM-DD')
+      AND EVT_CATE in ('LOGF','LFAB') AND SUBSTR(CR_ROUTE_ID,1,1) IN('B','M','R','S') AND CR_OPE_ID NOT IN('0001')and substr(PROD_ID,1,2) IN('AP','AG')
+    )X
+    LEFT JOIN ( SELECT PROD_KEY,PEP_CNT,PROD_MODEL_ID FROM   DM.M_PROD_D  WHERE PROD_ID LIKE '10A%' )Y ON X.PROD_KEY=Y.PROD_KEY
+    LEFT JOIN ( SELECT SUBSTR(OPE_ID,4) OPE_ID,OPE_NAME,OPE_TYPE FROM DM.M_OPE_D WHERE OPE_ID LIKE'10A%' )Z ON X.CR_OPE_ID=Z.OPE_ID
+    group by
+        prod_model_id, pep_cnt, x.cr_ope_id, ope_name, substr(x.cr_eqptg_id,4,3)
+  </select>
+
+  <select id="getStationCycleTimeCell" resultType="java.util.Map">
+    select
+      MODEL_ID, PROD_ID, GLASS_THIN, OPE_ID, OPE_NAME, EQPT_ID,
+      CASE WHEN m_cnt is null THEN 0 ELSE m_cnt END m_cnt,
+      CASE WHEN m_cnt_s is null THEN 0 ELSE m_cnt_s END m_cnt_s,
+      CASE WHEN r_cnt is null THEN 0 ELSE r_cnt END r_cnt,
+      CASE WHEN r_cnt_s is null THEN 0 ELSE r_cnt_s END r_cnt_s,
+      CASE WHEN s_cnt is null THEN 0 ELSE s_cnt END s_cnt,
+      CASE WHEN s_cnt_s is null THEN 0 ELSE s_cnt_s END s_cnt_s,
+      CASE WHEN (m_cnt+m_cnt_s)>0 THEN LF_LN/(m_cnt+m_cnt_s) else 0 END m_time,
+      CASE WHEN (r_cnt+r_cnt_s)>0 THEN LF_LN/(r_cnt+r_cnt_s) else 0 END r_time,
+      CASE WHEN (s_cnt+s_cnt_s)>0 THEN LF_LN/(s_cnt+s_cnt_s) else 0 END s_time
+    from (
+      select
+        MODEL_ID,PROD_ID,GLASS_THIN,OPE_ID,OPE_NAME,EQPT_ID,
+        sum(m_cnt) m_cnt, sum(r_cnt) r_cnt, sum(s_cnt) s_cnt, sum(m_cnt_s) m_cnt_s, sum(r_cnt_s) r_cnt_s, sum(s_cnt_s) s_cnt_s,
+        sum(LF_LN) LF_LN
+      from (
+        select
+          MODEL_ID,PROD_ID,GLASS_THIN,OPE_ID,OPE_NAME,EQPT_ID,LF_LN,
+          case when ROUTE_ID='M' THEN SHT_QTY else 0 end m_cnt,
+          case when ROUTE_ID='R' THEN SHT_QTY else 0 end r_cnt,
+          case when ROUTE_ID='S' THEN SHT_QTY else 0 end s_cnt,
+          case when ROUTE_ID='M' THEN (PNL_SHT_QTY+PNL_QTY) else 0 end m_cnt_s,
+          case when ROUTE_ID='R' THEN (PNL_SHT_QTY+PNL_QTY) else 0 end r_cnt_s,
+          case when ROUTE_ID='S' THEN (PNL_SHT_QTY+PNL_QTY) else 0 end s_cnt_s
+        FROM (
+          SELECT
+            MODEL_ID,
+            CASE WHEN OPE_ID='0J00' THEN 'FEOL' ELSE PROD_ID END PROD_ID,
+            GLASS_THIN, OPE_ID, OPE_NAME, EQPT_ID, ROUTE_ID, SHT_QTY, LF_LN,
+            CASE WHEN OPE_ID='0J00' THEN 0 ELSE PNL_SHT_QTY END PNL_SHT_QTY,
+            CASE WHEN OPE_ID='0J00' THEN 0 ELSE PNL_QTY END PNL_QTY
+          FROM DM.MWM_CYCLETIME
+          WHERE
+              FAB_DATE>=TO_DATE(#{fromDate},'YYYY-MM-DD') AND FAB_DATE&lt;=TO_DATE(#{toDate},'YYYY-MM-DD')
+        ) A
+        WHERE PROD_ID IN ('R','P','Q','A','B','C','T','G','S','L','FEOL')
+      ) B
+      group by MODEL_ID,PROD_ID,GLASS_THIN,OPE_ID,OPE_NAME,EQPT_ID
+      order by MODEL_ID,PROD_ID,GLASS_THIN,OPE_ID
+    )
+  </select>
+
+  <select id="getTotalProductCost" resultType="java.util.Map">
+    SELECT A.FAB_ID, PRICE, AMOUNT, MON FROM (
+                                            SELECT FAB_ID,SUM(PRICE)PRICE ,to_char("DATE",'yyyy-mm') MON  FROM DM.MSC_LOCATION_COST
+                                            WHERE FAB_ID IN  ('ARY','CEL') AND FAB_SCRAP_TYPE IN ('ARY责至LOT2Scrap', 'CEL责至LOT2Scrap','CF责至LOT2Scrap','LOT2前判ARY责Scrap','LOT2前判CEL责Scrap','LOT2前判CF责Scrap','ARY厂内Scrap')
+                                            GROUP BY to_char("DATE",'yyyy-mm'),FAB_ID
+                                          )A LEFT JOIN ( select FAB_DATE,AMOUNT from DM.MSC_AMT_F where FAB_ID IN ('CEL') )B ON A.MON= to_char(B.FAB_DATE,'yyyy-mm')
+    WHERE MON>='2016-01'
+    UNION ALL
+    SELECT A.FAB_ID,PRICE,AMOUNT,to_char(A."DATE",'yyyy-mm')MON FROM (
+                                                                       SELECT FAB_ID,SUM(PRICE)PRICE ,"DATE" FROM DM.MSC_LOCATION_COST  WHERE FAB_ID IN ('LCM1','LCM2') GROUP BY "DATE",FAB_ID
+                                                                     )A LEFT JOIN (
+      SELECT TO_DATE(ZYEAR||SUBSTR(ZMONTH,-2)||'01','yyyy-mm-dd')FAB_DATE, CASE WHEN (SUBSTR(WO_ID,1,1)='K') THEN 'LCM1'  ELSE 'LCM2'  END  FAB_ID ,SUM(AMOUNT)AMOUNT
+      FROM  DM.MSC_WO_ACT
+      WHERE MTRL_GROUP not in ('004','912','002','006')
+      GROUP BY TO_DATE(ZYEAR||SUBSTR(ZMONTH,-2)||'01','yyyy-mm-dd'),CASE WHEN (SUBSTR(WO_ID,1,1)='K')  THEN 'LCM1'  ELSE 'LCM2'  END
+    ) B ON A.FAB_ID=B.FAB_ID AND A."DATE"=B.FAB_DATE
+    WHERE to_char(A."DATE",'yyyy-mm')>='2016-01'
+    order by MON
+  </select>
+
 </mapper>

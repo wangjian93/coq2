@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>KPI新产品开发失败成本率</title>
+    <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../assets/module/admin.css?v=316" media="all"/>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+        /** ---------------------------theme-my主题start----------------------------------- */
+        /* logo */
+        .theme-my .layui-layout-admin .layui-header .layui-logo {
+            color: #dddddd;
+            background-color: #191a23;
+
+        }
+
+        /* header */
+
+
+        .theme-my .layui-layout-admin .layui-header {
+            background-color: #ffffff;
+        }
+
+        .theme-my .layui-layout-admin .layui-header a {
+            color: #595959;
+        }
+
+        .theme-my .layui-layout-admin .layui-header a:hover {
+            color: #595959;
+        }
+
+        .theme-my .layui-layout-admin .layui-header .layui-nav-child a {
+            color: #595959;
+        }
+
+        .theme-my .layui-layout-admin .layui-header .layui-nav .layui-nav-more {
+            border-color: #595959 transparent transparent;
+        }
+
+        .theme-my .layui-layout-admin .layui-header .layui-nav .layui-nav-mored {
+            border-color: transparent transparent #595959;
+        }
+
+        .theme-my .layui-layout-admin .layui-header .layui-nav .layui-this:after,
+        .theme-my .layui-layout-admin .layui-header .layui-nav-bar {
+            background-color: #191a23;
+        }
+
+
+
+        /* side */
+        .theme-my .layui-layout-admin .layui-side {
+            background-color: #191a23;
+
+        }
+
+
+        .theme-my .layui-nav-tree .layui-nav-child dd.layui-this a,
+        .theme-my .layui-nav-tree .layui-this > a,
+        .theme-my .layui-nav-tree .layui-this > a:hover {
+            background-color: #009688;
+        }
+
+        .theme-my .layui-nav-tree > .layui-nav-item > a:before {
+            background-color: #009688;
+        }
+
+
+        .theme-my .layui-layout-admin.admin-nav-mini .layui-side .layui-nav .admin-nav-hover > .layui-nav-child:before {
+            background: #191a23 !important;
+        }
+
+
+
+
+        /* side icon */
+        .theme-my .layui-side .layui-nav-item > a > .layui-icon {
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            font-size: 12px !important;
+            line-height: 28px;
+            text-align: center;
+            border-radius: 50%;
+            display: inline-block;
+            vertical-align: middle;
+            background-color: #61B2FC;
+        }
+
+        .theme-my .layui-side .layui-nav-item:nth-child(even) > a > .layui-icon {
+            background-color: #7DD733;
+        }
+
+        .theme-my .layui-side .layui-nav-item:nth-child(3) > a > .layui-icon {
+            background-color: #32A2D4;
+        }
+
+        .theme-my .layui-side .layui-nav-item:nth-child(4) > a > .layui-icon {
+            background-color: #2BCCCE;
+        }
+
+        .theme-my .layui-side .layui-nav-item:nth-child(5) > a > .layui-icon {
+            background-color: #7383CF;
+        }
+
+        @media screen and (min-width: 768px) {
+            .theme-my .admin-nav-mini .layui-side .layui-nav-item > a {
+                padding-left: 16px;
+            }
+        }
+
+        .theme-my .layui-layout-admin .layui-side .layui-nav .layui-nav-item .layui-nav-child a {
+            padding-left: 63px;
+        }
+
+        .theme-my .layui-layout-admin .layui-side .layui-nav .layui-nav-item .layui-nav-child .layui-nav-child a {
+            padding-left: 83px;
+        }
+
+        .theme-my .layui-layout-admin .layui-side .layui-nav .layui-nav-item .layui-nav-child .layui-nav-child .layui-nav-child a {
+            padding-left: 103px;
+        }
+
+        .theme-my .layui-layout-admin .layui-side .layui-nav .layui-nav-item .layui-nav-child .layui-nav-child .layui-nav-child .layui-nav-child a {
+            padding-left: 123px;
+        }
+
+        .theme-my .layui-side .layui-nav .layui-nav-item a cite {
+            vertical-align: middle;
+        }
+
+
+        /* body tab */
+
+        .theme-my .layui-layout-admin .layui-body > .layui-tab > .layui-tab-title li.layui-this:after {
+            background-color: #191a23;
+
+        }
+
+
+        /* body title */
+        .theme-my .layui-body-header-title {
+            border-left-color: #009688;
+        }
+
+
+
+        /* admin dialog */
+        .theme-my .layui-layer.layui-layer-admin .layui-layer-title {
+            color: #ffffff;
+            background-color: #191a23;
+
+
+        }
+
+
+
+        .theme-my .layui-layer.layui-layer-admin .layui-layer-btn .layui-layer-btn0 {
+            border-color: #009688;
+            background-color: #009688;
+        }
+
+
+
+
+
+        /* other */
+        .theme-my .more-theme-item:hover,
+        .theme-my .more-theme-item.active {
+            border-color: #009688;
+        }
+
+        .theme-my .btn-circle {
+            background: #009688;
+        }
+
+        .theme-my .ball-loader > span,
+        .theme-my .signal-loader > span {
+            background-color: #009688;
+        }
+
+        .theme-my .text-primary,
+        .theme-my .layui-link {
+            color: #009688 !important;;
+        }
+
+
+
+        /* button */
+        .theme-my .layui-btn {
+            background-color: #009688;
+
+        }
+
+
+
+
+        /* input、button height */
+        /* button */
+        .theme-my .layui-btn {
+            height: 32px;
+            line-height: 32px;
+            border-radius: 4px;
+        }
+
+        .theme-my .layui-layer.layui-layer-admin .layui-layer-btn a {
+            height: 30px;
+            line-height: 30px;
+            border-radius: 4px;
+        }
+
+        /* input */
+        .theme-my .layui-input,
+        .theme-my .layui-select,
+        .theme-my .layui-textarea,
+        .theme-my xm-select {
+            height: 32px;
+            border-radius: 4px;
+        }
+
+        /* form */
+        .theme-my .layui-form-label,
+        .theme-my .layui-form-mid {
+            padding-top: 6px;
+            padding-bottom: 6px;
+        }
+
+        .theme-my .layui-input-block {
+            min-height: 32px;
+        }
+
+        .theme-my .layui-form-radio {
+            margin-top: 2px;
+        }
+
+        /* button lg sm */
+        .theme-my .layui-btn-lg {
+            height: 42px;
+            line-height: 42px;
+        }
+
+        .theme-my .layui-btn.layui-btn-sm {
+            height: 28px;
+            line-height: 28px;
+        }
+
+        .theme-my .layui-btn.layui-btn-xs {
+            height: 22px;
+            line-height: 22px;
+        }
+
+
+        /* switch */
+        .theme-my .layui-form-onswitch {
+            border-color: #009688;
+            background-color: #009688;
+        }
+
+        /* radio */
+        .theme-my .layui-form-radio > i:hover,
+        .theme-my .layui-form-radioed > i,
+        .theme-my .layui-form-checked i,
+        .theme-my .layui-form-checked:hover i {
+            color: #009688;
+        }
+
+        /* checkbox */
+        .theme-my .layui-form-checked[lay-skin=primary] i,
+        .theme-my .layui-form-checked span,
+        .theme-my .layui-form-checked:hover span {
+            border-color: #009688 !important;
+            background-color: #009688;
+        }
+
+        .theme-my .layui-form-checkbox[lay-skin=primary] i:hover,
+        .theme-my .layui-form-checkbox[lay-skin=primary]:hover i {
+            border-color: #009688;
+        }
+
+        /* select */
+        .theme-my .layui-form-select dl dd.layui-this {
+            background-color: #009688;
+        }
+
+        /* laypage */
+        .theme-my .layui-laypage .layui-laypage-curr .layui-laypage-em {
+            background-color: #009688;
+        }
+
+        .theme-my .layui-laypage input:focus,
+        .theme-my select:focus {
+            border-color: #009688 !important;
+        }
+
+        .theme-my .layui-laypage a:hover {
+            color: #009688;
+        }
+
+        /* tab */
+        .theme-my .layui-tab-brief > .layui-tab-title .layui-this {
+            color: #009688;
+        }
+
+        .theme-my .layui-tab-brief > .layui-tab-more li.layui-this:after,
+        .theme-my .layui-tab-brief > .layui-tab-title .layui-this:after {
+            border-color: #009688 !important;
+        }
+
+        .theme-my .layui-tab.layui-tab-vertical > .layui-tab-title > li.layui-this {
+            border-color: #009688;
+            color: #009688;
+        }
+
+        /* breadcrumb */
+        .theme-my .layui-breadcrumb a:hover {
+            color: #009688 !important;
+        }
+
+        /* laydate */
+        .theme-my .layui-laydate-footer span:hover,
+        .theme-my .layui-laydate-header i:hover,
+        .theme-my .layui-laydate-header span:hover {
+            color: #009688;
+        }
+
+        .theme-my .layui-laydate .layui-this {
+            background-color: #009688 !important;
+        }
+
+        .theme-my .layui-laydate-content td.laydate-selected {
+            background-color: rgba(0,150,136,.1);
+        }
+
+        .theme-my .laydate-selected:hover {
+            background-color: rgba(0,150,136,.1) !important;
+        }
+
+        /* timeline */
+        .theme-my .layui-timeline-axis {
+            color: #009688;
+        }
+
+        /* transfer */
+        .theme-my .layui-transfer-active .layui-btn {
+            background-color: #009688 !important;
+            border-color: #009688 !important;
+        }
+
+        /* progress-bar */
+        .theme-my .layui-progress-bar {
+            background-color: #009688;
+        }
+
+        /* slider */
+        .theme-my .layui-slider-bar {
+            background-color: #009688 !important;
+        }
+
+        .theme-colorful .layui-slider-wrap-btn {
+            border-color: #009688 !important;
+        }
+
+        /* steps */
+        .theme-my .layui-tab.layui-steps > .layui-tab-title > li > .layui-icon {
+            color: #009688;
+        }
+
+        .theme-my .layui-tab.layui-steps > .layui-tab-title > li > .layui-icon.layui-icon-ok,
+        .theme-my .layui-elem-quote {
+            border-color: #009688;
+        }
+
+        .theme-my .layui-tab.layui-steps > .layui-tab-title > li:before,
+        .theme-my .layui-tab.layui-steps > .layui-tab-title > li.layui-this > .layui-icon.layui-icon-ok {
+            background-color: #009688;
+        }
+
+        .theme-my .layui-tab.layui-steps.layui-steps-simple > .layui-tab-title > li {
+            background-color: rgba(0,150,136,.5);
+        }
+
+        .theme-my .layui-tab.layui-steps.layui-steps-simple > .layui-tab-title > li.layui-this {
+            background-color: #009688;
+        }
+
+        .theme-my .layui-tab.layui-steps.layui-steps-simple > .layui-tab-title > li:after {
+            border-left-color: rgba(0,150,136,.5) !important;
+        }
+
+        .theme-my .layui-tab.layui-steps.layui-steps-simple > .layui-tab-title > li.layui-this + li:after {
+            border-left-color: #009688 !important;
+        }
+
+        /* xmSelect */
+        .theme-my xm-select .xm-body .xm-option .xm-option-icon {
+            border-color: #009688 !important;
+        }
+
+        .theme-my xm-select .xm-body .xm-option.selected .xm-option-icon,
+        .theme-my xm-select > .xm-body .xm-toolbar .toolbar-tag:hover,
+        .theme-my .ew-xmselect-tree xm-select .xm-body .xm-option.selected .xm-option-content {
+            color: #009688 !important;
+        }
+
+        .theme-my xm-select .xm-label .xm-label-block,
+        .theme-my xm-select > .xm-body .xm-option.hide-icon.selected {
+            background-color: #009688 !important;
+        }
+
+        /* tagsinput */
+        .theme-my div.tagsinput span.tag {
+            background: #009688;
+        }
+
+        /* cascader */
+        .theme-my .ew-cascader-dropdown-list-item.active,
+        .theme-my .ew-cascader-dropdown-list-item.active .ew-icon-right {
+            color: #009688;
+        }
+
+        /* city-select */
+        .theme-my .city-select a.active {
+            color: #fff !important;
+            background-color: #009688 !important;
+        }
+
+        .theme-my .city-select a:hover,
+        .theme-my .city-select a:focus {
+            background-color: rgba(0,150,136,.07);
+            color: #009688;
+        }
+
+        .theme-my .city-picker-span > .title > span:hover {
+            background-color: rgba(0,150,136,.07);
+        }
+
+        .theme-my .city-select-tab > a.active {
+            color: #009688;
+        }
+
+
+        /** ---------------------------theme-my主题end----------------------------------- *
+</style>
+</head>
+<body class="theme-my">
+<!-- 加载动画 -->
+<div class="page-loading">
+    <div class="ball-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+
+        <div class="layui-card-body">
+            <!-- 查询条件 -->
+            <form class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">日期范围:</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="month" name="month" value="2019-09 ~ 2020-09">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">&emsp;
+                        <button class="layui-btn icon-btn layui-btn-sm" type="button" id="search">
+                            <i class="layui-icon">&#xe615;</i>查询
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- chart图 -->
+            <div class="layui-row">
+                <div class="layui-col-md12 layui-col-sm12 layui-col-xs12">
+                    <div id="chart_FailureCostRate" style="height: 500px;"></div>
+                </div>
+            </div>
+
+            <!-- 数据图表 -->
+            <div class="layui-row">
+                <div class="layui-col-md12 layui-col-sm12 layui-col-xs12">
+                    <table id="table_FailureCostRate" lay-filter="table_FailureCostRate"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- js部分 -->
+<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js?v=316"></script>
+<script type="text/javascript" src="../../assets/libs/echarts/echarts.min.js"></script>
+<script>
+    layui.use(['laydate', 'table'], function() {
+        var laydate = layui.laydate;
+        var $ = layui.$;
+        var table = layui.table;
+
+        // 日期选择器
+        laydate.render({
+            elem: '#month'
+            ,type: 'month'
+            ,range: '~'
+            ,format: 'yyyy-MM'
+        });
+
+        //查询按钮点击事件
+        $("#search").click(function() {
+            renderData();
+        });
+
+        // chart图配置
+        var option = {
+            xAxis: {
+                data: []
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    show: true,
+                    interval: 'auto',
+                    formatter: '{value} %'
+                },
+                minInterval: 10,
+                interval: 1
+            },
+            series: [{
+                data: [],
+                type: 'line',
+                label: {
+                    show: true,
+                    position: 'top',
+                    formatter: function(param) {
+                        return param.data + " %";
+                    }
+                }
+            }]
+        };
+        var chart_FailureCostRate = echarts.init(document.getElementById('chart_FailureCostRate'));
+
+        /**
+         * 渲染chart图
+         */
+        var renderChartData = function(data) {
+            var xArray = new Array(data.length);
+            var series = new Array(data.length);
+            for(var i=0; i<data.length; i++) {
+                xArray[i] = data[i].month;
+                series[i] = data[i].ratio;
+            }
+            // 赋值
+            chart_FailureCostRate.clear();
+            option.xAxis.data = xArray;
+            option.series[0].data = series;
+            chart_FailureCostRate.setOption(option);
+        };
+
+        /**
+         * 渲染表格
+         */
+        var renderTableData = function(data) {
+            var data_ = {};
+            var cols = [
+                {title: '月份', templet: function () {return '比率';} }
+            ];
+            for(var i=0; i<data.length; i++) {
+                var d = data[i];
+                data_[d.month] = d.rate;
+                cols.push({title: d.month, field: d.month});
+            }
+
+            table.render({
+                elem: '#table_FailureCostRate',
+                data: [data_],
+                cols: [cols],
+                size: 'sm',
+                cellMinWidth: 80
+            });
+        };
+
+        /**
+         * 渲染数据
+         */
+        var renderData = function() {
+            var months = $("#month").val().split("~");
+            var fromMonth = months[0].trim();
+            var toMonth = months[1].trim();
+
+            $.get('/np/failureCostRate/getFailureCostRate', {fromMonth: fromMonth, toMonth: toMonth}, function(res) {
+                if(res.code === 200) {
+                    renderChartData(res.data);
+                    renderTableData(res.data);
+                } else {
+                    layer.msg("请求失败，" + res.msg);
+                }
+            });
+        };
+    });
+</script>
+
+</body>
+</html>

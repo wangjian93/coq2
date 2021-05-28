@@ -51,7 +51,7 @@
           (b.BudgetType='资本' AND c.MaterialGroupName LIKE '%固定资产%') or
           (b.BudgetType='其他' AND c.MaterialGroupName NOT LIKE '%费用-委外加工费%' AND c.MaterialGroupName NOT LIKE '%服务-检测%')
           )
-      AND b.BudgetNumber LIKE ('%N1568V-R0%')
+      AND b.BudgetNumber LIKE #{project}
       AND a.DateOfCreate BETWEEN #{fromDate} AND #{toDate}
     ORDER BY a.TrackingNumber
   </select>
@@ -78,7 +78,7 @@
            LEFT JOIN MM_O_Material m on m.Material_ID=b.Material_FK and m.ValidFlag=1
     where b.BudgetType='其他'
       AND c.MaterialGroupName LIKE '%服务-检测%'
-      AND b.BudgetNumber LIKE ('%N1568V-R0%')
+      AND b.BudgetNumber LIKE #{project}
       AND a.DateOfCreate BETWEEN #{fromDate} AND #{toDate}
     ORDER BY a.TrackingNumber
   </select>

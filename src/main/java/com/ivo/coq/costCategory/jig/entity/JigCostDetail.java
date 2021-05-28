@@ -36,6 +36,11 @@ public class JigCostDetail extends AutoIncreaseEntityModel {
     private Integer time;
 
     /**
+     * 属于预防或内损
+     */
+    private String type;
+
+    /**
      * PR采购请求单
      */
     private String pr;

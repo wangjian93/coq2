@@ -31,7 +31,7 @@ import java.util.Objects;
 @EnableJpaRepositories(
         entityManagerFactoryRef="entityManagerFactoryPrimary",
         transactionManagerRef="transactionManagerPrimary",
-        basePackages= {"com.ivo.system", "com.ivo.coq"})
+        basePackages= {"com.ivo.system", "com.ivo.coq", "com.ivo.np","com.ivo.station","com.ivo.product"})
 public class PrimaryJpaConfig {
 
     private final DataSource primaryDataSource;
@@ -68,7 +68,7 @@ public class PrimaryJpaConfig {
         return builder
                 .dataSource(primaryDataSource)
                 .properties(propertiesMap)
-                .packages("com.ivo.system", "com.ivo.coq") // 设置实体类所在位置
+                .packages("com.ivo.system", "com.ivo.coq", "com.ivo.np", "com.ivo.station","com.ivo.product") // 设置实体类所在位置
                 .persistenceUnit("primaryPersistenceUnit")
                 .build();
     }
