@@ -15,17 +15,7 @@ public class StationCycleTimeAryServiceTest extends AbstractTest {
     private StationCycleTimeAryService stationCycleTimeAryService;
 
     @Test
-    public void computeAryStationAmount() {
-        stationCycleTimeAryService.computeAryStationAmount("202104");
-    }
-
-    @Test
-    public void sumStationCycleTime() {
-        stationCycleTimeAryService.sumStationCycleTime("202104");
-    }
-
-    @Test
-    public void t() {
-        double d = stationCycleTimeAryService.getPerProductAmountAry("202104", "N1568V999999");
+    public void syncStationCycleTime() {
+        System.out.println(stationCycleTimeAryService.getPerReworkAmountAry("202105", "N1166", "4505"));
     }
 }

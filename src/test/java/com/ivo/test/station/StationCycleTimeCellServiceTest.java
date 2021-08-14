@@ -16,6 +16,6 @@ public class StationCycleTimeCellServiceTest extends AbstractTest {
 
     @Test
     public void syncStationCycleTimeCell() {
-        stationCycleTimeCellService.syncStationCycleTimeCell("202104");
+        stationCycleTimeCellService.syncStationCycleTimeCell("202105");
     }
 }

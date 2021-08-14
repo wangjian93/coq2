@@ -1,18 +1,19 @@
 package com.ivo.coq.report.service.impl;
 
-import com.ivo.coq.report.entity.WbRatio;
 import com.ivo.coq.report.repository.WbRatioRepository;
 import com.ivo.coq.report.service.WbRatioService;
+import com.ivo.product.entity.ObaMonth;
+import com.ivo.product.repository.LocationCostRepository;
+import com.ivo.product.repository.ObaMonthRepository;
 import com.ivo.rest.oracle.OracleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import javax.annotation.Resource;
+import java.text.ParseException;
+import java.util.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 /**
  * @author wj
@@ -25,6 +26,12 @@ public class WbRatioServiceImpl implements WbRatioService {
     private OracleService oracleService;
 
     private WbRatioRepository wbRatioRepository;
+
+    @Resource
+    private LocationCostRepository locationCostRepository;
+
+    @Resource
+    private ObaMonthRepository obaMonthRepository;
 
     @Autowired
     public WbRatioServiceImpl(OracleService oracleService, WbRatioRepository wbRatioRepository) {
@@ -39,9 +46,56 @@ public class WbRatioServiceImpl implements WbRatioService {
     }
 
     @Override
-    public List<WbRatio> getWbRatio(Date fromDate, Date toDate, String fabId) {
+    public Map getWbRatio(List<String> monthList, String fabId) throws ParseException {
+        String FAB_ID = fabId;
+        Map<String, Map> month_map = new HashMap<>();
+        for(String month : monthList) {
+            Map<String, Double> subMap = new HashMap<>();
+            subMap.put("b_trip", 0d);
+            subMap.put("scrap", 0d);
+            subMap.put("oba", 0d);
+            subMap.put("product", 0d);
+            month_map.put(month, subMap);
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+        List<Map> list_btrip = locationCostRepository.getB_TripAmuntMonth(FAB_ID, sdf.parse(monthList.get(0)), sdf.parse(monthList.get(monthList.size()-1)));
+        List<Map> list_scrap = locationCostRepository.getScrapAmountMonth(FAB_ID, sdf.parse(monthList.get(0)), sdf.parse(monthList.get(monthList.size()-1)));
+        for(Map map : list_btrip) {
+            String month = (String) map.get("month");
+            double amount = (double) map.get("amount");
+            Map subMap = month_map.get(month);
+            if(subMap == null) continue;
+            subMap.put("b_trip", amount);
+        }
+        for(Map map : list_scrap) {
+            String month = (String) map.get("month");
+            double amount = (double) map.get("amount");
+            Map subMap = month_map.get(month);
+            if(subMap == null) continue;
+            subMap.put("scrap", amount);
+        }
+
+        String fab = FAB_ID;
+        if(fab.equals("WB_CEL")) fab = "CELL";
+        if(fab.equals("WB_LCM")) fab = "LCM";
+        List<ObaMonth> obaMonthList = obaMonthRepository.findByFabAndMonthIn(fab, monthList);
+        for(ObaMonth obaMonth : obaMonthList) {
+            String month = obaMonth.getMonth();
+            double amount = obaMonth.getAmount();
+            Map subMap = month_map.get(month);
+            if(subMap == null) continue;
+            subMap.put("oba", amount);
+        }
+
+        return month_map;
+    }
+
+    @Override
+    public List<Map> getWbRatio(Date fromDate, Date toDate, String fabId) {
         List<String> months = getMonthBetween(fromDate, toDate);
-        return  wbRatioRepository.findByFabIdAndMonInAndRatioNotNullOrderByMonAsc(fabId, months);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+        return  wbRatioRepository.getWebFailureRate(sdf.format(fromDate), sdf.format(toDate), fabId);
     }
 
     /**

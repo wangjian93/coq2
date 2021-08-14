@@ -7,8 +7,8 @@ import com.ivo.common.result.Result;
 import com.ivo.common.utils.ResultUtil;
 import com.ivo.coq.costCategory.salary.entity.RoleSalary;
 import com.ivo.coq.costCategory.salary.service.RoleSalaryService;
-import com.ivo.core.decryption.DecryptException;
-import com.ivo.core.decryption.IVODecryptionUtils;
+//import com.ivo.core.decryption.DecryptException;
+//import com.ivo.core.decryption.IVODecryptionUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -75,19 +75,19 @@ public class RoleSalaryController {
 
     @PostMapping(value = "/importExcel", headers = "content-type=multipart/form-data")
     public Result importExcel(@RequestParam("file") MultipartFile file) {
-        try {
-            //IVO文件解密
-            byte[] bytes = IVODecryptionUtils.decrypt(file.getInputStream());
-            InputStream inputStream = new ByteArrayInputStream(bytes);
-            String fileName = file.getOriginalFilename();
-            roleSalaryService.importExcel(inputStream, fileName);
-        } catch (IOException e) {
-            return ResultUtil.error("Excel导入失败，文件读取异常");
-        } catch (DecryptException e) {
-            return ResultUtil.error("Excel导入失败，文件解密异常");
-        } catch (Exception e) {
-            return ResultUtil.error(e.getMessage());
-        }
+//        try {
+//            //IVO文件解密
+//            byte[] bytes = IVODecryptionUtils.decrypt(file.getInputStream());
+//            InputStream inputStream = new ByteArrayInputStream(bytes);
+//            String fileName = file.getOriginalFilename();
+//            roleSalaryService.importExcel(inputStream, fileName);
+//        } catch (IOException e) {
+//            return ResultUtil.error("Excel导入失败，文件读取异常");
+//        } catch (DecryptException e) {
+//            return ResultUtil.error("Excel导入失败，文件解密异常");
+//        } catch (Exception e) {
+//            return ResultUtil.error(e.getMessage());
+//        }
         return ResultUtil.success("Excel导入成功");
     }
 

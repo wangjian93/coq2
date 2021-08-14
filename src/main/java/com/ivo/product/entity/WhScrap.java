@@ -20,10 +20,6 @@ import java.util.Date;
 @Getter
 public class WhScrap extends AutoIncreaseEntityModel {
 
-    /**
-     *  工厂
-     */
-    private String fab;
 
     /**
      * 仓库报废单号
@@ -43,10 +39,25 @@ public class WhScrap extends AutoIncreaseEntityModel {
     /**
      * 申请部门
      */
-    private String userDepartment_fk;
+    private String userDepartment;
 
     /**
      * 成本中心
      */
-    private String costCenter_fk;
+    private String costCenter;
+
+    /**
+     * 机种
+     */
+    private String project;
+
+    /**
+     * 实验类别
+     */
+    private String expType;
+
+    /**
+     * 报废原因
+     */
+    private String costType;
 }

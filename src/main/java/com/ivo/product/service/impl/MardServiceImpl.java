@@ -6,6 +6,7 @@ import com.ivo.product.repository.MardMonthRepository;
 import com.ivo.product.repository.MardRepository;
 import com.ivo.product.service.MardService;
 import com.ivo.rest.oracle.mapper.OracleMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -41,6 +42,9 @@ public class MardServiceImpl implements MardService {
             mard.setMATNR((String) map.get("MATNR"));
             mard.setERSDA(new Date(((Timestamp) map.get("ERSDA")).getTime()));
             mard.setLABST((double) map.get("LABST"));
+
+            mard.setAUFNR((String) map.get("AUFNR"));
+            mard.setCHARG((String) map.get("CHARG"));
             mardList.add(mard);
         }
         mardRepository.saveAll(mardList);
@@ -125,12 +129,31 @@ public class MardServiceImpl implements MardService {
         List<Mard> lcm1List = getMardLcm1(fromDate, toDate);
         double total_lcm1 = 0;
         for(Mard mard : lcm1List) {
+            if(StringUtils.startsWith(mard.getMATNR(), "14")) continue;
+
+
+            if( mard.getAUFNR().length()>3 && StringUtils.equalsAny( mard.getAUFNR().substring(2,3), "1", "8")) {
+
+            } else {
+                continue;
+            }
+
             total_lcm1 += mard.getLABST()*mard.getPrice();
         }
 
         List<Mard> lcm2List = getMardLcm2(fromDate, toDate);
         double total_lcm2 = 0;
         for(Mard mard : lcm2List) {
+            if(StringUtils.startsWith(mard.getMATNR(), "14")) continue;
+
+
+            if( mard.getAUFNR().length()>3 && StringUtils.equalsAny( mard.getAUFNR().substring(2,3), "1", "8")) {
+
+            } else {
+                continue;
+            }
+
+
             total_lcm2 += mard.getLABST()*mard.getPrice();
         }
 

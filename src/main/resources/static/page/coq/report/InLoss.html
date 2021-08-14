@@ -22,15 +22,70 @@
 <!-- 正文开始 -->
 <div class="layui-fluid">
     <div class="layui-card">
-        <div class="layui-card-header">
-            <i class="layui-icon layui-icon-tabs"></i>
-            <span id="title"></span>内损费用</span>
-        </div>
         <div class="layui-card-body">
-            <div class="layui-row">
-                <span class="layui-badge layui-badge-green pull-right">单位：RMB</span>
+
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="layui-icon layui-icon-table"></i>
+                    <span><span id="title"></span>费用</span>
+                    <div class="layui-row">
+                        <span class="layui-badge layui-badge-green pull-right">单位：RMB</span>
+                    </div>
+                </div>
+                <div class="layui-card-body">
+                    <table id="amountCount" lay-filter="inLoss"></table>
+                </div>
             </div>
-            <table id="inLoss" lay-filter="inLoss"></table>
+
+            <div class="layui-card"  id="reworkScrap">
+                <div class="layui-card-header">
+                    <i class="layui-icon layui-icon-table"></i>
+                    <span>重工报废费用</span>
+                </div>
+                <div class="layui-card-body">
+                    <table id="reworkScrapTable" lay-filter="reworkScrapTable"></table>
+                </div>
+            </div>
+
+            <div class="layui-card"  id="mardMonth">
+                <div class="layui-card-header">
+                    <i class="layui-icon layui-icon-table"></i>
+                    <span>入库费用</span>
+                </div>
+                <div class="layui-card-body">
+                    <table id="mardMonthTable" lay-filter="mardMonthTable"></table>
+                </div>
+            </div>
+
+            <div class="layui-card"  id="whScrapMonth">
+                <div class="layui-card-header">
+                    <i class="layui-icon layui-icon-table"></i>
+                    <span>报废损失外包费用</span>
+                </div>
+                <div class="layui-card-body">
+                    <table id="whScrapMonthTable" lay-filter="whScrapMonthTable"></table>
+                </div>
+            </div>
+
+            <div class="layui-card"  id="woCloseMonth">
+                <div class="layui-card-header">
+                    <i class="layui-icon layui-icon-table"></i>
+                    <span>超耗费用</span>
+                </div>
+                <div class="layui-card-body">
+                    <table id="woCloseMonthTable" lay-filter="woCloseMonthTable"></table>
+                </div>
+            </div>
+
+            <div class="layui-card"  id="inLoss">
+                <div class="layui-card-header">
+                    <i class="layui-icon layui-icon-table"></i>
+                    <span>内损费用</span>
+                </div>
+                <div class="layui-card-body">
+                    <table id="inLossTable" lay-filter="inLoss"></table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -59,57 +114,248 @@
         var FAB_DATE = getQueryVariable("fabDate");
         $("#title").html(FAB_DATE + "  " + FAB_ID);
         if(FAB_ID && FAB_DATE) {
-            $.post('/coq/report/inLossAmountDetail', {
-                FAB_ID: FAB_ID,
-                FAB_DATE: FAB_DATE
-            }, function(data) {
-                if(data.code === 200) {
-                    var cols = [];
-                    if(getQueryVariable("plant") === 'LCM1' || getQueryVariable("plant") === 'LCM2') {
-                        cols = [
-                            {type: 'numbers'},
-                            {field: 'fabDate', title: 'FAB_DATE', align: 'center'},
-                            // {field: 'zYear', title: 'ZYEAR', align: 'center'},
-                            // {field: 'zMonth', title: 'ZMONTH', align: 'center'},
-                            {field: 'prodId', title: 'PROD_ID', align: 'center'},
-                            {field: 'verId', title: 'VERID', align: 'center'},
-                            {field: 'woId', title: 'WO_ID', align: 'center'},
-                            {field: 'plant', title: 'PLANT', align: 'center'},
-                            {field: 'prodModelId', title: 'PROD_MODEL_ID', align: 'center'},
-                            {field: 'prodSizeId', title: 'PROD_SIZE_ID', align: 'center'},
-                            {field: 'amount', title: 'AMOUNT', align: 'center', sort: true}
-                        ];
-                    } else {
-                        cols = [
-                            {type: 'numbers'},
-                            {field: 'fabDate', title: 'FAB_DATE', align: 'center'},
-                            {field: 'fabId', title: 'FAB_ID', align: 'center'},
-                            {field: 'pfcd', title: 'PFCD', align: 'center'},
-                            {field: 'prodId', title: 'PROD_ID', align: 'center'},
-                            {field: 'mtrlId', title: 'MTRL_ID', align: 'center'},
-                            {field: 'prodSizeId', title: 'PROD_SIZE_ID', align: 'center'},
-                            {field: 'prodModelId', title: 'PROD_MODEL_ID', align: 'center'},
-                            {field: 'scrapSht', title: 'SCRAP_SHT', align: 'center'},
-                            {field: 'scrapPnl', title: 'SCRAP_PNL', align: 'center'},
-                            {field: 'cut', title: 'CUT', align: 'center'},
-                            {field: 'verId', title: 'VER_ID', align: 'center'},
-                            {field: 'fabScrapType', title: 'FAB_SCRAP_TYPE', align: 'center'},
-                            {field: 'price', title: 'PRICE', align: 'center', sort: true}
-                        ];
-                    }
 
-                    /* 表格渲染 */
-                    table.render({
-                        elem: '#inLoss',
-                        data: data.data,
-                        cols: [cols],
-                        limit: 40,
-                        page: true,
-                        size: 'sm'
-                    });
+            $.post('/inFailureCostRate/getRate', {
+                fab: FAB_ID,
+                fromMonth: FAB_DATE,
+                toMonth: FAB_DATE
+            }, function(data) {
+
+                var option;
+                if(FAB_ID === 'LCM1' || FAB_ID === 'LCM2') {
+                    option = [
+                        {field: 'MONTH', title: '月份', align: 'center'},
+                        {field: '报废损失外包费用', title: '报废损失外包费用', align: 'center', templet: function(d) {
+                            var n = d['报废损失外包费用'];
+                            return numFormat(n);
+                        }},
+                        {field: '重工报废费用', title: '重工报废费用', align: 'center', templet: function(d) {
+                                var n = d['重工报废费用'];
+                                return numFormat(n);
+                            }},
+                        {field: '超耗费用', title: '超耗费用', align: 'center', templet: function(d) {
+                                var n = d['超耗费用'];
+                                return numFormat(n);
+                            }},
+                        {field: '入库费用', title: '入库费用', align: 'center', templet: function(d) {
+                                var n = d['入库费用'];
+                                return numFormat(n);
+                            }},
+                        {field: '总制造费用', title: '总制造费用', align: 'center', templet: function(d) {
+                                var n = d['总制造费用'];
+                                return numFormat(n);
+                            }},
+                        {title: '比率（%）', align: 'center', templet: function(o) {
+                                var n = (o['报废损失外包费用']+o['重工报废费用']+o['超耗费用']+o['入库费用'])/o['总制造费用']*100;
+                                return n.toFixed(4);
+                            }}
+                    ];
+                } else {
+                    option = [
+                        {field: 'MONTH', title: '月份', align: 'center'},
+                        {field: '内损费用', title: '内损费用', align: 'center', templet: function(d) {
+                                var n = d['内损费用'];
+                                return numFormat(n);
+                            }},
+                        {field: '报废损失外包费用', title: '报废损失外包费用', align: 'center', templet: function(d) {
+                                var n = d['报废损失外包费用'];
+                                return numFormat(n);
+                            }},
+                        {field: '重工报废费用', title: '重工报废费用', align: 'center', templet: function(d) {
+                                var n = d['重工报废费用'];
+                                return numFormat(n);
+                            }},
+                        {field: '总制造费用', title: '总制造费用', align: 'center', templet: function(d) {
+                                var n = d['总制造费用'];
+                                return numFormat(n);
+                            }},
+                        {title: '比率（%）', align: 'center', templet: function(o) {
+                                var n = (o['内损费用']+o['报废损失外包费用']+o['重工报废费用'])/o['总制造费用']*100;
+                                return n.toFixed(4);
+                            }}
+                    ];
                 }
+
+                table.render({
+                    elem: '#amountCount',
+                    data: data.data,
+                    cols: [option],
+                    limit: 40,
+                    page: false,
+                    size: 'sm'
+                });
             });
+
+            //重工报废费用表格
+            $.post('/inFailureCostRate/getReworkScrapData', {
+                fab: FAB_ID,
+                month: FAB_DATE
+            }, function(d) {
+                table.render({
+                    elem: '#reworkScrapTable',
+                    data: d.data,
+                    cols: [[
+                        {field: 'fabDate', title: '日期', align: 'center'},
+                        {field: 'evt_CATE', title: 'EVT_CATE', align: 'center'},
+                        {field: 'prod_ID', title: 'PROD_ID', align: 'center'},
+                        {field: 'prod_MODEL_ID', title: 'PROD_MODEL_ID', align: 'center'},
+                        {field: 'ary_PROD_ID', title: 'ARY_PROD_ID', align: 'center'},
+                        {field: 'product_TYP', title: 'PRODUCT_TYP', align: 'center'},
+                        {field: 'wo_ID', title: 'WO_ID', align: 'center'},
+                        {field: 'ope_ID', title: 'OPE_ID', align: 'center'},
+                        {field: 'route_ID', title: 'ROUTE_ID', align: 'center'},
+                        {field: 'nx_OPE_ID', title: 'NX_OPE_ID', align: 'center'},
+                        {field: 'cr_OPE_ID', title: 'CR_OPE_ID', align: 'center'},
+                        {field: 'scrp_M_OPE_ID', title: 'SCRP_M_OPE_ID', align: 'center'},
+                        {field: 'qty', title: 'QTY', align: 'center'},
+                        {field: 'station', title: 'station', align: 'center'},
+                        {field: 'stationAmount', title: 'stationAmount', align: 'center'},
+                        {field: 'amount', title: 'amount', align: 'center'}
+                    ]],
+                    size: 'sm',
+                    page: true,
+                    limit: 20
+                });
+            });
+
+
+            //报废损失外包费用表格
+            table.render({
+                elem: '#whScrapMonthTable',
+                url: '/inFailureCostRate/getWhScrapData',
+                where: {
+                    fab: FAB_ID,
+                    month: FAB_DATE
+                },
+                cols: [[
+                    {field: 'trackingNumber', title: '仓库报废单号', align: 'center'},
+                    {field: 'scrapMoneyCny', title: '报废金额', align: 'center'},
+                    {field: 'dateOfOrder', title: '申请时间', align: 'center'},
+                    {field: 'userDepartment', title: '申请部门', align: 'center'},
+                    {field: 'costCenter', title: '成本中心', align: 'center'},
+                    {field: 'project', title: '机种', align: 'center'},
+                    {field: 'expType', title: '实验类别', align: 'center'},
+                    {field: 'costType', title: '报废原因', align: 'center'},
+                ]],
+                size: 'sm'
+            });
+
+
+            if(FAB_ID === 'LCM1' || FAB_ID === 'LCM2') {
+                //超耗费用表格
+                $.post('/inFailureCostRate/getWoCloseData', {
+                    fab: FAB_ID,
+                    month: FAB_DATE
+                }, function(d) {
+                    table.render({
+                        elem: '#woCloseMonthTable',
+                        data: d.data,
+                        cols: [[
+                            {field: 'werks', title: '工厂', align: 'center'},
+                            {field: 'closeDate', title: '日期', align: 'center'},
+                            {field: 'aufnr', title: '工单', align: 'center'},
+                            {field: 'aufnr_T', title: '工单类型', align: 'center'},
+                            {field: 'mtrl_ID', title: '成品料号', align: 'center'},
+                            {field: 'project', title: '机种', align: 'center'},
+                            {field: 'matnr', title: '料号', align: 'center'},
+                            {field: 'qty', title: '超耗数量', align: 'center'},
+                            {field: 'price', title: 'price', align: 'center'}
+                        ]],
+                        size: 'sm',
+                        page: true,
+                        limit: 40
+                    });
+                });
+
+
+                //入库费用
+                $.post('/inFailureCostRate/getMardData', {
+                    fab: FAB_ID,
+                    month: FAB_DATE
+                }, function(d) {
+                    table.render({
+                        elem: '#mardMonthTable',
+                        data: d.data,
+                        cols: [[
+                            {field: 'matnr', title: '成品料号', align: 'center'},
+                            {field: 'werks', title: '工厂', align: 'center'},
+                            {field: 'lgort', title: '仓位', align: 'center'},
+                            {field: 'labst', title: '入库数量', align: 'center'},
+                            {field: 'ersda', title: '入库时间', align: 'center'},
+                            {field: 'price', title: 'price', align: 'center'},
+                            {field: 'aufnr', title: 'AUFNR', align: 'center'},
+                            {field: 'charg', title: 'CHARG', align: 'center'}
+                        ]],
+                        size: 'sm',
+                        page: true,
+                        limit: 40
+                    });
+                });
+
+
+            } else {
+                //内损费用表格
+                $.post('/coq/report/inLossAmountDetail', {
+                    FAB_ID: FAB_ID,
+                    FAB_DATE: FAB_DATE
+                }, function(data) {
+                    if(data.code === 200) {
+                        var cols = [];
+                        if(getQueryVariable("plant") === 'LCM1' || getQueryVariable("plant") === 'LCM2') {
+                            cols = [
+                                {type: 'numbers'},
+                                {field: 'fabDate', title: 'FAB_DATE', align: 'center'},
+                                // {field: 'zYear', title: 'ZYEAR', align: 'center'},
+                                // {field: 'zMonth', title: 'ZMONTH', align: 'center'},
+                                {field: 'prodId', title: 'PROD_ID', align: 'center'},
+                                {field: 'verId', title: 'VERID', align: 'center'},
+                                {field: 'woId', title: 'WO_ID', align: 'center'},
+                                {field: 'plant', title: 'PLANT', align: 'center'},
+                                {field: 'prodModelId', title: 'PROD_MODEL_ID', align: 'center'},
+                                {field: 'prodSizeId', title: 'PROD_SIZE_ID', align: 'center'},
+                                {field: 'amount', title: 'AMOUNT', align: 'center', sort: true}
+                            ];
+                        } else {
+                            cols = [
+                                {type: 'numbers'},
+                                {field: 'fabDate', title: 'FAB_DATE', align: 'center'},
+                                {field: 'fabId', title: 'FAB_ID', align: 'center'},
+                                {field: 'pfcd', title: 'PFCD', align: 'center'},
+                                {field: 'prodId', title: 'PROD_ID', align: 'center'},
+                                {field: 'mtrlId', title: 'MTRL_ID', align: 'center'},
+                                {field: 'prodSizeId', title: 'PROD_SIZE_ID', align: 'center'},
+                                {field: 'prodModelId', title: 'PROD_MODEL_ID', align: 'center'},
+                                {field: 'scrapSht', title: 'SCRAP_SHT', align: 'center'},
+                                {field: 'scrapPnl', title: 'SCRAP_PNL', align: 'center'},
+                                {field: 'cut', title: 'CUT', align: 'center'},
+                                {field: 'verId', title: 'VER_ID', align: 'center'},
+                                {field: 'fabScrapType', title: 'FAB_SCRAP_TYPE', align: 'center'},
+                                {field: 'price', title: 'PRICE', align: 'center', sort: true}
+                            ];
+                        }
+
+                        /* 表格渲染 */
+                        table.render({
+                            elem: '#inLossTable',
+                            data: data.data,
+                            cols: [cols],
+                            limit: 40,
+                            page: true,
+                            size: 'sm'
+                        });
+                    }
+                });
+            }
+
         }
+
+
+        /* 数字转千分位，加',' */
+        var numFormat = function(num) {
+            console.log(num);
+            return (num.toString().indexOf ('.') !== -1) ?
+                num.toLocaleString() : num.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
+        };
     });
 </script>
 </body>

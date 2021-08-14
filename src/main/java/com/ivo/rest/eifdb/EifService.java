@@ -25,7 +25,7 @@ public interface EifService {
      * @param ee 工程试验单
      * @return
      */
-    String getPlantForEE(String ee);
+    Map getPlantForEE(String ee);
 
     /**
      * 获取EE单中的产品ID和实验数量 （ARRAY/CELL）

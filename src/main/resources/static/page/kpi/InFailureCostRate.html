@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>量产品-内部失败成本率</title>
+    <link rel="stylesheet" href="../../../assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../../assets/module/admin.css?v=316" media="all"/>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<!-- 加载动画 -->
+<div class="page-loading">
+    <div class="ball-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-tabs"></i>
+            <span>量产品-内部失败成本率</span>
+        </div>
+        <div class="layui-card-body">
+            <!-- 表格工具栏 -->
+            <form class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">日期范围:</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="month" name="month" value="2020-01 ~ 2021-05">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">&emsp;
+                        <button class="layui-btn icon-btn" lay-filter="search" id="search" lay-submit>
+                            <i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- 数据图表 -->
+            <div class="layui-row">
+                <div class="layui-col-md12 layui-col-sm12 layui-col-xs12">
+                    <div id="chartInLossAmount" style="height: 500px;"></div>
+                </div>
+
+                <div class="layui-col-md12 layui-col-sm12 layui-col-xs12">
+                    <table id="tableInLossAmount" lay-filter="tableInLossAmount"></table>
+                </div>
+            </div>
+
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+        </div>
+    </div>
+</div>
+
+
+<!-- js部分 -->
+<script type="text/javascript" src="../../../assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="../../../assets/js/common.js?v=316"></script>
+<script type="text/javascript" src="../../../assets/libs/echarts/echarts.min.js"></script>
+<script>
+    layui.use(['form', 'notice', 'xmSelect', 'laydate', 'table'], function () {
+        var form = layui.form;
+        var $ = layui.$;
+        var notice = layui.notice;
+        var laydate = layui.laydate;
+        var table = layui.table;
+
+        var fab_s = [ 'ARRAY', 'CELL', 'LCM1', 'LCM2'];
+
+
+        // 日期选择器
+        laydate.render({
+            elem: '#month'
+            ,type: 'month'
+            ,range: '~'
+            ,format: 'yyyy-MM'
+        });
+
+        // 渲染图表
+        var colors = ['#1E9FFF', '#99CCFF','#FFB800', '#5FB878'];
+        var chartInLossAmount = echarts.init(document.getElementById('chartInLossAmount'));
+        var option = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['ARRAY', 'CELL', 'LCM1', 'LCM2']
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: [],
+                axisLabel: {
+                    interval: 0,//横轴信息全部显示
+                    //rotate: 30,//60度角倾斜显示
+                    formatter:function(val){
+                        return val.substring(2,4)+'-'+val.substring(4,6);
+                    }
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    show: true,
+                    interval: 'auto',
+                    formatter: '{value} %'
+                },
+                min:0,
+                max:100,
+                splitNumber:6
+            },
+            series: [
+                {
+                    name: 'ARRAY',
+                    type: 'line',
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: '{c}%'
+                    },
+                    data: [],
+                    itemStyle : {
+                        normal : {
+                            color: colors[0],
+                            lineStyle:{
+                                color: colors[0]
+                            }
+                        }
+                    }
+                },{
+                    name: 'CELL',
+                    type: 'line',
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: '{c}%'
+                    },
+                    data: [],
+                    itemStyle : {
+                        normal : {
+                            color: colors[1],
+                            lineStyle:{
+                                color: colors[1]
+                            }
+                        }
+                    }
+                },{
+                    name: 'LCM1',
+                    type: 'line',
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: '{c}%'
+                    },
+                    data: [],
+                    itemStyle : {
+                        normal : {
+                            color: colors[2],
+                            lineStyle:{
+                                color: colors[2]
+                            }
+                        }
+                    }
+                },{
+                    name: 'LCM2',
+                    type: 'line',
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: '{c}%'
+                    },
+                    data: [],
+                    itemStyle : {
+                        normal : {
+                            color: colors[3],
+                            lineStyle:{
+                                color: colors[3]
+                            }
+                        }
+                    }
+                }
+            ]
+        };
+        // 处理点击事件并且跳转到相应的页面
+        chartInLossAmount.on('click', function (params) {
+            window.open('/page/coq/report/InLoss.html?plant='+encodeURIComponent(params.seriesName)+'&fabDate=' + encodeURIComponent(params.name));
+        });
+        chartInLossAmount.setOption(option);
+
+
+        var generateSeries = function(inLossAmount) {
+            var series = new Array(inLossAmount.length);
+            for(var i=0; i<inLossAmount.length; i++) {
+                series[i] = inLossAmount[i].RATIO;
+            }
+            return series;
+        };
+
+        var generateXArray = function(inLossAmountArray, inLossAmountCell, inLossAmountLcm1, inLossAmountLcm2) {
+            var data = inLossAmountArray;
+            if(data.length < inLossAmountCell.length) {
+                data = inLossAmountCell;
+            }
+            if(data.length < inLossAmountLcm1.length) {
+                data = inLossAmountLcm1;
+            }
+            if(data.length < inLossAmountLcm2.length) {
+                data = inLossAmountLcm2;
+            }
+            var xArray = new Array(data.length);
+            for(var i=0; i<data.length; i++) {
+                xArray[i] = data[i].FAB_DATE;
+            }
+            xArray.push("");
+            return xArray;
+        };
+
+        var generateTableCols = function(inLossAmountArray, inLossAmountCell, inLossAmountLcm1, inLossAmountLcm2) {
+            var data = inLossAmountArray;
+            if(data.length < inLossAmountCell.length) {
+                data = inLossAmountCell;
+            }
+            if(data.length < inLossAmountLcm1.length) {
+                data = inLossAmountLcm1;
+            }
+            if(data.length < inLossAmountLcm2.length) {
+                data = inLossAmountLcm2;
+            }
+            var cols = new Array(data.length+1);
+            cols[0] = {field: 'date', title: '日期', align: 'center', fixed: 'left'};
+            for(var i=0; i<data.length; i++) {
+                cols[i+1] = {field: data[i].FAB_DATE, title: data[i].FAB_DATE, align: 'center'};
+            }
+            return cols;
+        };
+
+        var generateTableDate = function(inLossAmountArray, inLossAmountCell, inLossAmountLcm1, inLossAmountLcm2) {
+            var data = [];
+            for(var i=0; i<fab_s.length; i++) {
+                var fab = fab_s[i];
+
+                var inLossAmount;
+                if(fab_s[i] === 'ARRAY') inLossAmount= inLossAmountArray;
+                if(fab_s[i] === 'CELL') inLossAmount= inLossAmountCell;
+                if(fab_s[i] === 'LCM1') inLossAmount= inLossAmountLcm1;
+                if(fab_s[i] === 'LCM2') inLossAmount= inLossAmountLcm2;
+
+                var o1 =  {"date": "内损金额"};
+                var o2 =  {"date": fab};
+                for(var j=0; j<inLossAmount.length; j++) {
+                    o1[inLossAmount[j].FAB_DATE]  = numFormat(inLossAmount[j].molecular) + ' 万';
+                    o2[inLossAmount[j].FAB_DATE]  = inLossAmount[j].RATIO;
+                }
+                data.push(o1);
+                data.push(o2);
+            }
+
+            return data;
+        };
+
+        // 渲染chart数据
+        var renderCharts = function (fromMonth, toMonth) {
+
+            var inLossAmountArray =  getInLossAmount(fromMonth, toMonth, 'ARRAY');
+            var inLossAmountCell =  getInLossAmount(fromMonth, toMonth, 'CELL');
+            var inLossAmountLcm1 =  getInLossAmount(fromMonth, toMonth, 'LCM1');
+            var inLossAmountLcm2 =  getInLossAmount(fromMonth, toMonth, 'LCM2');
+            // 更新chart图
+            chartInLossAmount.clear();
+            option.xAxis.data = generateXArray(inLossAmountArray, inLossAmountCell, inLossAmountLcm1, inLossAmountLcm2);
+            option.series[0].data = generateSeries(inLossAmountArray);
+            option.series[1].data = generateSeries(inLossAmountCell);
+            option.series[2].data = generateSeries(inLossAmountLcm1);
+            option.series[3].data = generateSeries(inLossAmountLcm2);
+
+            //设置Y轴刻度最大最小值
+            var max = -10000;
+            var min = 10000;
+            for(var i=0; i<inLossAmountArray.length; i++) {
+                var rate = inLossAmountArray[i].RATIO;
+                if(rate > max) max = rate;
+                if(rate < min) min = rate;
+            }
+            for(var i=0; i<inLossAmountCell.length; i++) {
+                var rate = inLossAmountCell[i].RATIO;
+                if(rate > max) max = rate;
+                if(rate < min) min = rate;
+            }
+            for(var i=0; i<inLossAmountLcm1.length; i++) {
+                var rate = inLossAmountLcm1[i].RATIO;
+                if(rate > max) max = rate;
+                if(rate < min) min = rate;
+            }
+            for(var i=0; i<inLossAmountLcm2.length; i++) {
+                var rate = inLossAmountLcm2[i].RATIO;
+                if(rate > max) max = rate;
+                if(rate < min) min = rate;
+            }
+            min = 0;
+            max = 12;
+
+            option.yAxis.max = max;
+            option.yAxis.min = min;
+            chartInLossAmount.setOption(option);
+
+
+            // 更新表格
+            table.render({
+                elem: '#tableInLossAmount',
+                data: generateTableDate(inLossAmountArray, inLossAmountCell, inLossAmountLcm1, inLossAmountLcm2),
+                cols: [generateTableCols(inLossAmountArray, inLossAmountCell, inLossAmountLcm1, inLossAmountLcm2)],
+                size: 'sm',
+                cellMinWidth: 80
+            });
+            // 监听单元格点击事件
+            table.on('tool(tableInLossAmount)', function (obj) {
+                var data = obj.data;
+                var type = '';
+                switch(obj.event) {
+                    case 'sex' :
+                        type = '性别';
+                        break;
+                    case 'username':
+                        type = '姓名';
+                        break;
+                    case 'age':
+                        type = '年龄';
+                        break;
+
+                }
+                console.log('你点击的单元格的内容是' + data[obj.event], '------对应的列是' + type)
+            });
+
+        };
+
+        /**
+         * 获取Array/cell/lcm内损数据
+         */
+        var getInLossAmount = function(fromMonth, toMonth, plant) {
+            var d = [];
+            $.ajax({
+                type : "post",
+                url: '/inFailureCostRate/getRate',
+                async : false,
+                data: {
+                    fromMonth: fromMonth,
+                    toMonth: toMonth,
+                    fab: plant
+                },
+                success : function(data){
+                    if(data.code === 200) {
+                        d =  data.data;
+                        for(var i=0; i<d.length; i++) {
+                            var o = d[i];
+                            o['FAB_DATE'] = o['MONTH'];
+                            var fab = o['FAB'];
+                            if(fab === 'LCM1' || fab === 'LCM2') {
+                                var a = o['报废损失外包费用']+o['重工报废费用']+o['超耗费用']+o['入库费用'];
+                                var b = o['总制造费用']
+                                o['RATIO'] = (a/b*100).toFixed(3);
+                                o['molecular'] = a;
+                                o['denominator'] = b;
+                                //o['RATIO'] = ((o['报废损失外包费用']+o['重工报废费用']+o['超耗费用'])/o['总制造费用']*100).toFixed(4);
+                            } else {
+                                var a = o['内损费用']+o['报废损失外包费用']+o['重工报废费用'];
+                                var b = o['总制造费用']
+                                o['RATIO'] = (a/b*100).toFixed(3);
+                                o['molecular'] = a;
+                                o['denominator'] = b;
+                            }
+                            if(o['RATIO'] === 'Infinity') o['RATIO'] = 0;
+                            o['RATIO'] = parseFloat(o['RATIO']);
+                        }
+                    } else {
+                        notice.msg(data.msg, {icon: 2});
+                    }
+                }
+            });
+            return d;
+        };
+
+        /* 搜索按钮监听 */
+        form.on('submit(search)', function (d) {
+            if(d.field.month) {
+                var months = d.field.month.split("~");
+                var fromMonth = months[0].trim();
+                var toMonth = months[1].trim();
+                renderCharts(fromMonth, toMonth);
+            } else {
+                notice.msg('请选择起始和结束日期', {icon: 5});
+            }
+            return false;
+        });
+
+        /* 数字转千分位，加',' */
+        var numFormat = function(num) {
+            num = (num/10000).toFixed(1);
+
+            return (num.toString().indexOf ('.') !== -1) ?
+                num.toLocaleString() : num.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
+        };
+    });
+</script>
+</body>
+</html>

@@ -19,7 +19,7 @@
            b.Quantity as quantity,
            b.Currency_FK as currency,
            b.UnitPrice*b.Quantity AS prAmount,
-           (select DISTINCT p.SubTotal from MM_D_PurchaseOrderRequisitionItem p where p.ValidFlag=1 and p.PurchaseRequisitionItemCode = a.SapCode+'_'+cast(b.ItemLine as varchar)) as poAmount
+           (select sum(p.SubTotal) from MM_D_PurchaseOrderRequisitionItem p where p.ValidFlag=1 and p.PurchaseRequisitionItemCode = a.SapCode+'_'+cast(b.ItemLine as varchar)) as poAmount
     FROM MM_D_PurchaseRequisitionItem b
         LEFT JOIN MM_M_PurchaseRequisition a on b.PurchaseRequisition_FK=a.PurchaseRequisition_ID and a.ValidFlag=1 and b.ValidFlag=1 and a.OrderTask_FK='980'
         LEFT JOIN MM_O_MaterialGroup c on c.MaterialGroup_ID=b.MaterialGroup_FK and c.ValidFlag=1
@@ -42,7 +42,7 @@
            b.Quantity as quantity,
            b.Currency_FK as currency,
            b.UnitPrice*b.Quantity AS prAmount ,
-           (select DISTINCT p.SubTotal from MM_D_PurchaseOrderRequisitionItem p where p.ValidFlag=1 and p.PurchaseRequisitionItemCode = a.SapCode+'_'+cast(b.ItemLine as varchar)) as poAmount
+           (select sum(p.SubTotal) from MM_D_PurchaseOrderRequisitionItem p where p.ValidFlag=1 and p.PurchaseRequisitionItemCode = a.SapCode+'_'+cast(b.ItemLine as varchar)) as poAmount
     FROM MM_D_PurchaseRequisitionItem b
         LEFT JOIN MM_M_PurchaseRequisition a on b.PurchaseRequisition_FK=a.PurchaseRequisition_ID and a.ValidFlag=1 and b.ValidFlag=1 and a.OrderTask_FK='980'
         LEFT JOIN MM_O_MaterialGroup c on c.MaterialGroup_ID=b.MaterialGroup_FK and c.ValidFlag=1
@@ -71,7 +71,7 @@
            b.Quantity as quantity,
            b.Currency_FK as currency,
            b.UnitPrice*b.Quantity AS prAmount ,
-           (select DISTINCT p.SubTotal from MM_D_PurchaseOrderRequisitionItem p where p.ValidFlag=1 and p.PurchaseRequisitionItemCode = a.SapCode+'_'+cast(b.ItemLine as varchar)) as poAmount
+           (select sum(p.SubTotal) from MM_D_PurchaseOrderRequisitionItem p where p.ValidFlag=1 and p.PurchaseRequisitionItemCode = a.SapCode+'_'+cast(b.ItemLine as varchar)) as poAmount
     FROM MM_D_PurchaseRequisitionItem b
            LEFT JOIN MM_M_PurchaseRequisition a on b.PurchaseRequisition_FK=a.PurchaseRequisition_ID and a.ValidFlag=1 and b.ValidFlag=1 and a.OrderTask_FK='980'
            LEFT JOIN MM_O_MaterialGroup c on c.MaterialGroup_ID=b.MaterialGroup_FK and c.ValidFlag=1

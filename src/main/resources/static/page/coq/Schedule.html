@@ -245,14 +245,10 @@
                 if(data.code == 200) {
                     var schedules = [];
                     var d = data.data;
-                    var names =[];
-                    for(var key in d){
-                        names.push(key)
-                    }
-                    names = names.sort();
-                    for(var j=0; j<names.length; j++) {
+                    var versions = ['计划','实际'];
+                    for(var j=0; j<versions.length; j++) {
                         var schedule = {};
-                        var version = names[j];
+                        var version = versions[j];
                         schedule.version = version;
                         var nodes = d[version];
                         for(var i=0; i<nodes.length; i++) {
@@ -284,6 +280,7 @@
                         }
                         schedules.push(schedule);
                     }
+                    console.log(schedules);
                     laytpl(demo.innerHTML).render(schedules, function(html){
                         $("#has-buy").html(html);
                     });

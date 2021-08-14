@@ -51,7 +51,7 @@ public interface StationCycleTimeAryRepository extends JpaRepository<StationCycl
      * @param station 重工站点
      * @return
      */
-    @Query(value = "select sum(a.reworkAmount) from StationCycleTimeAry a where a.month=:month and a.project=:project and station<=:station")
+    @Query(value = "select sum(a.reworkAmount) from StationCycleTimeAry a where a.month=:month and a.project=:project and station = :station")
     Double getPerReworkAmountAry(String month, String project, String station);
 
 
@@ -60,7 +60,7 @@ public interface StationCycleTimeAryRepository extends JpaRepository<StationCycl
      * @param project 机种
      * @return String
      */
-    @Query(value = "select a.month from Station_CycleTime_Ary a where a.project=:project order by a.month desc limit 1", nativeQuery = true)
+    @Query(value = "select a.month from station_cycle_time_ary a where a.project=:project order by a.month desc limit 1", nativeQuery = true)
     String getLastMonth(String project);
 
     /**

@@ -19,23 +19,16 @@ public class MardServiceTest extends AbstractTest {
 
     @Test
     public void syncMard() {
-        mardService.syncMard("202103");
-        mardService.syncMard("202102");
-        mardService.syncMard("202101");
+//        mardService.syncMard("202106");
     }
 
     @Test
     public void syncMatnrPrice() {
-        mardService.syncMatnrPrice("202103");
-        mardService.syncMatnrPrice("202102");
-        mardService.syncMatnrPrice("202101");
+        mardService.syncMatnrPrice("202106");
     }
 
     @Test
     public void computeMardMonth() {
-        mardService.computeMardMonth("202104");
-        mardService.computeMardMonth("202103");
-        mardService.computeMardMonth("202102");
-        mardService.computeMardMonth("202101");
+        mardService.computeMardMonth("202106");
     }
 }

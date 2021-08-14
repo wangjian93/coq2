@@ -42,6 +42,7 @@ public class StationCycleAryTimeServiceImpl implements StationCycleTimeAryServic
     @Override
     public void syncStationCycleTime(Date fromDate, Date toDate) {
         stationCycleTimeAryTempRepository.deleteAll();
+        stationCycleTimeAryTempRepository.flush();
         long startTIme = fromDate.getTime();
         long endTime = toDate.getTime();
         long oneDay = 1000 * 60 * 60 * 24;
@@ -51,6 +52,7 @@ public class StationCycleAryTimeServiceImpl implements StationCycleTimeAryServic
             String d = sdf.format(new Date(time));
             List<StationCycleTimeAryTemp> list = oracleMapper.getStationCycleTimeAry(d, d);
             stationCycleTimeAryTempRepository.saveAll(list);
+            stationCycleTimeAryTempRepository.flush();
             time += oneDay;
         }
     }
@@ -81,6 +83,7 @@ public class StationCycleAryTimeServiceImpl implements StationCycleTimeAryServic
             stationCycleTimeAryList.add(stationCycleTimeAry);
         }
         stationCycleTimeAryRepository.saveAll(stationCycleTimeAryList);
+        stationCycleTimeAryRepository.flush();
     }
 
     @Override

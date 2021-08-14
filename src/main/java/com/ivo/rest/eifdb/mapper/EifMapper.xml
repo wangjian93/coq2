@@ -13,17 +13,17 @@
   </select>
 
   <!-- 获取EE单厂别 -->
-  <select id="getPlantForEE" parameterType="java.lang.String" resultType="java.lang.String">
+  <select id="getPlantForEE" parameterType="java.lang.String" resultType="java.util.Map">
     select
            CASE e.Fab_FK
                WHEN 'KS1A' THEN 'ARRAY'
                WHEN 'KS1B' THEN 'CELL'
                WHEN 'KS1C' THEN 'LCM'
                ELSE ''
-               END as plant
+               END as plant,
+        storageLocation_fk
     FROM PP_M_EngineeringExperiment e
-    WHERE e.ValidFlag=1
-      AND e.TrackingNumber = #{ee}
+    WHERE e.TrackingNumber = #{ee}
   </select>
 
   <!-- 获取EE单（Array/Cell）中的产品 -->
@@ -74,16 +74,17 @@
   <!-- 获取仓库报废金额 -->
   <select id="getWhScrap" resultType="java.util.Map">
     select
-      case
-        when costCenter_fk='M0002' then 'LCM1'
-        when costCenter_fk='B3002' then 'LCM2'
-        when costCenter_fk='B2200' then 'CELL'
-        when costCenter_fk='B2100' then 'ARRAY'
-        ELSE ''
-        END fab,
-      trackingNumber,scrapMoneyCny, dateOfOrder, userDepartment_fk, costCenter_fk
+      trackingNumber, expType_fk as expType, costType_fk as costType, costCenter_fk as costCenter, scrapMoneyCny,
+      dateOfOrder, userDepartment_fk as userDepartment, project
     from MM_M_WhScrap
-    where userDepartment_fk in ('10000578','10000684')
-      and costCenter_fk in ('M0002','B3002','B2100','B2200')
+    where orderTask_fk='980' AND dateOfOrder>'2019-01-01' and
+      costCenter_fk in ('M0002','B3002','B2100','B2200', 'BX133', 'M0024')
+  </select>
+
+
+  <!-- 获取部门下的员工工号 -->
+  <select id="getEmployeesByDeptId" resultType="java.lang.String">
+    select e.Employee_ID from HR_O_Employee e left join HR_O_Department d on d.Department_ID=e.Department_FK
+    where e.ValidFlag=1 and d.ValidFlag=1 and d.DeptPath like #{deptId}
   </select>
 </mapper>

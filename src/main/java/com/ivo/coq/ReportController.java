@@ -118,8 +118,7 @@ public class ReportController {
      */
     @PostMapping("/inLossAmountDetail")
     public Result getInLossAmountDetail(String FAB_ID, String FAB_DATE) throws ParseException {
-        FAB_DATE += "-01";
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
         if(StringUtils.equalsAnyIgnoreCase(FAB_ID, PlantEnum.Lcm1.getPlant(), PlantEnum.Lcm2.getPlant())) {
             return  ResultUtil.success(inLossAmountService.getInLossAmountDetailLcm(FAB_ID, sdf.parse(FAB_DATE)));
         } else {
@@ -223,7 +222,7 @@ public class ReportController {
     @RequestMapping("/getWbRatio")
     public Result getWbRatio(String FAB_ID, String fromMonth, String toMonth) throws ParseException {
         fromMonth += "-01";
-        toMonth += "-1";
+        toMonth += "-01";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return  ResultUtil.success(wbRatioService.getWbRatio(sdf.parse(fromMonth), sdf.parse(toMonth), FAB_ID));
     }

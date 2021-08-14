@@ -26,7 +26,7 @@ public interface EifMapper {
      * @param ee 工程实验单
      * @return
      */
-    String getPlantForEE(String ee);
+    Map getPlantForEE(String ee);
 
     /**
      * 获取EE单（Array/Cell）中的产品
@@ -68,5 +68,12 @@ public interface EifMapper {
      * @return
      */
     List<Map> getWhScrap();
+
+    /**
+     * 获取部门下的员工工号
+     * @param deptId 部门ID
+     * @return
+     */
+    List<String> getEmployeesByDeptId(String deptId);
 }
 

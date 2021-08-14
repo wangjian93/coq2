@@ -1,10 +1,290 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>量产品-外部失败成本率</title>
+    <link rel="stylesheet" href="../../../assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../../assets/module/admin.css?v=316" media="all"/>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
 <body>
+<!-- 加载动画 -->
+<div class="page-loading">
+    <div class="ball-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-tabs"></i>
+            <span>量产品-外部失败成本率</span>
+        </div>
+        <div class="layui-card-body">
+            <!-- 表格工具栏 -->
+            <form class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">日期范围:</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="month" name="month" value="2020-01 ~ 2021-05">
+                        </div>
+                    </div>
 
+                    <div class="layui-inline">&emsp;
+                        <button class="layui-btn icon-btn" lay-filter="search" id="search" lay-submit>
+                            <i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- 数据图表 -->
+            <div class="layui-row">
+                <div class="layui-col-md12 layui-col-sm12 layui-col-xs12">
+                    <div id="chartInLossAmount" style="height: 500px;"></div>
+                </div>
+
+                <div class="layui-col-md12 layui-col-sm12 layui-col-xs12">
+                    <table id="tableInLossAmount" lay-filter="tableInLossAmount"></table>
+                </div>
+            </div>
+
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+        </div>
+    </div>
+</div>
+
+
+<!-- js部分 -->
+<script type="text/javascript" src="../../../assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="../../../assets/js/common.js?v=316"></script>
+<script type="text/javascript" src="../../../assets/libs/echarts/echarts.min.js"></script>
+<script>
+    layui.use(['form', 'notice', 'xmSelect', 'laydate', 'table'], function () {
+        var form = layui.form;
+        var $ = layui.$;
+        var notice = layui.notice;
+        var laydate = layui.laydate;
+        var table = layui.table;
+
+        // 日期选择器
+        laydate.render({
+            elem: '#month'
+            ,type: 'month'
+            ,range: '~'
+            ,format: 'yyyy-MM'
+        });
+
+        // 渲染图表
+        var colors = ['#3399FF', '#99CCFF'];
+        var chartInLossAmount = echarts.init(document.getElementById('chartInLossAmount'));
+        var option = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['WB_CELL', 'WB_LCM']
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: [],
+                axisLabel: {
+                    interval: 0,//横轴信息全部显示
+                    //rotate: 60,//60度角倾斜显示
+                    formatter:function(val){
+                        return val.substring(2,4)+'-'+val.substring(4,6);
+                    }
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    show: true,
+                    interval: 'auto',
+                    formatter: '{value} %'
+                },
+                min:0,
+                max:1.2,
+                splitNumber:6
+            },
+            series: [
+                {
+                    name: 'WB_LCM',
+                    type: 'line',
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: '{c}%'
+                    },
+                    data: [],
+                    itemStyle : {
+                        normal : {
+                            color: colors[0],
+                            lineStyle:{
+                                color: colors[0]
+                            }
+                        }
+                    }
+                    //smooth: true // 曲线
+                },
+                {
+                    name: 'WB_CELL',
+                    type: 'line',
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: '{c}%'
+                    },
+                    data: [],
+                    itemStyle : {
+                        normal : {
+                            color: colors[1],
+                            lineStyle:{
+                                color: colors[1]
+                            }
+                        }
+                    }
+                    //smooth: true // 曲线
+                }
+            ]
+        };
+        // 处理点击事件并且跳转到相应的页面
+        chartInLossAmount.on('click', function (params) {
+            window.open('/page/coq/report/OutLoss.html?plant='+encodeURIComponent(params.seriesName)+'&fabDate=' + encodeURIComponent(params.name));
+        });
+        chartInLossAmount.setOption(option);
+
+
+        var generateSeries = function(wbRatio) {
+            var series = new Array(wbRatio.length);
+            for(var i=0; i<wbRatio.length; i++) {
+                series[i] = (wbRatio[i].ratio*100 ).toFixed(4);
+            }
+            return series;
+        };
+
+        var generateXArray = function(wbRatioLcm, wbRatioCell) {
+            var data = wbRatioLcm;
+            if(data.length < wbRatioLcm.length) {
+                data = wbRatioLcm;
+            }
+            if(data.length < wbRatioCell.length) {
+                data = wbRatioCell;
+            }
+            var xArray = new Array(data.length);
+            for(var i=0; i<data.length; i++) {
+                xArray[i] = data[i].month;
+            }
+            xArray.push("");
+            return xArray;
+        };
+
+        // 渲染chart数据
+        var renderCharts = function (fromMonth, toMonth) {
+            var wbRatioLcm = getWbRatio(fromMonth, toMonth, 'LCM');
+            var wbRatioCell =  getWbRatio(fromMonth, toMonth, 'CELL');
+
+            // 更新chart图
+            chartInLossAmount.clear();
+            option.xAxis.data = generateXArray(wbRatioLcm, wbRatioCell);
+            option.series[0].data = generateSeries(wbRatioLcm);
+            option.series[1].data = generateSeries(wbRatioCell);
+            chartInLossAmount.setOption(option);
+
+            // 更新表格
+            table.render({
+                elem: '#tableInLossAmount',
+                data: generateTableDate(wbRatioLcm, wbRatioCell),
+                cols: [generateTableCols(wbRatioLcm, wbRatioCell)],
+                size: 'sm',
+                cellMinWidth: 80
+            });
+        };
+
+        /**
+         * 获取cell/lcm外部失败成本率数据
+         */
+        var getWbRatio = function(fromMonth, toMonth, plant) {
+            var d = [];
+            $.ajax({
+                type : "post",
+                url: '/outFailureCostRate/getRate',
+                async : false,
+                data: {
+                    fromMonth: fromMonth,
+                    toMonth: toMonth,
+                    FAB_ID: plant
+                },
+                success : function(data){
+                    if(data.code === 0) {
+                        d =  data.data;
+                    } else {
+                        notice.msg(data.msg, {icon: 2});
+                    }
+                }
+            });
+            return d;
+        };
+
+        /* 搜索按钮监听 */
+        form.on('submit(search)', function (d) {
+            if(d.field.month) {
+                var months = d.field.month.split("~");
+                var fromMonth = months[0].trim();
+                var toMonth = months[1].trim();
+                renderCharts(fromMonth, toMonth);
+            } else {
+                notice.msg('请选择起始和结束日期', {icon: 5});
+            }
+            return false;
+        });
+
+
+        var generateTableCols = function(wbRatioLcm, wbRatioCell) {
+            var data = wbRatioLcm;
+            if(data.length < wbRatioCell.length) {
+                data = wbRatioCell;
+            }
+            var cols = new Array(data.length+1);
+            cols[0] = {field: 'date', title: '日期', align: 'center', fixed: 'left'};
+            for(var i=0; i<data.length; i++) {
+                cols[i+1] = {field: data[i].month, title: data[i].month, align: 'center'};
+            }
+            return cols;
+        };
+
+        var generateTableDate = function(wbRatioLcm, wbRatioCell) {
+            var data = [{"date":"内损金额"},{"date":"WB_LCM"}, {"date":"内损金额"},{"date":"WB_CELL"}];
+            for(var i=0; i<wbRatioLcm.length; i++) {
+                data[0][wbRatioLcm[i].month]  = numFormat(wbRatioLcm[i].price+wbRatioLcm[i].obaAmount) + ' 万';
+                data[1][wbRatioLcm[i].month]  = (wbRatioLcm[i].ratio*100).toFixed(3);
+            }
+            for(var i=0; i<wbRatioCell.length; i++) {
+                data[2][wbRatioLcm[i].month]  = numFormat(wbRatioCell[i].price+wbRatioCell[i].obaAmount) + ' 万';
+                data[3][wbRatioCell[i].month]  = (wbRatioCell[i].ratio*100).toFixed(3);
+            }
+            return data;
+        };
+
+        /* 数字转千分位，加',' */
+        var numFormat = function(num) {
+            num = (num/10000).toFixed(1);
+
+            return (num.toString().indexOf ('.') !== -1) ?
+                num.toLocaleString() : num.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
+        };
+    });
+</script>
 </body>
 </html>

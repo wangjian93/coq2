@@ -12,10 +12,12 @@ import com.ivo.coq.project.service.SampleService;
 import com.ivo.rest.oracle.OracleService;
 import com.ivo.station.service.StationCostService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +69,13 @@ public class ProductionCostDetailServiceImpl implements ProductionCostDetailServ
             //LCM按工单计算生产费用
             if(PlantEnum.Lcm.getPlant().equals(fab)) {
                 for(EngineeringExperiment engineeringExperiment : engineeringExperimentList) {
+                    //  模组入库2590仓不计算生产费用
+                    if(StringUtils.equals(engineeringExperiment.getPlant(), "LCM") &&
+                            StringUtils.containsAny(engineeringExperiment.getStorageLocation(), "2600","2590")) {
+                        System.out.println("生产费用不算2600");
+                        continue;
+                    }
+
                     List<EngineeringExperimentWo> woList = engineeringExperiment.getWoList();
                     for(EngineeringExperimentWo wo : woList) {
                         ProductionCostDetail productionCostDetail = new ProductionCostDetail(sample.getProject(), sample.getStage(), sample.getTime());
@@ -97,13 +106,18 @@ public class ProductionCostDetailServiceImpl implements ProductionCostDetailServ
     public void computeProductionCostDetail(String project) {
         log.info("计算生产费用详细 " + project);
         List<ProductionCostDetail> productionCostDetailList = getProductionCostDetail(project);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
         for(ProductionCostDetail productionCostDetail : productionCostDetailList) {
             String fab = productionCostDetail.getPlant();
             Double perProductAmount = 0D;
             Double amount = 0D;
             Double shippingQty = 0D;
+            String month = sdf.format(productionCostDetail.getInQuantity());
+            if(StringUtils.containsIgnoreCase(project, " ")) {
+                project = project.split(" ")[0];
+            }
             if(PlantEnum.Array.getPlant().equals(fab)) {
-                perProductAmount  = stationCostService.getPerProductAmountAry(project, null);
+                perProductAmount  = stationCostService.getPerProductAmountAry(month, project);
                 amount = DoubleUtil.multiply(perProductAmount, productionCostDetail.getInQuantity());
             }
             else if(PlantEnum.Cell.getPlant().equals(fab)) {
@@ -116,7 +130,7 @@ public class ProductionCostDetailServiceImpl implements ProductionCostDetailServ
                 String product = productionCostDetail.getProductId();
                 shippingQty = oracleService.getWoShippingQty(wo);
                 shippingQty = shippingQty == null ? 0d : shippingQty;
-                perProductAmount  = stationCostService.getPerProductAmountLcm(product,null);
+                perProductAmount  = stationCostService.getPerProductAmountLcm(month, product);
                 amount = DoubleUtil.multiply(perProductAmount, shippingQty);
                 productionCostDetail.setWoShippingQty(shippingQty);
             }

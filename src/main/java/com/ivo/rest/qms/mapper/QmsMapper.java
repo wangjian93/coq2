@@ -5,6 +5,7 @@ import com.ivo.rest.qms.entity.QmsVerification;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wj
@@ -26,4 +27,10 @@ public interface QmsMapper {
      * @return
      */
     List<QmsOba> getQmsOba(String project);
+
+    /**
+     * 获取OBA数据
+     * @return
+     */
+    List<Map> getOba();
 }

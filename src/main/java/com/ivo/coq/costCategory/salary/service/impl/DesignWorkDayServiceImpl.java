@@ -104,6 +104,8 @@ public class DesignWorkDayServiceImpl implements DesignWorkDayService {
                 designWorkDay.setVersion(ver);
                 designWorkDay.setValidFlag(true);
                 designWorkDayList.add(designWorkDay);
+
+                
             }
             saveRoleWorkDays(designWorkDayList);
         } catch (Exception e) {

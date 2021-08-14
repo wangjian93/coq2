@@ -235,11 +235,6 @@ public class ReworkScrapLcmServiceImpl implements ReworkScrapLcmService {
         ca.setTime(fromDate);
         ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));
         toDate = ca.getTime();
-        List<ReworkScrapMonth> list = reworkScrapMonthRepository.findByMonth(month);
-        if(list.size()>0) {
-            reworkScrapMonthRepository.deleteAll(list);
-        }
-
         ReworkScrapMonth lcm1 = new ReworkScrapMonth();
         ReworkScrapMonth lcm2 = new ReworkScrapMonth();
 

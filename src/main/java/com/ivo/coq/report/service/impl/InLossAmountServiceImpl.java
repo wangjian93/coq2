@@ -78,43 +78,19 @@ public class InLossAmountServiceImpl implements InLossAmountService {
 
     @Override
     public List<InLossAmount> getInLossAmount(String FAB_ID, Date fromDate, Date toDate) {
-        if(StringUtils.equalsIgnoreCase(FAB_ID, PlantEnum.Array.getPlant())) {
-            FAB_ID = "ARY";
-        } else if(StringUtils.equalsIgnoreCase(FAB_ID, PlantEnum.Cell.getPlant())) {
-            FAB_ID = "CEL";
-        } else if(StringUtils.equalsIgnoreCase(FAB_ID, PlantEnum.Lcm1.getPlant())) {
-            FAB_ID = "1000";
-        } else if(StringUtils.equalsIgnoreCase(FAB_ID, PlantEnum.Lcm2.getPlant())) {
-            FAB_ID = "3000";
-        }
+
         return inLossAmountRepository.findByPlantAndFabDateBetween(FAB_ID, fromDate, toDate);
     }
 
     @Override
     public List<InLossAmountDetailArrayCell> getInLossAmountDetailArrayCell(String FAB_ID, Date FAB_DATE) {
-        if(StringUtils.equalsIgnoreCase(FAB_ID, PlantEnum.Array.getPlant())) {
-            FAB_ID = "ARY";
-        } else if(StringUtils.equalsIgnoreCase(FAB_ID, PlantEnum.Cell.getPlant())) {
-            FAB_ID = "CEL";
-        } else if(StringUtils.equalsIgnoreCase(FAB_ID, PlantEnum.Lcm1.getPlant())) {
-            FAB_ID = "1000";
-        } else if(StringUtils.equalsIgnoreCase(FAB_ID, PlantEnum.Lcm2.getPlant())) {
-            FAB_ID = "3000";
-        }
+
         return inLossAmountDetailArrayCellRepository.findByFabIdAndFabDate(FAB_ID, FAB_DATE);
     }
 
     @Override
     public List<InLossAmountDetailLcm> getInLossAmountDetailLcm(String FAB_ID, Date FAB_DATE) {
-        if(StringUtils.equalsIgnoreCase(FAB_ID, PlantEnum.Array.getPlant())) {
-            FAB_ID = "ARY";
-        } else if(StringUtils.equalsIgnoreCase(FAB_ID, PlantEnum.Cell.getPlant())) {
-            FAB_ID = "CEL";
-        } else if(StringUtils.equalsIgnoreCase(FAB_ID, PlantEnum.Lcm1.getPlant())) {
-            FAB_ID = "1000";
-        } else if(StringUtils.equalsIgnoreCase(FAB_ID, PlantEnum.Lcm2.getPlant())) {
-            FAB_ID = "3000";
-        }
+
         return inLossAmountDetailLcmRepository.findByPlantAndFabDate(FAB_ID, FAB_DATE);
     }
 

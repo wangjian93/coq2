@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>jQuery自定义弹窗插件dialog.js</title>
+		<link rel="stylesheet" type="text/css" href="dialog.css?345" />
+	</head>
+	<body>
+		<input type="text" id="superDialog" onclick="openDialog1()" readonly />
+		<button type="button" onclick="openDialog2()">打开弹框</button>
+
+		<script src="jquery.js"></script>
+		<script src="selectDialog.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- 引入 layui.css -->
+        <link rel="stylesheet" href="layui/css/layui.css">
+        <!-- 引入 layui.js -->
+        <script src="layui/layui.js" type="text/javascript" charset="utf-8"></script>
+
+		<script type="text/javascript">
+            function openDialog1() {
+
+                var cols = [{field: 'name1', title: '名字1'}, {field: 'name2', title: '名字2'}];
+                var  data = [{"name1": "w", "name2": "w9"}, {"name1": "w", "name2": "wj"}];
+
+                selectDialog({
+                    id: "superDialog",
+                    cols: cols,
+                    data: data,
+                    callback: function(d) {
+                        $("#superDialog").val(d.name2);
+                    }
+                });
+            }
+
+            function openDialog2() {
+                var url = "http://localhost:8080/coq/category/salaryCost/normalHoursDetail/S0172 R0";
+                var cols = [
+                    {field:'role', title: '角色'},
+                    {field:'workDays', title: '工作天数'},
+                    {field:'delayDays', title: 'Delay的天数'},
+                    {field:'preventionAmount', title: '预防费用'},
+                    {field:'inLossAmount', title: '内损费用'}
+                ];
+
+                selectDialog({
+                    id: "superDialog",
+                    //cols: cols,
+                    url: url,
+                    callback: function(d) {
+                        $("#superDialog").val(d.role);
+                    }
+                });
+            }
+
+
+
+            function test(id, url, callback) {
+                var url = "http://localhost:8080/coq/category/salaryCost/normalHoursDetail/S0172 R0";
+                var cols = [
+                    {field:'role', title: '角色'},
+                    {field:'workDays', title: '工作天数'},
+                    {field:'delayDays', title: 'Delay的天数'},
+                    {field:'preventionAmount', title: '预防费用'},
+                    {field:'inLossAmount', title: '内损费用'}
+                ];
+
+                selectDialog({
+                    id: "superDialog",
+                    cols: cols,
+                    url: url,
+                    callback: function(d) {
+                        $("#superDialog").val(d.role);
+                    }
+                });
+            }
+		</script>
+
+	</body>
+</html>

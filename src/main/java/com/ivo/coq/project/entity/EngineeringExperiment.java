@@ -1,6 +1,5 @@
 package com.ivo.coq.project.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ivo.common.model.AutoIncreaseEntityModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -59,6 +58,10 @@ public class EngineeringExperiment extends AutoIncreaseEntityModel {
     @OneToMany(mappedBy = "engineeringExperiment", cascade = CascadeType.ALL)
     List<EngineeringExperimentWo> woList;
 
+    /**
+     * 入库仓位
+     */
+    private String storageLocation;
 
     public EngineeringExperiment() {}
 

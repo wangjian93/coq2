@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * 仓库报废金额By费用
+ * 量产品报废损失(外包)
  * @author wj
  * @version 1.0
  */
@@ -24,7 +24,7 @@ public class WhScrapMonth extends AutoIncreaseEntityModel {
     private String month;
 
     /**
-     *  LCM1 LCM2
+     *  LCM1 LCM2  ARRAY CELL
      */
     private String fab;
 

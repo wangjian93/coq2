@@ -2,6 +2,7 @@ package com.ivo.test.rest;
 
 import com.ivo.coq.report.service.WbRatioService;
 import com.ivo.rest.RestService;
+import com.ivo.rest.bm.BmService;
 import com.ivo.rest.eifdb.EifService;
 import com.ivo.rest.oracle.OracleService;
 import com.ivo.test.AbstractTest;
@@ -32,6 +33,9 @@ public class RestServiceTest extends AbstractTest {
     @Autowired
     private EifService eifService;
 
+    @Autowired
+    private BmService bmService;
+
     @Test
     public void test() throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -44,6 +48,8 @@ public class RestServiceTest extends AbstractTest {
 
     @Test
     public void test2() {
-        System.out.println(oracleService.getWoAmount("IL1W212001"));
+        String pr = eifService.getPrByOee("OEE200200012");
+        List list = bmService.getBmOutsourcingThinning(pr);
+        list.size();
     }
 }

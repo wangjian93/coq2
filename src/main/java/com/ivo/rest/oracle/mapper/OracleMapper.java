@@ -193,4 +193,25 @@ public interface OracleMapper {
      * @return
      */
     List<Map> getTotalProductCost();
+
+    /**
+     * 获取Ary重工报废数据
+     * @param fromDate 开始日期
+     * @param toDate 结束日期
+     * @return
+     */
+    List<Map> getReworkScrapAry(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
+
+    /**
+     * 获取Cell重工报废数据
+     * @param fromDate 开始日期
+     * @param toDate 结束日期
+     * @return
+     */
+    List<Map> getReworkScrapCell(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
+
+
+    List<Map> MSC_LOCATION_COST();
+
+    List<Map> WMM_SCRAP_DETAIL();
 }

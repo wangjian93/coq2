@@ -32,7 +32,17 @@ public class TotalProductCostServiceImpl implements TotalProductCostService {
         List<TotalProductCost> list = new ArrayList<>();
         for(Map map : mapList) {
             TotalProductCost totalProductCost = new TotalProductCost();
-            totalProductCost.setFab((String) map.get("FAB_ID"));
+            String fab = (String) map.get("FAB_ID");
+            if(fab.equals("CEL")) {
+                fab = "CELL";
+            }
+            if(fab.equals("ARY")) {
+                fab = "ARRAY";
+            }
+
+            totalProductCost.setFab(fab);
+
+
             totalProductCost.setMonth((String) map.get("MON"));
             double d1 = 0;
             if(map.get("PRICE")!=null) {

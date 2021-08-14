@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wj
@@ -109,8 +110,13 @@ public class EngineeringExperimentServiceImpl implements EngineeringExperimentSe
         log.info("同步获取工程实验单的厂别 " + project);
         List<EngineeringExperiment> engineeringExperimentList = getEngineeringExperiments(project);
         for(EngineeringExperiment engineeringExperiment : engineeringExperimentList) {
-            String plant = eifService.getPlantForEE(engineeringExperiment.getEeOrder()).trim().toUpperCase();
-            engineeringExperiment.setPlant(plant);
+            Map map = eifService.getPlantForEE(engineeringExperiment.getEeOrder());
+            String plant = (String) map.get("plant");
+            if (plant == null) plant = "";
+            String storageLocation = (String) map.get("storageLocation_fk");
+            if(storageLocation == null) storageLocation = "";
+            engineeringExperiment.setPlant(plant.trim().toUpperCase());
+            engineeringExperiment.setStorageLocation(storageLocation);
         }
         repository.saveAll(engineeringExperimentList);
     }

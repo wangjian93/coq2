@@ -1,5 +1,6 @@
 package com.ivo.product.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ivo.common.model.AutoIncreaseEntityModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,7 @@ import java.util.Date;
 @Table(name = "Rework_Scrap_Lcm1")
 public class ReworkScrapLcm1 extends AutoIncreaseEntityModel {
     @Column(name = "FAB_DATE")
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date fabDate;
     private String WO_ID;
     private String CR_OPE_ID;

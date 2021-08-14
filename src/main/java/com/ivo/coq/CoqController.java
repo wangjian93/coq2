@@ -47,10 +47,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * COQ 数据接口
@@ -202,13 +199,19 @@ public class CoqController {
             map2.put("stage", milestone.getMilestone());
             map2.put("date", sdf.format(milestone.getEndDate()));
             list2.add(map2);
-            if(StringUtils.equalsAnyIgnoreCase( milestone.getMilestone(), "Kick Off", "NPRB", "Design review", "1st Light on") ) {
+
+            Date endDate = milestone.getEndDate();
+            Date planDate = milestone.getEndDatePlan();
+            Date nowDate = new Date();
+            if(endDate.before(nowDate) && !endDate.after(planDate)) {
                 map2.put("status", "COMP");
+            } else if(endDate.before(nowDate) && endDate.after(planDate)) {
+                map2.put("status", "DELAY");
             }
         }
         Map<String, List> map = new HashMap<>();
-        map.put("V00", list1);
-        map.put("V01", list2);
+        map.put("计划", list1);
+        map.put("实际", list2);
         return ResultUtil.success(map);
     }
 

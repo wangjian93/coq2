@@ -34,7 +34,7 @@ public class EifServiceImpl implements EifService {
     }
 
     @Override
-    public String getPlantForEE(String ee) {
+    public Map getPlantForEE(String ee) {
         log.info("数据接口：EE单的厂别 " + ee);
         return eifMapper.getPlantForEE(ee);
     }

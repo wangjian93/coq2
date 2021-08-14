@@ -12,8 +12,14 @@ public interface WhScrapService {
     void syncWhScrap();
 
     /**
-     * By月计算仓库报废金额
+     * 计算量产报废损失(外包)
      * @param month 月份
      */
     void computeWhScrapMonth(String month);
+
+    /**
+     * 计算量产RMA费用
+     * @param month
+     */
+    void computeRmaMonth(String month);
 }

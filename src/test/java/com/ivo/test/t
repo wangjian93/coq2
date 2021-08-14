@@ -1,0 +1,51 @@
+set_button_msob_false;
+
+    DECLARE
+
+    oldmsg    varchar2(2);
+    q_str     varchar2(250);
+    err_msg   varchar2(200);
+    v_default_where	varchar2(2000);
+    V_PTDF_HEADER_ID  number;
+    v_price_type varchar2(30);
+    BEGIN
+    IF :GIB_PT_DOMESTIC_HEADER_V.period_name IS NULL OR
+     :GIB_PT_DOMESTIC_HEADER_V.INVPERIOD_ID IS NULL THEN
+    message('ÇëÑ¡Ôñ¿â´æÆÚ¼ä');
+    message('ÇëÑ¡Ôñ¿â´æÆÚ¼ä');
+    go_item('GIB_PT_DOMESTIC_HEADER_V.period_name');
+    RAISE form_trigger_failure;
+    END IF;
+    go_block('GIB_PT_DOMESTIC_HEADER_V');
+    IF :system.record_status IN ('CHANGED', 'INSERT') THEN
+    commit_form;
+    END IF;
+    go_block('GIB_PT_DOMESTIC_ITEM_HEADER_V');
+    IF :system.block_status IN ('CHANGED', 'INSERT') THEN
+    commit_form;
+    END IF;
+    DF_UNITPRICE_COMPUTE(:parameter.p_sob_id ,
+                       :GIB_PT_DOMESTIC_HEADER_V.PTDF_HEADER_ID ,
+                       --v_price_type,
+                       :GIB_PT_DOMESTIC_HEADER_V.paytax_date,
+                         err_msg ) ;
+    IF err_msg IS NOT NULL THEN
+    MESSAGE(err_msg);
+    ELSE
+    MESSAGE('µ¥¼Û¼ÆËã×÷ÒµÍê³É£¡');
+
+    END IF;
+
+    v_default_where := 	get_block_property('GIB_PT_DOMESTIC_HEADER_V', DEFAULT_WHERE);
+    go_block('GIB_PT_DOMESTIC_HEADER_V');
+    V_PTDF_HEADER_ID := :GIB_PT_DOMESTIC_HEADER_V.PTDF_HEADER_ID;
+    oldmsg          := :System.Message_Level;
+    q_str           := 'PTDF_HEADER_ID =' || V_PTDF_HEADER_ID;
+    set_block_property('GIB_PT_DOMESTIC_HEADER_V', DEFAULT_WHERE, q_str);
+
+	:System.Message_Level := '10';
+    Execute_Query;
+	:System.Message_Level := oldmsg;
+    set_block_property('GIB_PT_DOMESTIC_HEADER_V', DEFAULT_WHERE, v_default_where);
+
+    end;

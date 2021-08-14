@@ -47,7 +47,7 @@
 
   <!-- 获取料号的单价 -->
   <select id="getMaterialPrice" parameterType="java.lang.String" resultType="java.lang.Double">
-    select sum(price)
+    select max(price)
     from (
         select matnr , bwkey, case vprsv when 'S' then stprs else verpr end as price
         from  EXF.SZA_PSI_MBEW
@@ -194,7 +194,9 @@
 
   <!-- 获取LCM的内损成本 -->
   <select id="getInLossAmountArrayLcm" resultType="com.ivo.coq.report.entity.InLossAmount">
-    SELECT FAB_DATE as fabDate, PLANT, SUM(AMOUNT) as amount FROM(
+    SELECT FAB_DATE as fabDate,
+        CASE PLANT when '1000' then 'LCM2' WHEN '3000' THEN 'LCM1' else PLANT end as PLANT,
+        SUM(AMOUNT) as amount FROM(
     SELECT FAB_DATE,ZYEAR,ZMONTH,TT.PROD_ID,TT.VERID,WO_ID,PLANT,SUM(AMOUNT) AMOUNT ,PROD_MODEL_ID,PROD_SIZE_ID FROM (
     select ZYEAR,ZMONTH,PROD_ID,VERID,WO_ID,MTRL_GROUP,GROUPNAME,MTRL_ID,PLANT,qty,QTY_Y,QTY_UNIT,QTY_PROD,PRICE,Q_RATIO,AMOUNT AMOUNT_A,
     AMOUNT1 AMOUNT_B,AMOUNT-AMOUNT1 AMOUNT,FAB_DATE
@@ -251,7 +253,9 @@
 
   <!-- 获取ARRAY/CELL的内损成本 -->
   <select id="getInLossAmountArrayCell" resultType="com.ivo.coq.report.entity.InLossAmount">
-    SELECT FAB_DATE as fabDate, FAB_ID as plant, SUM(PRICE) as amount
+    SELECT FAB_DATE as fabDate,
+           CASE FAB_ID when 'CEL' then 'CELL' WHEN 'ARY' THEN 'ARRAY' else FAB_ID end as PLANT,
+           SUM(PRICE) as amount
     FROM(SELECT TT.*,YY.PRICE FROM (
     select  FAB_DATE,FAB_ID,PFCD,PROD_ID,
     PROD_SIZE_ID,PROD_MODEL_ID,SUM(SCRAP_SHT) SCRAP_SHT,SUM(SCRAP_PNL) SCRAP_PNL,CUT,VER_ID,FAB_SCRAP_TYPE from (
@@ -290,7 +294,8 @@
 
   <!-- 获取Array/cell/lcm的总制造成本 -->
   <select id="getTotalAmount" resultType="com.ivo.coq.report.entity.TotalAmount">
-    SELECT FAB_ID AS plant, PRICE, AMOUNT, MON
+    SELECT FAB_ID AS plant,
+           PRICE, AMOUNT, MON
     FROM (
            SELECT A.FAB_ID, PRICE, AMOUNT, MON
            FROM (
@@ -335,47 +340,57 @@
 
   <!-- 获取ARRAY/CELL的内损成本明细 -->
   <select id="getInLossAmountDetailArrayCell" resultType="com.ivo.coq.report.entity.InLossAmountDetailArrayCell">
-    SELECT FAB_DATE as fabDate, FAB_ID as fabId, PFCD, PROD_ID as prodId, MTRL_ID as mtrlId, PROD_SIZE_ID as prodSizeId,
+    SELECT FAB_DATE as fabDate,
+           CASE FAB_ID when 'CEL' then 'CELL' WHEN 'ARY' THEN 'ARRAY' else FAB_ID end as fabId,
+           PFCD, PROD_ID as prodId, MTRL_ID as mtrlId, PROD_SIZE_ID as prodSizeId,
            PROD_MODEL_ID as prodModelId, SCRAP_SHT as scrapSht, SCRAP_PNL as scrapPnl, CUT, VER_ID as verId, FAB_SCRAP_TYPE as fabScrapType, PRICE
     FROM (
-        SELECT TT.*,YY.PRICE FROM (
-                                select  FAB_DATE,FAB_ID,PFCD,PROD_ID,
-                                        MTRL_ID,PROD_SIZE_ID,PROD_MODEL_ID,SUM(SCRAP_SHT) SCRAP_SHT,SUM(SCRAP_PNL) SCRAP_PNL,CUT,VER_ID,FAB_SCRAP_TYPE from (
-                                                                                                                                                              SELECT  A.PROD_KEY,FAB_ID,TRUNC(FAB_DATE,'mm') FAB_DATE,FAB_SCRAP_TYPE,A.MTRL_ID,B.PROD_SIZE_ID,A.PROD_TYPE,LOCATION,A.PROD_ID,SUBSTR(B.PROD_ID,4)PFCD,B.PROD_NAME, A.RSN_CODE1,B.PROD_MODEL_ID,A.SCRAP_QTY SCRAP_PNL,A.SCRAP_QTY/C.CUT  SCRAP_SHT,C.CUT,
-                                                                                                                                                                      case WHEN substr(a.PROD_ID,1,2) IN ('15') and fab_id in ('CEL') then 'TFT'
-                                                                                                                                                                           WHEN substr(a.PROD_ID,1,2) IN ('16') and fab_id in ('CEL') then 'CF'
-                                                                                                                                                                           WHEN substr(a.PROD_ID,1,2) IN ('41') and fab_id in ('CEL') then 'POL'
-                                                                                                                                                                           WHEN substr(a.PROD_ID,1,2) IN ('15','51') and fab_id in ('ARY') then 'TFT'  else ' ' end mtrl_type,B.VER_ID
-                                                                                                                                                              FROM ( SELECT  * FROM DM.MSC_SCRAP_LOCATION WHERE FAB_ID IN ('ARY','CEL'))  A
-                                                                                                                                                                     LEFT JOIN DM.M_PROD_D B ON A.PROD_KEY=B.PROD_KEY
-                                                                                                                                                                     LEFT JOIN
-                                                                                                                                                                   (  select b.prod_key,to_number(code_value)cut
-                                                                                                                                                                      from dm.m_prod_d b ,sor.wad_code c
-                                                                                                                                                                      where  b.prod_size_id = c.code_id
-                                                                                                                                                                        AND code_type = 'Size'  and b.PROD_SUB_TYPE='PROD'
-                                                                                                                                                                   )C
-                                                                                                                                                                   ON A.PROD_KEY=C.PROD_KEY
-                                                                                                                                                            )
-                                GROUP BY FAB_DATE,FAB_ID,PFCD,PROD_ID,
-                                         MTRL_ID,PROD_SIZE_ID,PROD_MODEL_ID,CUT,VER_ID,FAB_SCRAP_TYPE
-                              )TT
-                                LEFT JOIN
-                              (
-                                SELECT FAB_ID,TRUNC("DATE",'mm') FAB_DATE, A.PROD_ID, SUBSTR(B.PROD_ID,4) PFCD, SUM(PRICE)PRICE ,FAB_SCRAP_TYPE
-                                FROM DM.MSC_LOCATION_COST  A
-                                       LEFT JOIN DM.M_PROD_D B
-                                                 ON A.PROD_KEY=B.PROD_KEY
-                                WHERE FAB_ID IN  ('ARY','CEL')
-                                  AND FAB_SCRAP_TYPE IN ('ARY责至LOT2Scrap', 'CEL责至LOT2Scrap','CF责至LOT2Scrap','LOT2前判ARY责Scrap','LOT2前判CEL责Scrap','LOT2前判CF责Scrap','ARY厂内Scrap')
-                                GROUP BY FAB_ID,TRUNC("DATE",'mm'), A.PROD_ID, SUBSTR(B.PROD_ID,4) ,FAB_SCRAP_TYPE
-                              )YY
-                              ON TT.FAB_DATE=YY.FAB_DATE  AND TT.PFCD=YY.PFCD  AND TT.PROD_ID=YY.PROD_ID
-    ) ORDER BY FAB_DATE
+           SELECT TT.*,YY.PRICE FROM (
+                                       select  FAB_DATE,FAB_ID,PFCD,PROD_ID,
+                                               MTRL_ID,PROD_SIZE_ID,PROD_MODEL_ID,
+                                               SUM(SCRAP_SHT) SCRAP_SHT,
+                                               SUM(SCRAP_PNL) SCRAP_PNL,CUT,VER_ID,FAB_SCRAP_TYPE
+                                       from (
+                                              SELECT  A.PROD_KEY,FAB_ID,TRUNC(FAB_DATE,'mm') FAB_DATE,
+                                                      FAB_SCRAP_TYPE,A.MTRL_ID,B.PROD_SIZE_ID,A.PROD_TYPE,LOCATION,A.PROD_ID,
+                                                      SUBSTR(B.PROD_ID,4)PFCD,B.PROD_NAME, A.RSN_CODE1,B.PROD_MODEL_ID,
+                                                      A.SCRAP_QTY SCRAP_PNL,A.SCRAP_QTY/C.CUT  SCRAP_SHT,C.CUT,
+                                                      case WHEN substr(a.PROD_ID,1,2) IN ('15') and fab_id in ('CEL') then 'TFT'
+                                                           WHEN substr(a.PROD_ID,1,2) IN ('16') and fab_id in ('CEL') then 'CF'
+                                                           WHEN substr(a.PROD_ID,1,2) IN ('41') and fab_id in ('CEL') then 'POL'
+                                                           WHEN substr(a.PROD_ID,1,2) IN ('15','51') and fab_id in ('ARY') then 'TFT'
+                                                           else ' '
+                                                        end mtrl_type,B.VER_ID
+                                              FROM
+                                                  ( SELECT  * FROM DM.MSC_SCRAP_LOCATION WHERE FAB_ID IN ('ARY','CEL'))  A
+                                                    LEFT JOIN DM.M_PROD_D B ON A.PROD_KEY=B.PROD_KEY
+                                                    LEFT JOIN
+                                                (  select b.prod_key,to_number(code_value)cut
+                                                   from dm.m_prod_d b ,sor.wad_code c
+                                                   where  b.prod_size_id = c.code_id
+                                                     AND code_type = 'Size'  and b.PROD_SUB_TYPE='PROD'
+                                                )C ON A.PROD_KEY=C.PROD_KEY
+                                            )GROUP BY FAB_DATE,FAB_ID,PFCD,PROD_ID,
+                                                      MTRL_ID,PROD_SIZE_ID,PROD_MODEL_ID,CUT,VER_ID,FAB_SCRAP_TYPE
+                                     )TT
+                                       LEFT JOIN
+                                     (
+                                       SELECT FAB_ID,TRUNC("DATE",'mm') FAB_DATE, A.PROD_ID, SUBSTR(B.PROD_ID,4) PFCD, SUM(PRICE)PRICE ,FAB_SCRAP_TYPE
+                                       FROM DM.MSC_LOCATION_COST  A
+                                              LEFT JOIN DM.M_PROD_D B ON A.PROD_KEY=B.PROD_KEY
+                                       WHERE FAB_ID IN  ('ARY','CEL')
+                                         AND FAB_SCRAP_TYPE IN ('ARY责至LOT2Scrap', 'CEL责至LOT2Scrap','CF责至LOT2Scrap','LOT2前判ARY责Scrap','LOT2前判CEL责Scrap','LOT2前判CF责Scrap','ARY厂内Scrap')
+                                       GROUP BY FAB_ID,TRUNC("DATE",'mm'), A.PROD_ID, SUBSTR(B.PROD_ID,4) ,FAB_SCRAP_TYPE
+                                     )YY
+                                     ON TT.FAB_DATE=YY.FAB_DATE  AND TT.PFCD=YY.PFCD  AND TT.PROD_ID=YY.PROD_ID  AND TT.FAB_ID=YY.FAB_ID
+         ) ORDER BY FAB_DATE
   </select>
 
   <!-- 获取LCM的内损成本明细 -->
   <select id="getInLossAmountDetailLcm" resultType="com.ivo.coq.report.entity.InLossAmountDetailLcm">
-    select FAB_DATE as fabDate,ZYEAR,ZMONTH,PROD_ID as prodId,VERID,WO_ID as woId,PLANT,AMOUNT,PROD_MODEL_ID as prodModelId,
+    select FAB_DATE as fabDate,ZYEAR,ZMONTH,PROD_ID as prodId,VERID,WO_ID as woId,
+           CASE PLANT when '1000' then 'LCM2' WHEN '3000' THEN 'LCM1' else PLANT end as PLANT,
+           AMOUNT,PROD_MODEL_ID as prodModelId,
     PROD_SIZE_ID as prodSizeId
     from (
     SELECT FAB_DATE,ZYEAR,ZMONTH,TT.PROD_ID,TT.VERID,WO_ID,PLANT,SUM(AMOUNT) AMOUNT ,PROD_MODEL_ID,PROD_SIZE_ID FROM (
@@ -437,7 +452,7 @@
     from exf.SAP_AUFM where bwart in ('101','102') and aufnr = #{wo}
   </select>
 
-
+  <!-- 获取外部失败成本率数据 -->
   <select id="getWbRatio" resultType="com.ivo.coq.report.entity.WbRatio">
     SELECT A.FAB_ID as fabId, PRICE, AMOUNT, to_char(A."DATE",'yyyy-mm') MON, PRICE/AMOUNT ratio
     FROM (
@@ -455,18 +470,32 @@
 
 
   <!-- 获取ARY的生产履历的重工报废数据 -->
-<!--  <select id="getAryReworkScrap">-->
-<!--    select a.*,b.prod_model_id from (-->
-<!--    select fab_date,prod_id,cr_route_id route_id,cr_ope_id ope_id ,EVT_CATE,count(*) qty-->
-<!--    from sor.wpp_asht_his a-->
-<!--    where-->
-<!--    fab_date &gt;= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')-->
-<!--    and ( (EVT_CATE IN ('LOGF', 'LFAB', 'LFRW', 'LFAT') and (cr_route_id like 'R%P' OR cr_route_id like 'B%')) or EVT_CATE ='SCRP')-->
-<!--    group by fab_date,prod_id,cr_route_id,cr_ope_id,EVT_CATE-->
-<!--    ) a left join (-->
-<!--    select substr(prod_id,4) newPord,prod_model_id from dm.m_prod_d-->
-<!--    ) b on a.prod_id=b.newPord-->
-<!--  </select>-->
+  <select id="getReworkScrapAry" resultType="java.util.Map">
+    select a.*,b.prod_model_id from (
+    select fab_date,prod_id,cr_route_id route_id,cr_ope_id ope_id ,EVT_CATE,count(*) qty
+    from sor.wpp_asht_his a
+    where
+    fab_date >= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+    and ( (EVT_CATE IN ('LOGF', 'LFAB', 'LFRW', 'LFAT') and (cr_route_id like 'R%P' OR cr_route_id like 'B%')) or EVT_CATE ='SCRP')
+    group by fab_date,prod_id,cr_route_id,cr_ope_id,EVT_CATE
+    ) a left join (
+    select substr(prod_id,4) newPord,prod_model_id from dm.m_prod_d
+    ) b on a.prod_id=b.newPord
+  </select>
+
+  <!-- 获取CELL的生产履历的重工报废数据 -->
+  <select id="getReworkScrapCell" resultType="java.util.Map">
+    select a.*,b.prod_model_id from (
+    select fab_date,prod_id,ary_prod_id,product_typ,nx_ope_id,EVT_CATE,count(pnl_id) qty
+    from sor.wpp_Csht_his
+    where
+    fab_date >= to_date(#{fromDate},'yyyy-mm-dd') and fab_date &lt;= to_date(#{toDate},'yyyy-mm-dd')
+    and evt_cate in ('LFRW','PIRW','RWTP','QTRW','REWK','REVW','RESS','LGRW','FERW','ARWK','SCRP')
+    group by fab_date,prod_id,ary_prod_id,product_typ,nx_ope_id,EVT_CATE
+    ) a left join (
+    select substr(prod_id,4) newPord,prod_model_id from dm.m_prod_d
+    ) b on a.prod_id=b.newPord
+  </select>
 
   <!-- LCM物料超耗数据 -->
   <select id="getLcmWoClose" resultType="java.util.Map">
@@ -612,6 +641,7 @@
         prod_model_id, pep_cnt, x.cr_ope_id, ope_name, substr(x.cr_eqptg_id,4,3)
   </select>
 
+  <!-- 获取CELL Cycle time-->
   <select id="getStationCycleTimeCell" resultType="java.util.Map">
     select
       MODEL_ID, PROD_ID, GLASS_THIN, OPE_ID, OPE_NAME, EQPT_ID,
@@ -656,6 +686,7 @@
     )
   </select>
 
+  <!-- 获取总制造费用 -->
   <select id="getTotalProductCost" resultType="java.util.Map">
     SELECT A.FAB_ID, PRICE, AMOUNT, MON FROM (
                                             SELECT FAB_ID,SUM(PRICE)PRICE ,to_char("DATE",'yyyy-mm') MON  FROM DM.MSC_LOCATION_COST
@@ -674,6 +705,29 @@
     ) B ON A.FAB_ID=B.FAB_ID AND A."DATE"=B.FAB_DATE
     WHERE to_char(A."DATE",'yyyy-mm')>='2016-01'
     order by MON
+  </select>
+
+  <select id="MSC_LOCATION_COST" resultType="java.util.Map">
+    select A.FAB_ID,A."DATE",A.PROD_ID,A.VER_ID,A.PRICE,B.AMOUNT from (
+    SELECT * FROM DM.MSC_LOCATION_COST WHERE FAB_ID in ('WB_CEL','WB_LCM') AND LOCATION&lt;>'SUM' AND "DATE">=to_date('2011-01-01','yyyy-mm-dd')
+    )A LEFT JOIN (SELECT * from DM.MSC_AMT_F where  FAB_ID in ('WB_CEL','WB_LCM') ) B ON A.FAB_ID=B.FAB_ID AND A."DATE"=B.FAB_DATE
+  </select>
+
+  <select id="WMM_SCRAP_DETAIL" resultType="java.util.Map">
+    SELECT * FROM (
+                    SELECT TO_DATE(TO_CHAR(A.DATE_CLOSE,'YYYY-MM')||'-01','YYYY-MM-DD') FAB_DATE, TO_CHAR(A.DATE_CLOSE,'YYYY-MM') MON, A.TRACK_NUM,B.MATERIAL_FK,
+                           CASE WHEN COST_CENTER='BX133' AND A.COST_TYPE='0300' AND B.MATERIAL_FK LIKE'14%' THEN 'WB_CEL'
+                                WHEN COST_CENTER='BX133' AND A.COST_TYPE='0300' AND SUBSTR(B.MATERIAL_FK,1,2) NOT IN ('14') THEN 'WB_LCM'
+                                WHEN COST_CENTER='BX133' AND A.COST_TYPE='0200' THEN 'WB_LCM'
+                                WHEN COST_CENTER='M0024' AND EXP_ID IN ('05','06')  THEN 'WB_LCM'  ELSE '' END FAB_ID
+                    FROM (
+                           SELECT * FROM (
+                                           SELECT TO_DATE(TO_CHAR(DATE_CLOSE,'YYYY-MM-DD'),'YYYY-MM-DD') DATE_CLOS,A.* FROM SOR.WMM_SCRAP_ORDER A
+                                         ) A  WHERE  DATE_CLOS>=TO_DATE('2011-01-01','YYYY-MM-DD')
+                         ) A INNER  JOIN (
+                      SELECT SCRAP_FK,MAX(A.MATERIAL_FK) MATERIAL_FK FROM  SOR.WMM_SCRAP_DETAIL A GROUP BY SCRAP_FK
+                    ) B ON A.WHSCRAP_ID=B.SCRAP_FK
+                  ) A WHERE FAB_ID IS NOT NULL
   </select>
 
 </mapper>

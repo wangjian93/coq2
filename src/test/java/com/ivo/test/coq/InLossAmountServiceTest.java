@@ -37,10 +37,10 @@ public class InLossAmountServiceTest extends AbstractTest {
         inLossAmountService.syncInLossAmountDetailLcm();
     }
 
-    @Test
-    public void syncTotalAmount() {
-        totalAmountService.syncTotalAmount();
-    }
+//    @Test
+//    public void syncTotalAmount() {
+//        totalAmountService.syncTotalAmount();
+//    }
 
     @Test
     public void syncWbRatio() {

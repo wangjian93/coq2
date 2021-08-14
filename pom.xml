@@ -7,6 +7,7 @@
   <groupId>com.ivo</groupId>
   <artifactId>coq2</artifactId>
   <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
 
   <description>质量成本系统</description>
 
@@ -81,7 +82,7 @@
     <dependency>
       <groupId>net.sourceforge.jtds</groupId>
       <artifactId>jtds</artifactId>
-      <version>${jtds.version}</version>
+      <version>${jtds-version}</version>
     </dependency>
 
     <!-- Druid 连接池 -->
@@ -118,6 +119,13 @@
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
 
+    <!-- IVO解密 -->
+    <dependency>
+      <groupId>com.ivo</groupId>
+      <artifactId>ivo-decryption</artifactId>
+      <version>1.0</version>
+    </dependency>
+
 <!--    <dependency>-->
 <!--      <groupId>io.micrometer</groupId>-->
 <!--      <artifactId>micrometer-registry-prometheus</artifactId>-->
@@ -136,22 +144,21 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
-
-
-    <!-- IVO解密 -->
-    <dependency>
-      <groupId>com.ivo</groupId>
-      <artifactId>ivo-decryption</artifactId>
-      <version>1.0</version>
-    </dependency>
   </dependencies>
 
   <build>
+    <finalName>coq</finalName>
     <resources>
       <resource>
         <directory>src/main/java</directory>
         <includes>
           <include>**/*.xml</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*</include>
         </includes>
       </resource>
     </resources>
@@ -161,14 +168,17 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>2.4.5</version>
       </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
         <configuration>
           <source>8</source>
           <target>8</target>
+          <compilerArgument>-parameters</compilerArgument>
         </configuration>
       </plugin>
     </plugins>

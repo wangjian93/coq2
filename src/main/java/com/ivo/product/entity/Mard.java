@@ -50,4 +50,8 @@ public class Mard extends AutoIncreaseEntityModel {
      * 通过查询EXF.SZA_PSI_MBEW
      */
     private double price;
+
+    private String AUFNR;
+
+    private String CHARG;
 }

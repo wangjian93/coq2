@@ -56,51 +56,16 @@
 <!-- 正文开始 -->
 <div class="layui-fluid">
     <div class="layui-card">
-        <div class="layui-card-header">
-            <i class="layui-icon layui-icon-tabs"></i>
-            <span>N1568V R0开发计划</span>
-        </div>
         <div class="layui-card-body">
-            <!-- 表格工具栏 -->
-            <form class="layui-form toolbar" hidden>
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">类&emsp;型:</label>
-                        <div class="layui-input-inline">
-                            <select name="type" id="type" lay-filter="type"></select>
-                        </div>
-                    </div>
-
-                    <div class="layui-inline">
-                        <label class="layui-form-label">尺&emsp;寸:</label>
-                        <div class="layui-input-inline">
-                            <select name="size" id="size" lay-filter="size"></select>
-                        </div>
-                    </div>
-
-                    <div class="layui-inline">
-                        <label class="layui-form-label">机&emsp;种:</label>
-                        <div class="layui-input-inline">
-                            <select name="project" id="project" lay-filter="project"></select>
-                        </div>
-                    </div>
-                    <div class="layui-inline">&emsp;
-                        <button class="layui-btn icon-btn" lay-filter="projectSearch" lay-submit>
-                            <i class="layui-icon">&#xe615;</i>搜索
-                        </button>
-                    </div>
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="layui-icon layui-icon-tabs"></i>
+                    <span>机种进度</span>
                 </div>
-            </form>
-            <!-- 数据表格 -->
-            <div hidden>
-                <table id="tableCost" lay-filter="tableCost"></table>
-            </div>
-
-
-            <!-- 进度数据 -->
-            <div id="has-buy">
-                <div class="rate-ps section"> <span class="item-show "> <img src="/assets/images/projectavatar.png"><br>V01 </span>   <ul class="item-flow item-font latest"> <li class="line"></li> <li class="rate-line" style="width:770px;"></li>   <li class="COMP"> <em class="qtop">2020-10-30</em> <a></a> <em>Kick Off</em> </li>    <li class="COMP"> <em class="qtop">2020-12-22</em> <a></a> <em>NPRB</em> </li>    <li class="COMP"> <em class="qtop">2020-12-24</em> <a></a> <em>Design review</em> </li>    <li class="COMP"> <em class="qtop">2021-01-31</em> <a></a> <em>1st Light on</em> </li>     <li class="pn"> <a></a> </li>   <li class="undefined"> <em class="qtop">2021-05-30</em> <a></a> <em>DVT</em> </li>    <li class="undefined"> <em class="qtop">2021-08-08</em> <a></a> <em>PVT</em> </li>    <li class="qe undefined"> <em class="qtop">2021-08-09</em> <a></a> <em>MP</em> </li>   </ul> </div>
-            </div>
+                <div class="layui-card-body">
+                    <!-- 进度数据 -->
+                    <div id="has-buy"></div>
+                </div>
 
             <div class="layui-card">
                 <div class="layui-card-header">
@@ -128,13 +93,157 @@
 <!-- js部分 -->
 <script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
 <script type="text/javascript" src="../../assets/js/common.js?v=316"></script>
+    <script id="demo" type="text/html">
+
+        {{#  layui.each(d, function(index, item){ }}
+
+        <div class="rate-ps section">
+        <span class="item-show ">
+            <img src="/assets/images/projectavatar.png"><br>{{ item.version }}
+        </span>
+
+            {{# if(index != d.length-1) { }}
+            <ul class="item-flow item-font">
+                <li class="line"></li>
+                {{# } }}
+                {{# if(index == d.length-1) { }}
+                <ul class="item-flow item-font latest">
+                    <li class="line"></li>
+                    <li class="rate-line" style="width:770px;"></li>
+                    {{# } }}
+
+
+                    {{# if(item.KICKOFF) { }}
+                    <li class={{ item.KICKOFF.status }}>
+                        <em class="qtop">{{ item.KICKOFF.date }}</em>
+                        <a></a>
+                        <em>Kick Off</em>
+                    </li>
+                    {{# } }}
+                    {{# if(!item.KICKOFF) { }}
+                    <li class="pn">
+                        <a></a>
+                    </li>
+                    {{# } }}
+
+                    {{# if(item.NPRB) { }}
+                    <li class={{ item.NPRB.status }}>
+                        <em class="qtop">{{ item.NPRB.date }}</em>
+                        <a></a>
+                        <em>NPRB</em>
+                    </li>
+                    {{# } }}
+                    {{# if(!item.NPRB) { }}
+                    <li class="pn">
+                        <a></a>
+                    </li>
+                    {{# } }}
+
+                    {{# if(item.DESIGN) { }}
+                    <li class={{ item.DESIGN.status }}>
+                        <em class="qtop">{{ item.DESIGN.date }}</em>
+                        <a></a>
+                        <em>Design review</em>
+                    </li>
+                    {{# } }}
+                    {{# if(!item.DESIGN) { }}
+                    <li class="pn">
+                        <a></a>
+                    </li>
+                    {{# } }}
+
+                    {{# if(item.LIGHTON) { }}
+                    <li class={{ item.LIGHTON.status }}>
+                        <em class="qtop">{{ item.LIGHTON.date }}</em>
+                        <a></a>
+                        <em>1st Light on</em>
+                    </li>
+                    {{# } }}
+                    {{# if(!item.LIGHTON) { }}
+                    <li class="pn">
+                        <a></a>
+                    </li>
+                    {{# } }}
+
+                    {{# if(item.EVT) { }}
+                    <li class={{ item.EVT.status }}>
+                        <em class="qtop">{{ item.EVT.date }}</em>
+                        <a></a>
+                        <em>EVT</em>
+                    </li>
+                    {{# } }}
+                    {{# if(!item.EVT) { }}
+                    <li class="pn">
+                        <a></a>
+                    </li>
+                    {{# } }}
+
+                    {{# if(item.DVT) { }}
+                    <li class={{ item.DVT.status }}>
+                        <em class="qtop">{{ item.DVT.date }}</em>
+                        <a></a>
+                        <em>DVT</em>
+                    </li>
+                    {{# } }}
+                    {{# if(!item.DVT) { }}
+                    <li class="pn">
+                        <a></a>
+                    </li>
+                    {{# } }}
+
+                    {{# if(item.PVT) { }}
+                    <li class={{ item.PVT.status }}>
+                        <em class="qtop">{{ item.PVT.date }}</em>
+                        <a></a>
+                        <em>PVT</em>
+                    </li>
+                    {{# } }}
+                    {{# if(!item.PVT) { }}
+                    <li class="pn">
+                        <a></a>
+                    </li>
+                    {{# } }}
+
+                    {{# if(item.MP) { }}
+                    <li class="qe {{ item.MP.status }}">
+                        <em class="qtop">{{ item.MP.date }}</em>
+                        <a></a>
+                        <em>MP</em>
+                    </li>
+                    {{# } }}
+                    {{# if(!item.MP) { }}
+                    <li class="pn">
+                        <a></a>
+                    </li>
+                    {{# } }}
+
+
+                </ul>
+        </div>
+
+        {{#  }); }}
+    </script>
 <script>
-    layui.use(['table', 'notice', 'form', 'notice', 'tableX'], function () {
+    layui.use(['table', 'notice', 'form', 'notice', 'tableX', 'laytpl'], function () {
         var table = layui.table;
         var form = layui.form;
         var $ = layui.$;
         var notice = layui.notice;
         var tableX = layui.tableX;
+        var laytpl = layui.laytpl;
+
+
+        var getQueryVariable = function (variable) {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i=0;i<vars.length;i++) {
+                var pair = vars[i].split("=");
+                if(pair[0] === variable){return pair[1];}
+            }
+            return(false);
+        };
+
+        var project = getQueryVariable("project");
 
         /* 机种成本 */
         table.render({
@@ -271,21 +380,13 @@
             size: 'sm'
         });
 
-        /* 表格搜索 */
-        form.on('submit(projectSearch)', function (data) {
-            if(!data.field.project) {
-                notice.msg('请选择机种', {icon: 5});
-                return false;
-            }
-            var URL_Cost = '/coq/costs/'  + data.field.project;
-            var URL_CostSubject = '/coq/costSubjects/'  + data.field.project;
-            var URL_CostStage = '/coq/costStages/'  + data.field.project;
+        var URL_Cost = '/coq/costs/'  + project;
+        var URL_CostSubject = '/coq/costSubjects/'  + project;
+        var URL_CostStage = '/coq/costStages/'  + project;
 
-            table.reload('tableCost', {url: URL_Cost});
-            table.reload('tableCostSubject', {url: URL_CostSubject});
-            table.reload('tableCostStage', {url: URL_CostStage});
-            return false;
-        });
+        table.reload('tableCost', {url: URL_Cost});
+        table.reload('tableCostSubject', {url: URL_CostSubject});
+        table.reload('tableCostStage', {url: URL_CostStage});
 
         /* 表格单元格中数据转化 ('-1'转为'-'，'null'转为'') */
         var cellConvert = function(d) {
@@ -305,80 +406,61 @@
         };
 
 
-        /* 机种、尺寸、类型下拉框联动 */
-        (function() {
-            $.get('/coq/projects', function(data){
-                if(data.code === 0) {
-                    var types = [];
-                    $('#type').empty();
-                    $.each(data.data, function (index, item) {
-                        if(types.indexOf(item.type) === -1) {
-                            $('#type').append(new Option(item.type, item.type));
-                            types.push(item.type);
-                        }
-                    });
-                    form.render('select');
-                    sizeSelectRender();
-                } else {
-                    notice.msg(data.msg, {icon: 2});
-                }
-            });
-        })();
 
-        var sizeSelectRender = function() {
-            var type = $("#type").val();
-            var url = '/coq/projects/' + type;
-            $.get(url, function(data) {
-                if(data.code === 0) {
-                    var sizes = [];
-                    $('#size').empty();
-                    $.each(data.data, function (index, item) {
-                        if(sizes.indexOf(item.size) === -1) {
-                            $('#size').append(new Option(item.size, item.size));
-                            sizes.push(item.size);
+        // 渲染机种进度图
+        var scheduleRender = function(url) {
+            $.get(url, function(data){
+                if(data.code == 200) {
+                    var schedules = [];
+                    var d = data.data;
+                    var versions = ['计划','实际'];
+                    for(var j=0; j<versions.length; j++) {
+                        var schedule = {};
+                        var version = versions[j];
+                        schedule.version = version;
+                        var nodes = d[version];
+                        for(var i=0; i<nodes.length; i++) {
+                            var node = nodes[i];
+                            if(node.stage == ("Kick Off").toUpperCase() ) {
+                                schedule.KICKOFF = node;
+                            }
+                            if(node.stage == "NPRB") {
+                                schedule.NPRB = node;
+                            }
+                            if(node.stage == ("Design review").toUpperCase() ) {
+                                schedule.DESIGN = node;
+                            }
+                            if(node.stage == ("1st Light on").toUpperCase() ) {
+                                schedule.LIGHTON = node;
+                            }
+                            if(node.stage == "EVT") {
+                                schedule.EVT = node;
+                            }
+                            if(node.stage == "DVT") {
+                                schedule.DVT = node;
+                            }
+                            if(node.stage == "PVT") {
+                                schedule.PVT = node;
+                            }
+                            if(node.stage == "MP") {
+                                schedule.MP = node;
+                            }
                         }
+                        schedules.push(schedule);
+                    }
+                    console.log(schedules);
+                    laytpl(demo.innerHTML).render(schedules, function(html){
+                        $("#has-buy").html(html);
                     });
-                    form.render('select');
-                    projectSelectRender();
+
                 } else {
-                    notice.msg(data.msg, {icon: 2});
+                    notice.msg('异常:' + data.msg, {icon: 2});
                 }
             });
         };
 
-        var projectSelectRender = function() {
-            var type = $("#type").val();
-            var size = $("#size").val();
-            var url = '/coq/projects/' + type + '/' + size;
-            $.get(url, function(data) {
-                if(data.code === 0) {
-                    var projects = [];
-                    $('#project').empty();
-                    $.each(data.data, function (index, item) {
-                        if(projects.indexOf(item.project) === -1) {
-                            $('#project').append(new Option(item.project, item.project));
-                            projects.push(item.project);
-                        }
-                    });
-                    form.render('select');
-                    $("button[lay-filter=projectSearch]").click();
-                } else {
-                    notice.msg(data.msg, {icon: 2});
-                }
-            });
-
-        };
-
-        /* 机种、尺寸、类型下拉框选择监听 */
-        form.on('select(type)', function() {
-            sizeSelectRender();
-        });
-        form.on('select(size)', function() {
-            projectSelectRender();
-        });
-        form.on('select(project)', function() {
-            $("button[lay-filter=projectSearch]").click();
-        });
+        var URL_Schedule = '/coq/milestone/'  + project;
+        scheduleRender(URL_Schedule);
     });
 </script>
 </body>

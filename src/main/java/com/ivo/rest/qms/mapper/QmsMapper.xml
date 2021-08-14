@@ -36,4 +36,24 @@
     WHERE z.MODELID = #{project}
   </select>
 
+  <!-- QMS获取OBA数据 -->
+  <select id="getOba" resultType="java.util.Map">
+    SELECT
+      z.MODELID as project,
+      z.QUANTITY as quantity,
+      z.PCSPRICE as price,
+      z.TOTALPRICE as amount,
+      p.OPE_NUMBER as peNumber,
+      p.OPR_TYPE as obaType,
+      p.HAPPENTIME as happenTime,
+      p.CREATE_USER as create_user,
+      ProductType as productType
+    from (
+           select a.MODELID, a.OPR_FK, a.QUANTITY,  a.PCSPRICE, a.TOTALPRICE, ProductType from qms_d_artifical a where a.IS_VALID=1
+           union all
+           SELECT c.MODELID, c.OPR_FK, c.QUANTITY, c.UNITPRICE as PCSPRICE, c.TOTALPRICE, ProductType from qms_d_place c where c.IS_VALID=1
+         ) z
+           LEFT JOIN qms_m_opr p on p.ID = z.OPR_FK
+  </select>
+
 </mapper>

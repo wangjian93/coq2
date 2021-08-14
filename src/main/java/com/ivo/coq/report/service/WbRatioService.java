@@ -1,9 +1,9 @@
 package com.ivo.coq.report.service;
 
-import com.ivo.coq.report.entity.WbRatio;
-
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wj
@@ -23,5 +23,7 @@ public interface WbRatioService {
      * @param fabId 厂别
      * @return
      */
-    List<WbRatio> getWbRatio(Date fromDate, Date toDate, String fabId);
+    List<Map> getWbRatio(Date fromDate, Date toDate, String fabId);
+
+    Map getWbRatio(List<String> monthList, String fabId) throws ParseException;
 }

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="./assets/libs/layui/css/layui.css"/>
+
+</head>
+<body>
+<div>
+    <table id="table"></table>
+</div>
+
+<!-- js部分 -->
+<script type="text/javascript" src="./assets/libs/layui/layui.js"></script>
+<script>
+    layui.use(['table'], function () {
+        table.render({
+            elem: '#table',
+            url: '/test',
+            cols: [[
+                {field: 'stage', title: '阶段', align: 'center'}
+            ]]
+        });
+    });
+</script>
+</body>
+</html>
