@@ -77,10 +77,9 @@ public class MaterialCostDetailServiceImpl implements MaterialCostDetailService 
         if(engineeringExperimentList== null || engineeringExperimentList.size() == 0) return;
         List<MaterialCostDetail> materialCostDetailList = new ArrayList<>();
         for(EngineeringExperiment engineeringExperiment : engineeringExperimentList) {
-            //  模组入库2590仓不计算直材费用
+            //  模组入库2600/2590/3610仓不计算直材费用
             if(StringUtils.equals(engineeringExperiment.getPlant(), "LCM") &&
-                    StringUtils.containsAny(engineeringExperiment.getStorageLocation(), "2600", "2590")) {
-                System.out.println("直材料不算2590");
+                    StringUtils.containsAny(engineeringExperiment.getStorageLocation(), "2600", "2500", "3610")) {
                 continue;
             }
 

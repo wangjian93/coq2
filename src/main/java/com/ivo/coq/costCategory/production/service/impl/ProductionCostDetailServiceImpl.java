@@ -69,10 +69,9 @@ public class ProductionCostDetailServiceImpl implements ProductionCostDetailServ
             //LCM按工单计算生产费用
             if(PlantEnum.Lcm.getPlant().equals(fab)) {
                 for(EngineeringExperiment engineeringExperiment : engineeringExperimentList) {
-                    //  模组入库2590仓不计算生产费用
+                    //  模组入库2600/2590/3610仓不计算生产费用
                     if(StringUtils.equals(engineeringExperiment.getPlant(), "LCM") &&
-                            StringUtils.containsAny(engineeringExperiment.getStorageLocation(), "2600","2590")) {
-                        System.out.println("生产费用不算2600");
+                            StringUtils.containsAny(engineeringExperiment.getStorageLocation(), "2600", "2500", "3610")) {
                         continue;
                     }
 
