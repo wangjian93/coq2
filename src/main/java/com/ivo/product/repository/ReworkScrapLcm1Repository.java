@@ -15,6 +15,8 @@ public interface ReworkScrapLcm1Repository extends JpaRepository<ReworkScrapLcm1
 
     List<ReworkScrapLcm1> findByFabDateBetween(Date fromDate, Date toDate);
 
+    @Query(value = "from ReworkScrapLcm1 a where a.EVT_CATE='SCRP' and a.fabDate >=:fromDate and a.fabDate<=:toDate")
+    List<ReworkScrapLcm1> getScrap(Date fromDate, Date toDate);
 
     /**
      * 统计量产品的重工报废费用

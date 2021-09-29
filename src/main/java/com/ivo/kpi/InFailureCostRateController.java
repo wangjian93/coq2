@@ -96,9 +96,9 @@ public class InFailureCostRateController {
         } else if(fab.equals("CELL")) {
             list = reworkScrapCellRepository.findByFabDateBetween(fromDate, toDate);
         } else if(fab.equals("LCM1")) {
-            list = reworkScrapLcm1Repository.findByFabDateBetween(fromDate, toDate);
+            list = reworkScrapLcm1Repository.getScrap(fromDate, toDate);
         } else {
-            list = reworkScrapLcm2Repository.findByFabDateBetween(fromDate, toDate);
+            list = reworkScrapLcm2Repository.getScrap(fromDate, toDate);
         }
         return ResultUtil.successPage(list);
     }

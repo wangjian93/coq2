@@ -145,6 +145,10 @@ public class NpFailureCostRateController {
         }
 
         List<Map> mapList = inLossAmountRepository.getNpFailureCostRateDetail(monthList);
-        return ResultUtil.successPage(mapList);
+        List<Map> list = new ArrayList<>();
+        for(Map map : mapList) {
+            if(((double)map.get("rate")>0)) list.add(map);
+        }
+        return ResultUtil.successPage(list);
     }
 }

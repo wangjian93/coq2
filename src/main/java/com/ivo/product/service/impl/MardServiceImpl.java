@@ -130,10 +130,7 @@ public class MardServiceImpl implements MardService {
         double total_lcm1 = 0;
         for(Mard mard : lcm1List) {
             if(StringUtils.startsWith(mard.getMATNR(), "14")) continue;
-
-
-            if( mard.getAUFNR().length()>3 && StringUtils.equalsAny( mard.getAUFNR().substring(2,3), "1", "8")) {
-
+            if(mard.getAUFNR() != null && mard.getAUFNR().length()>3 && StringUtils.equalsAny( mard.getAUFNR().substring(2,3), "1", "8")) {
             } else {
                 continue;
             }
@@ -145,9 +142,7 @@ public class MardServiceImpl implements MardService {
         double total_lcm2 = 0;
         for(Mard mard : lcm2List) {
             if(StringUtils.startsWith(mard.getMATNR(), "14")) continue;
-
-
-            if( mard.getAUFNR().length()>3 && StringUtils.equalsAny( mard.getAUFNR().substring(2,3), "1", "8")) {
+            if(mard.getAUFNR() != null && mard.getAUFNR().length()>3 && StringUtils.equalsAny( mard.getAUFNR().substring(2,3), "1", "8")) {
 
             } else {
                 continue;

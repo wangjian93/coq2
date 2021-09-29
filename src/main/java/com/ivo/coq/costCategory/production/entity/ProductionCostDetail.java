@@ -84,6 +84,8 @@ public class ProductionCostDetail extends AutoIncreaseEntityModel {
      */
     private double woShippingQty;
 
+    private String pfcd;
+
     public ProductionCostDetail() {}
     public ProductionCostDetail(String project, String stage, Integer time) {
         this.project = project;

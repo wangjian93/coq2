@@ -1,5 +1,6 @@
 package com.ivo.product.repository;
 
+import com.ivo.product.entity.ReworkScrapLcm1;
 import com.ivo.product.entity.ReworkScrapLcm2;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,6 +16,8 @@ public interface ReworkScrapLcm2Repository extends JpaRepository<ReworkScrapLcm2
 
     List<ReworkScrapLcm2> findByFabDateBetween(Date fromDate, Date toDate);
 
+    @Query(value = "from ReworkScrapLcm1 a where a.EVT_CATE='SCRP' and a.fabDate >=:fromDate and a.fabDate<=:toDate")
+    List<ReworkScrapLcm1> getScrap(Date fromDate, Date toDate);
 
     /**
      * 统计量产品的重工报废费用(工单第三码为 1 8)

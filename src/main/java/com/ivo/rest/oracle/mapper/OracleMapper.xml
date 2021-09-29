@@ -588,13 +588,26 @@
 
 
   <!-- 获取LCM入库的数量 -->
+<!--  <select id="getMard" resultType="java.util.Map">-->
+<!--    select MATNR, WERKS, LGORT, LABST, ERSDA-->
+<!--    from exf.sap_mard-->
+<!--    where-->
+<!--        LGORT IN ('6010','2598')-->
+<!--        AND MATNR NOT LIKE '14%'-->
+<!--        AND ERSDA >= to_date(#{fromDate},'yyyy-mm-dd') AND ERSDA &lt;= to_date(#{toDate},'yyyy-mm-dd')-->
+<!--  </select>-->
   <select id="getMard" resultType="java.util.Map">
-    select MATNR, WERKS, LGORT, LABST, ERSDA
-    from exf.sap_mard
-    where
-        LGORT IN ('6010','2598')
-        AND MATNR NOT LIKE '14%'
-        AND ERSDA >= to_date(#{fromDate},'yyyy-mm-dd') AND ERSDA &lt;= to_date(#{toDate},'yyyy-mm-dd')
+    select
+    *
+    from
+    (
+    SELECT * FROM EXF.SAP_MKPF WHERE MJAHR='2021' and BLDAT>=TO_DATE('2021-08-01','YYYY-MM-DD')  and BLDAT &lt;=TO_DATE('2021-08-31','YYYY-MM-DD')
+    ) A,
+    (
+    SELECT * FROM EXF.SAP_MSEG WHERE MJAHR='2021' and BWART IN ('101','521') AND LGORT IN ('6010','2598')
+    ) B
+    WHERE A.MBLNR=B.MBLNR
+    AND A.MJAHR=B.MJAHR
   </select>
 
 

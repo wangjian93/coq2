@@ -6,8 +6,11 @@ import com.ivo.coq.costCategory.production.entity.ProductionCostDetail;
 import com.ivo.coq.costCategory.production.repository.ProductionCostDetailRepository;
 import com.ivo.coq.costCategory.production.service.ProductionCostDetailService;
 import com.ivo.coq.project.entity.EngineeringExperiment;
+import com.ivo.coq.project.entity.EngineeringExperimentProduct;
 import com.ivo.coq.project.entity.EngineeringExperimentWo;
 import com.ivo.coq.project.entity.Sample;
+import com.ivo.coq.project.repository.EngineeringExperimentProductRepository;
+import com.ivo.coq.project.service.EngineeringExperimentService;
 import com.ivo.coq.project.service.SampleService;
 import com.ivo.rest.oracle.OracleService;
 import com.ivo.station.service.StationCostService;
@@ -89,7 +92,22 @@ public class ProductionCostDetailServiceImpl implements ProductionCostDetailServ
                     }
                 }
             } else {
+                List<String> productList = new ArrayList<>();
+                for(EngineeringExperiment  engineeringExperiment : sample.getEngineeringExperimentList()) {
+                    for(EngineeringExperimentProduct engineeringExperimentProduct : engineeringExperiment.getProductList()) {
+                        String p = engineeringExperimentProduct.getProduct();
+                        if(StringUtils.isNotEmpty(p))
+                            productList.add(p);
+                    }
+                }
+                String p_str = "";
+                for(String p : productList) {
+                    if(StringUtils.isNotEmpty(p_str))
+                        p_str += ",";
+                    p_str += p;
+                }
                 ProductionCostDetail productionCostDetail = new ProductionCostDetail(sample.getProject(), sample.getStage(), sample.getTime());
+                productionCostDetail.setPfcd(p_str);
                 productionCostDetail.setProcess(sample.getProcess());
                 productionCostDetail.setOrderNumber(sample.getOrderNumber());
                 productionCostDetail.setInQuantity(sample.getInQuantity());
@@ -120,7 +138,12 @@ public class ProductionCostDetailServiceImpl implements ProductionCostDetailServ
                 amount = DoubleUtil.multiply(perProductAmount, productionCostDetail.getInQuantity());
             }
             else if(PlantEnum.Cell.getPlant().equals(fab)) {
-                perProductAmount  = stationCostService.getPerProductAmountCell(project, null, "");
+                String pfcd = productionCostDetail.getPfcd();
+                if(StringUtils.isNotEmpty(pfcd) && StringUtils.contains(pfcd, ",")) {
+                    String[] pfcds = pfcd.split(",");
+                    pfcd = pfcds[0];
+                }
+                perProductAmount  = stationCostService.getPerProductAmountCell(month, project, pfcd);
                 amount = DoubleUtil.multiply(perProductAmount, productionCostDetail.getInQuantity());
             }
             else if(PlantEnum.Lcm.getPlant().equals(fab)) {

@@ -93,7 +93,8 @@ public interface InLossAmountRepository extends JpaRepository<InLossAmount, Long
             "                        case when prevention_cost is null or prevention_cost <0 then 0 else prevention_cost end prevention_cost,\n" +
             "                        (select date_format(end_date, '%Y%m') from coq_project_milestone m where m.project=c.project and m.milestone like CONCAT(c.stage,'%')) as month\n" +
             "                        FROM coq_cost_subject c\n" +
-            "                        ) t where month in :monthList \n" +
+            "                        ) t where month in :monthList " +
+            " and project not in (select project  from coq_project_milestone where milestone='NPRB' and end_date<='2020-01-01') \n" +
             "\t\t) tt GROUP BY project\n" +
             "\t) ttt\n" +
             ") tttt ORDER BY rate desc", nativeQuery = true)

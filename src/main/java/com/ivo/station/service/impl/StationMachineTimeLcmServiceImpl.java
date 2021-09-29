@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wj
@@ -66,35 +67,58 @@ public class StationMachineTimeLcmServiceImpl implements StationMachineTimeLcmSe
         stationMachineTimeLcmRepository.saveAll(stationMachineTimeLcmList);
     }
 
+    public Map matchMatnrAndMonth(String month, String product) {
+        List<Map> mapList = stationMachineTimeLcmRepository.matchMatnrAndMonth(month, product+"%");
+        if(mapList == null || mapList.size() == 0) {
+            if(product.length()>=15)  {
+                product = product.substring(0, 12);
+                mapList = stationMachineTimeLcmRepository.matchMatnrAndMonth(month, product + "%");
+            }
+        }
+        if(mapList == null || mapList.size() == 0) return null;
+        return  mapList.get(0);
+    }
 
     @Override
     public Double getPerProductAmountLcm(String month, String product) {
+        if(StringUtils.isEmpty(product)) return null;
         //如何当月没有维护数据查取最近一个月的数据
-        if(stationMachineTimeLcmRepository.countByMonthAndMatnr(month, product)==0) {
-            month = stationMachineTimeLcmRepository.getLastMonth(product);
-        }
-        if (month==null) return null;
+        Map map = matchMatnrAndMonth(month, product);
+        if(map == null) return null;
+        month = (String) map.get("month");
+        product = (String) map.get("matnr");
         return stationMachineTimeLcmRepository.getPerProductAmountLcm(month, product);
     }
 
     @Override
     public Double getPerScrapAmountLcm(String month, String product, String station) {
+        if(StringUtils.isEmpty(product)) return null;
         //如何当月没有维护数据查取最近一个月的数据
-        if(stationMachineTimeLcmRepository.countByMonthAndMatnr(month, product)==0) {
-            month = stationMachineTimeLcmRepository.getLastMonth(product);
+        Map map = matchMatnrAndMonth(month, product);
+        if(map == null) return null;
+        month = (String) map.get("month");
+        product = (String) map.get("matnr");
+        StationMachineTimeLcm stationMachineTimeLcm = stationMachineTimeLcmRepository.findFirstByMonthAndMatnrAndStationLike(month, product, station+'%');
+        //站点匹配不上截取前三码匹配，再不行截取前两码
+        if(stationMachineTimeLcm == null) {
+            if(station.length()>3) station = station.substring(0,3);
+            stationMachineTimeLcm = stationMachineTimeLcmRepository.findFirstByMonthAndMatnrAndStationLike(month, product, station+'%');
+            if(stationMachineTimeLcm == null) {
+                if(station.length()>2) station = station.substring(0,2);
+                stationMachineTimeLcm = stationMachineTimeLcmRepository.findFirstByMonthAndMatnrAndStationLike(month, product, station+'%');
+            }
         }
-        if (month==null) return null;
-        StationMachineTimeLcm stationMachineTimeLcm = stationMachineTimeLcmRepository.findFirstByMonthAndMatnrAndStationLike(month, product, station);
         return stationMachineTimeLcm == null ? null : stationMachineTimeLcm.getAmount();
     }
 
     @Override
     public Double getPerReworkAmountLcm(String month, String product, String station) {
+        if(StringUtils.isEmpty(product)) return null;
         //如何当月没有维护数据查取最近一个月的数据
-        if(stationMachineTimeLcmRepository.countByMonthAndMatnr(month, product)==0) {
-            month = stationMachineTimeLcmRepository.getLastMonth(product);
-        }
-        if (month==null) return null;
+        Map map = matchMatnrAndMonth(month, product);
+        if(map == null) return null;
+        month = (String) map.get("month");
+        product = (String) map.get("matnr");
         return stationMachineTimeLcmRepository.getPerReworkAmountLcm(month, product, station);
     }
 }

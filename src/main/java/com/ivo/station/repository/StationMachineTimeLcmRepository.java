@@ -5,6 +5,9 @@ import com.ivo.station.entity.StationMachineTimeLcm;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author wj
  * @version 1.0
@@ -33,8 +36,20 @@ public interface StationMachineTimeLcmRepository extends JpaRepository<StationMa
      * @param matnr 机种
      * @return
      */
-    @Query(value = "select sum(a.amount) from StationMachineTimeLcm a where a.month=:month and a.matnr=:matnr")
+    @Query(value = "select sum(a.amount) from station_machine_time_lcm a where a.month=:month and a.matnr=:matnr ", nativeQuery = true)
     Double getPerProductAmountLcm(String month, String matnr);
+
+    /**
+     * 匹配月份跟机种
+     * @param month
+     * @param matnr
+     * @return
+     */
+    @Query(value = "select month, matnr from station_machine_time_lcm a \n" +
+            "where a.month>=:month and a.matnr like :matnr \n" +
+            "GROUP BY month,matnr\n" +
+            "order by month", nativeQuery = true)
+    List<Map> matchMatnrAndMonth(String month, String matnr);
 
     /**
      * 筛选月份、机种、站点

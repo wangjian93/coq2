@@ -17,9 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author wj
@@ -86,9 +84,16 @@ public class EngineeringExperimentServiceImpl implements EngineeringExperimentSe
         repository.deleteAll(getEngineeringExperiments(project));
         List<Sample> sampleList = sampleService.getSamples(project);
         List<EngineeringExperiment> engineeringExperimentList = new ArrayList<>();
+
+        Set<String> eeSet = new HashSet<>();
         for(Sample sample : sampleList) {
             // EE单
             if(StringUtils.startsWithIgnoreCase(sample.getOrderNumber(), "EE")) {
+                //EE单去重复
+                String ee = sample.getOrderNumber();
+                if(eeSet.contains(ee)) continue;
+                eeSet.add(ee);
+
                 EngineeringExperiment engineeringExperiment = new EngineeringExperiment(sample, sample.getOrderNumber(), project);
                 engineeringExperimentList.add(engineeringExperiment);
             }
@@ -97,6 +102,10 @@ public class EngineeringExperimentServiceImpl implements EngineeringExperimentSe
                 List<String> eeList = eifService.getEeByEd(sample.getOrderNumber());
                 if(eeList== null || eeList.size() == 0) continue;
                 for(String ee : eeList) {
+                    //EE单去重复
+                    if(eeSet.contains(ee)) continue;
+                    eeSet.add(ee);
+
                     EngineeringExperiment engineeringExperiment = new EngineeringExperiment(sample, ee, project);
                     engineeringExperimentList.add(engineeringExperiment);
                 }
@@ -171,23 +180,30 @@ public class EngineeringExperimentServiceImpl implements EngineeringExperimentSe
 
     @Override
     public void syncEngineeringExperimentWo(String project) {
-        log.info("同步获取工程实验单（LCM）中的工单 " + project);
-        woRepository.deleteAll(getEngineeringExperimentWo(project));
-        List<EngineeringExperiment> engineeringExperimentList = getEngineeringExperiments(project);
-        List<EngineeringExperimentWo> woList = new ArrayList<>();
-        for(EngineeringExperiment engineeringExperiment : engineeringExperimentList) {
-            if(!StringUtils.equalsIgnoreCase(engineeringExperiment.getPlant(), PlantEnum.Lcm.getPlant())) continue;
-            List<String> wos = eifService.getEngineeringExperimentWo(engineeringExperiment.getEeOrder());
-            if(wos == null || wos.size() == 0) continue;
-            for(String woStr : wos) {
-                woStr = woStr.trim().toUpperCase();
-                EngineeringExperimentWo wo = new EngineeringExperimentWo(engineeringExperiment, project,
-                        engineeringExperiment.getEeOrder());
-                wo.setWo(woStr);
-                String product = oracleService.getProductByWo(woStr);
-                wo.setProduct(product);
-                woList.add(wo);
-            }
+//        log.info("同步获取工程实验单（LCM）中的工单 " + project);
+//        woRepository.deleteAll(getEngineeringExperimentWo(project));
+//        List<EngineeringExperiment> engineeringExperimentList = getEngineeringExperiments(project);
+//        List<EngineeringExperimentWo> woList = new ArrayList<>();
+//        for(EngineeringExperiment engineeringExperiment : engineeringExperimentList) {
+//            if(!StringUtils.equalsIgnoreCase(engineeringExperiment.getPlant(), PlantEnum.Lcm.getPlant())) continue;
+//            List<String> wos = eifService.getEngineeringExperimentWo(engineeringExperiment.getEeOrder());
+//            if(wos == null || wos.size() == 0) continue;
+//            for(String woStr : wos) {
+//                woStr = woStr.trim().toUpperCase();
+//                EngineeringExperimentWo wo = new EngineeringExperimentWo(engineeringExperiment, project,
+//                        engineeringExperiment.getEeOrder());
+//                wo.setWo(woStr);
+//                String product = oracleService.getProductByWo(woStr);
+//                wo.setProduct(product);
+//                woList.add(wo);
+//            }
+//        }
+//        woRepository.saveAll(woList);
+
+        List<EngineeringExperimentWo> woList  = getEngineeringExperimentWo(project);
+        for(EngineeringExperimentWo wo : woList) {
+            String product = oracleService.getProductByWo(wo.getWo());
+            wo.setProduct(product);
         }
         woRepository.saveAll(woList);
     }

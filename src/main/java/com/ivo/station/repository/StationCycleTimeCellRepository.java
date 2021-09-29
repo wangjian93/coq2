@@ -45,7 +45,7 @@ public interface StationCycleTimeCellRepository extends JpaRepository<StationCyc
      * @param prod_id 分类
      * @return
      */
-    @Query(value = "select sum(a.amount) from StationCycleTimeCell a where a.month=:month and a.project=:project and a.prodId=:prod_id")
+    @Query(value = "select sum(a.amount) from StationCycleTimeCell a where a.month=:month and a.project=:project and a.prodId like :prod_id")
     Double getPerProductAmountCell(String month, String project, String prod_id);
 
     /**
@@ -56,7 +56,7 @@ public interface StationCycleTimeCellRepository extends JpaRepository<StationCyc
      * @param prodId 分类
      * @return
      */
-    StationCycleTimeCell findFirstByMonthAndProjectAndStationLikeAndProdId(String month, String project, String station, String prodId);
+    StationCycleTimeCell findFirstByMonthAndProjectAndStationLikeAndProdIdLike(String month, String project, String station, String prodId);
 
     /**
      * 机种重工站点之前所有经过的站点费用总和

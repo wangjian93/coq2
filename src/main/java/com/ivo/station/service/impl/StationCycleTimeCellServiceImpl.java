@@ -1,7 +1,6 @@
 package com.ivo.station.service.impl;
 
 import com.ivo.rest.oracle.mapper.OracleMapper;
-import com.ivo.station.entity.StationCycleTimeAry;
 import com.ivo.station.entity.StationCycleTimeCell;
 import com.ivo.station.repository.StationCycleTimeCellRepository;
 import com.ivo.station.service.EqWorkCenterService;
@@ -122,10 +121,11 @@ public class StationCycleTimeCellServiceImpl implements StationCycleTimeCellServ
         }
         if(month==null) return null;
         //分类栏位为PFCD的第八码
-        prod_id = prod_id.substring(7, 8);
+        if(StringUtils.isEmpty(prod_id) && prod_id.length()>=8)
+            prod_id = prod_id.substring(7, 8);
         Double d = stationCycleTimeCellRepository.getPerProductAmountCell(month, project, prod_id);
-
-        return stationCycleTimeCellRepository.getPerProductAmountCell(month, project, prod_id);
+        if(d != null && d>0) return d;
+        return stationCycleTimeCellRepository.getPerProductAmountCell(month, project, "%");
     }
 
     @Override
@@ -136,22 +136,23 @@ public class StationCycleTimeCellServiceImpl implements StationCycleTimeCellServ
         }
         if(month==null) return null;
         //分类栏位为PFCD的第八码
-        prod_id = prod_id.substring(7, 8);
+        if(StringUtils.isNotEmpty(prod_id) && prod_id.length()>=8)
+            prod_id = prod_id.substring(7, 8);
 
-        StationCycleTimeCell stationCycleTimeCell = stationCycleTimeCellRepository.findFirstByMonthAndProjectAndStationLikeAndProdId(month, project, station+'%', prod_id);
+        StationCycleTimeCell stationCycleTimeCell = stationCycleTimeCellRepository.findFirstByMonthAndProjectAndStationLikeAndProdIdLike(month, project, station+'%', prod_id+'%');
         // 匹配不到站点时，匹配前三码，还没有然后再前两码
-//        if(stationCycleTimeCell == null) {
-//            if(station.length()>3) {
-//                station = station.substring(0, 3);
-//                stationCycleTimeCell = stationCycleTimeCellRepository.findFirstByMonthAndProjectAndStationLikeAndProdId(month, project, station+'%', prod_id);
-//                if(stationCycleTimeCell == null) {
-//                    if(station.length()>2) {
-//                        station = station.substring(0, 2);
-//                        stationCycleTimeCell = stationCycleTimeCellRepository.findFirstByMonthAndProjectAndStationLikeAndProdId(month, project, station+'%', prod_id);
-//                    }
-//                }
-//            }
-//        }
+        if(stationCycleTimeCell == null) {
+            if(station.length()>3) {
+                station = station.substring(0, 3);
+                stationCycleTimeCell = stationCycleTimeCellRepository.findFirstByMonthAndProjectAndStationLikeAndProdIdLike(month, project, station+'%', prod_id+'%');
+                if(stationCycleTimeCell == null) {
+                    if(station.length()>2) {
+                        station = station.substring(0, 2);
+                        stationCycleTimeCell = stationCycleTimeCellRepository.findFirstByMonthAndProjectAndStationLikeAndProdIdLike(month, project, station+'%', prod_id+'%');
+                    }
+                }
+            }
+        }
         return stationCycleTimeCell==null ? null : stationCycleTimeCell.getAmount();
     }
 
@@ -163,7 +164,8 @@ public class StationCycleTimeCellServiceImpl implements StationCycleTimeCellServ
         }
         if(month==null) return null;
         //分类栏位为PFCD的第八码
-        prod_id = prod_id.substring(7, 8);
+        if(StringUtils.isEmpty(prod_id) && prod_id.length()>=8)
+            prod_id = prod_id.substring(7, 8);
 
         return stationCycleTimeCellRepository.getPerReworkAmountCell(month, project, station, prod_id);
     }
