@@ -16,16 +16,16 @@ public class ReworkScrapCellServiceTest extends AbstractTest {
 
     @Test
     public void syncCellReworkScrap() {
-        reworkScrapCellService.syncCellReworkScrap("202106");
+        reworkScrapCellService.syncCellReworkScrap("202112");
     }
 
     @Test
     public void computeCellReworkScrapAmount() {
-        reworkScrapCellService.computeCellReworkScrapAmount("202106");
+        reworkScrapCellService.computeCellReworkScrapAmount("202112");
     }
 
     @Test
     public void computeReworkScrapMonth() {
-        reworkScrapCellService.computeReworkScrapMonth("202106");
+        reworkScrapCellService.computeReworkScrapMonth("202112");
     }
 }

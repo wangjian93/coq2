@@ -21,11 +21,11 @@ public class WhScrapServiceTest extends AbstractTest {
 
     @Test
     public void computeWhScrapMonth() {
-        whScrapService.computeWhScrapMonth("202106");
+        whScrapService.computeWhScrapMonth("202112");
     }
 
     @Test
     public void computeRmaMonth() {
-        whScrapService.computeRmaMonth("202106");
+        whScrapService.computeRmaMonth("202112");
     }
 }

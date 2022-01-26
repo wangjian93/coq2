@@ -35,6 +35,9 @@ public class NpFailureCostRateController {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
         SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMM");
 
+        //从202001月份开始计算累加
+        fromMonth = "202001";
+
         Date fromDate = sdf.parse(fromMonth);
         Date toDate = sdf.parse(toMonth);
         Calendar min = Calendar.getInstance();

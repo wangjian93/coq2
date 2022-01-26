@@ -21,7 +21,7 @@ import java.util.Map;
 @Slf4j
 public class RestServiceImpl implements RestService {
 
-    private static final String URL_Arcadia = "http://myivo.ivo.com.cn/Arcadia/getBEItems.do";
+    private static final String URL_Arcadia = "https://myivo.ivo.com.cn/Arcadia/getBEItems.do";
 
     private static RestTemplate restTemplate = new RestTemplate();
 

@@ -16,16 +16,16 @@ public class WoCloseServiceTest extends AbstractTest {
 
     @Test
     public void syncWoClose() {
-        woCloseService.syncWoClose("202106");
+        woCloseService.syncWoClose("202112");
     }
 
     @Test
     public void syncMatnrPrice() {
-        woCloseService.syncMatnrPrice("202106");
+        woCloseService.syncMatnrPrice("202112");
     }
 
     @Test
     public void computeWoCloseMonth() {
-        woCloseService.computeWoCloseMonth("202105");
+        woCloseService.computeWoCloseMonth("202112");
     }
 }

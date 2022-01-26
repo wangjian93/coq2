@@ -40,8 +40,8 @@ public class MardServiceImpl implements MardService {
             mard.setWERKS((String) map.get("WERKS"));
             mard.setLGORT((String) map.get("LGORT"));
             mard.setMATNR((String) map.get("MATNR"));
-            mard.setERSDA(new Date(((Timestamp) map.get("ERSDA")).getTime()));
-            mard.setLABST((double) map.get("LABST"));
+            mard.setERSDA(new Date(((Timestamp) map.get("BLDAT")).getTime())); //BLDAT
+            mard.setLABST((double) map.get("MENGE"));//MENGE
 
             mard.setAUFNR((String) map.get("AUFNR"));
             mard.setCHARG((String) map.get("CHARG"));

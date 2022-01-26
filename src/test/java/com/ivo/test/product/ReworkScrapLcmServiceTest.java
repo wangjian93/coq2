@@ -19,16 +19,16 @@ public class ReworkScrapLcmServiceTest extends AbstractTest {
 
     @Test
     public void syncReworkScrapLcm() {
-        reworkScrapLcmService.syncReworkScrap("202106");
+        reworkScrapLcmService.syncReworkScrap("202112");
     }
 
     @Test
     public void syncPerReworkScrapAmount() {
-        reworkScrapLcmService.syncPerReworkScrapAmountLcm("202106");
+        reworkScrapLcmService.syncPerReworkScrapAmountLcm("202112");
     }
 
     @Test
     public void computeReworkScrapMonth() {
-        reworkScrapLcmService.computeReworkScrapMonth("202106");
+        reworkScrapLcmService.computeReworkScrapMonth("202112");
     }
 }

@@ -15,17 +15,17 @@ public class ReworkScrapAryServiceTest extends AbstractTest {
     private ReworkScrapAryService reworkScrapAryService;
 
     @Test
-    public void syncAryReworkScrap() {
-        reworkScrapAryService.syncAryReworkScrap("202106");
+    public void a_syncAryReworkScrap() {
+        reworkScrapAryService.syncAryReworkScrap("202112");
     }
 
     @Test
-    public void computeAryReworkScrapAmount() {
-        reworkScrapAryService.computeAryReworkScrapAmount("202106");
+    public void b_computeAryReworkScrapAmount() {
+        reworkScrapAryService.computeAryReworkScrapAmount("202112");
     }
 
     @Test
-    public void computeReworkScrapMonth() {
-        reworkScrapAryService.computeReworkScrapMonth("202106");
+    public void c_computeReworkScrapMonth() {
+        reworkScrapAryService.computeReworkScrapMonth("202112");
     }
 }
