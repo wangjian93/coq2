@@ -31,7 +31,7 @@ public class ObaServiceTest extends AbstractTest {
 
     @Test
     public void computeObaMonth() {
-        obaService.computeObaMonth("202111");
+        obaService.computeObaMonth("202112");
     }
 
     @Test

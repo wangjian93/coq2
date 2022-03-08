@@ -5,12 +5,12 @@ spring:
     druid:
       # 主数据源  Mysql
       primary:
-#        url: jdbc:mysql://localhost:3306/coq2?useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-#        username: root
-#        password: root
-        url: jdbc:mysql://10.20.2.9/coq?useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-        username: test
-        password: test
+        url: jdbc:mysql://localhost:3306/coq2?useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+        username: root
+        password: root
+#        url: jdbc:mysql://10.20.2.9/coq?useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+#        username: test
+#        password: test
       # ORACLE数据源
       secondary:
         url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.10.2.233)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=10.10.2.234)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=kabedw)))

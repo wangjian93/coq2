@@ -266,14 +266,14 @@ public class Test2 extends AbstractTest {
 
     public void run(String PROJECT) {
         System.out.println("计算机种" + PROJECT);
-////        projectServiceTest(PROJECT);
-//        directMaterialCostServiceTest(PROJECT);
+//        projectServiceTest(PROJECT);
+        directMaterialCostServiceTest(PROJECT);
         JigCostServiceTest(PROJECT);
-//        ObaCostServiceTest(PROJECT);
-//        SalaryCostServiceTest(PROJECT);
+        ObaCostServiceTest(PROJECT);
+        SalaryCostServiceTest(PROJECT);
 ////        TravelCostServiceTest(PROJECT);
-//        VerificationCostServiceTest(PROJECT);
-//        ProductionCostServiceTest(PROJECT);
+        VerificationCostServiceTest(PROJECT);
+        ProductionCostServiceTest(PROJECT);
 ////        //ReworkScrapSyncJobServiceTest(PROJECT);
 ////        //ReworkScrapCostServiceTest(PROJECT);
         CostServiceTest(PROJECT);
